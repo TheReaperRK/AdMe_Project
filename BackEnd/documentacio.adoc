@@ -1,0 +1,85 @@
+= Memòria Tècnica - Project 3
+:author: Equip 4
+:date: 2025-01-21
+:toc: 
+:toclevels: 3
+
+
+
+[[proposta-1-didea-del-projecte]]
+== Proposta 1 d'idea del projecte
+
+[[introduccio]]
+=== Introducció
+CardSwap és una aplicació dissenyada per facilitar l'intercanvi de cartes col·leccionables de manera senzilla i eficient. Els usuaris poden exposar les seves cartes de les diferents col·leccions específiques, buscar cartes d'interès d'altres usuaris, i realitzar intercanvis directes amb altres col·leccionistes o be rebre les seves sol·licituds.
+
+[[objectiu-de-lapp-i-quines-necessitats-resol]]
+=== Objectiu de l'app i quines necessitats resol
+CardSwap permet als usuaris:
+- Posar a la venda cartes de col·leccions específiques, destacant les seves característiques (raritat, estat, edició, etc.).
+- Comprar cartes que busquen d'una manera ràpida, filtrant per col·leccions o expansió.
+- Facilitar intercanvis entre usuaris, fomentant el comerç directe entre col·leccionistes.
+
+Aquesta aplicació respon a la necessitat d'un mercat mòbil senzill i dinàmic per a cartes col·leccionables, oferint una plataforma on els usuaris poden realitzar transaccions de manera segura i transparent.
+
+[[estudi-de-mercat]]
+=== Estudi de mercat
+
+==== Aplicacions similars
+- **CardMarket**: Plataforma web per a cartes de jocs com Magic: The Gathering o Pokémon.
+- **eBay**: Utilitzada àmpliament per vendre articles col·leccionables, incloent-hi cartes.
+- **TCGPlayer**: Especialitzada en cartes de jocs, amb preus i comparadors.
+
+==== Diferenciació
+CardSwap es distingeix de les altres plataformes per la seva simplicitat i enfocament comunitari. A diferència de plataformes més complexes, CardSwap està dissenyada exclusivament per a dispositius mòbils, amb un sistema senzill d’intercanvis i una interfície intuïtiva basada en filtres per col·leccions.
+
+[[target]]
+=== Target
+L'aplicació està dirigida a col·leccionistes de cartes (12-35 anys) que juguen o col·leccionen cartes de jocs populars com Magic: The Gathering, Pokémon, Yu-Gi-Oh!, o cartes d'esports (NBA, futbol, etc.).
+
+[[item-i-categoria]]
+=== Ítem i categoria
+- **Ítem**: Cartes col·leccionables individuals o packs oficials i sense obrir de la col·lecció o joc.
+- **Categoria**: Joc o col·lecció de cartes al qual pertanyen les cartes, ja siguin cartes individuals o packs.
+
+Motiu de la relació:
+L'aplicació se centra exclusivament en cartes, una categoria molt específica dins del comerç col·leccionista, amb una comunitat sòlida i activa. Així mateix, cada joc o col·lecció de cartes conté, per definició, cartes col·leccionables. Les cartes i packs identificats com ítems seran agrupats i categoritzats segons la col·lecció o joc al qual pertanyen.
+
+[[processos-de-negoci]]
+=== Processos de negoci
+- **Posar a la venda o sol·licitar cartes**: Els usuaris poden crear anuncis ràpidament per vendre o sol·licitar cartes, indicant-ne l'expansió, el preu i l'estat. Els filtres permeten trobar fàcilment cartes d'interès.
+- **Intercanvi directe entre usuaris**: Funció senzilla per connectar dos usuaris que volen fer un intercanvi. Les dues parts poden acceptar o rebutjar la proposta directament a través del xat de l'app.
+
+[[proposta-2-didea-del-projecte]]
+== Proposta 2 d'idea del projecte
+
+[[introduccio2]]
+=== Introducció
+Aquí es podria descriure la segona idea de projecte, amb una explicació similar a la de la primera proposta.
+
+[[objectiu-de-lapp-i-quines-necessitats-resol2]]
+=== Objectiu de l'app i quines necessitats resol
+Aquí es poden descriure els objectius de la segona aplicació de manera similar a la primera.
+
+[[estudi-de-mercat2]]
+=== Estudi de mercat
+
+==== Aplicacions similars
+- **Aplicació 1**: Descripció de l'aplicació 1.
+- **Aplicació 2**: Descripció de l'aplicació 2.
+
+==== Diferenciació
+Explicació de com es diferencia la segona aplicació de les altres.
+
+[[target2]]
+=== Target
+Descriure el target de la segona aplicació.
+
+[[item-i-categoria2]]
+=== Ítem i categoria
+Definir els ítems i categories relacionades amb la segona aplicació.
+
+[[processos-de-negoci2]]
+=== Processos de negoci
+- **Posar a la venda o sol·licitar cartes**: Descriure els processos per vendre o sol·licitar cartes.
+- **Intercanvi directe entre usuaris**: Descriure com es farà l'intercanvi entre usuaris en aquesta segona aplicació.
