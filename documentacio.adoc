@@ -87,9 +87,9 @@ Requeriments relacionats amb la creació, visualització i gestió anuncis.
 ==== Requisits de negoci
 Requeriments de negoci addicionals per al funcionament de la nostra aplicació.
 
-- *RF27*: Els usuaris poden guardar anuncis que els hi interessin, afeixintlos a la seva propia llista personal de guardats.
-- *RF28*: Els usuaris podran llistar els anuncis guardats en la seva llista personal de guardats.
-- *RF29*: Els usuaris podran borrar els anuncis de la seva llista personal de guardats.
+- *RF27*: Els usuaris poden guardar anuncis que els hi interessin, afeixintlos a la seva llista personal de favorits.
+- *RF28*: Els usuaris podran llistar els anuncis guardats en la seva llista personal de favorits.
+- *RF29*: Els usuaris podran borrar els anuncis de la seva llista personal de favorits.
 
 [[requisits-no-funcionals]]
 === Requisits no funcionals
