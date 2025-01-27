@@ -437,14 +437,14 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article">
 <div id="header">
-<h1>Memòria Tècnica - Project 3</h1>
+<h1><strong>Memòria Tècnica - Project 3</strong></h1>
 <div class="details">
 <span id="author" class="author">Equip 4</span><br>
 </div>
 <div id="toc" class="toc">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#proposta-didea-del-projecte">Proposta d&#8217;idea del projecte: OfertApp</a>
+<li><a href="#proposta-didea-del-projecte"><strong>Proposta d&#8217;idea del projecte: OfertApp</strong></a>
 <ul class="sectlevel2">
 <li><a href="#introduccio">Introducció</a></li>
 <li><a href="#objectiu-de-lapp-i-quines-necessitats-resol">Ojectiu de l&#8217;app i quines necessitats resol</a></li>
@@ -459,12 +459,32 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#processos-de-negoci">Processos de negoci</a></li>
 </ul>
 </li>
+<li><a href="#especificacio-de-requisits"><strong>Especificacio de requisits</strong></a>
+<ul class="sectlevel2">
+<li><a href="#requisits-funcionals">Requisits funcionals</a>
+<ul class="sectlevel3">
+<li><a href="#gestio-dusuaris">Gestio d&#8217;usuaris</a></li>
+<li><a href="#gestio-de-categories">Gestio de categories</a></li>
+<li><a href="#gestio-danuncis">Gestio d&#8217;anuncis</a></li>
+<li><a href="#requisits-de-negoci">Requisits de negoci</a></li>
+</ul>
+</li>
+<li><a href="#requisits-no-funcionals">Requisits no funcionals</a>
+<ul class="sectlevel3">
+<li><a href="#requisits-tècnics-part-frontend-mobile">Requisits Tècnics part frontend Mobile</a></li>
+<li><a href="#requisits-dinterfície-ui-ux-accessibilitat-frontend-mobile">Requisits d’Interfície (UI/UX, Accessibilitat) frontend Mobile</a></li>
+<li><a href="#requisits-operatius-frontend-mobile">Requisits operatius frontend Mobile</a></li>
+<li><a href="#requisits-backend">Requisits backend</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
 <div id="content">
 <div class="sect1">
-<h2 id="proposta-didea-del-projecte"><a class="anchor" href="#proposta-didea-del-projecte"></a>Proposta d&#8217;idea del projecte: OfertApp</h2>
+<h2 id="proposta-didea-del-projecte"><a class="anchor" href="#proposta-didea-del-projecte"></a><strong>Proposta d&#8217;idea del projecte: OfertApp</strong></h2>
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="introduccio"><a class="anchor" href="#introduccio"></a>Introducció</h3>
@@ -534,10 +554,246 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="especificacio-de-requisits"><a class="anchor" href="#especificacio-de-requisits"></a><strong>Especificacio de requisits</strong></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="requisits-funcionals"><a class="anchor" href="#requisits-funcionals"></a>Requisits funcionals</h3>
+<div class="sect3">
+<h4 id="gestio-dusuaris"><a class="anchor" href="#gestio-dusuaris"></a>Gestio d&#8217;usuaris</h4>
+<div class="paragraph">
+<p>Requeriments relacionats amb l’autenticació, perfil i accions generals dels usuaris.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>RF01</strong>: Login. L’usuari ha de poder iniciar sessió a l’aplicació amb el  seu correu electrònic i contrasenya i sempre que estigui activat.</p>
+</li>
+<li>
+<p><strong>RF02</strong>: Registre. L’usuari ha de poder registrar-se per poder utilitzar l’app. Un nou usuari enregistrat, per defecte està en estat desactivat.</p>
+</li>
+<li>
+<p><strong>RF03</strong>: Recuperar contrasenya. L’usuari ha de poder recuperar la contrasenya en cas d’oblit.</p>
+</li>
+<li>
+<p><strong>RF04</strong>: Editar perfil usuari. L’usuari ha de poder modificar les dades del seu perfil, inclosa la seva foto.</p>
+</li>
+<li>
+<p><strong>RF05</strong>: Logout. L’usuari ha de poder tancar la sessió de manera segura.</p>
+</li>
+<li>
+<p><strong>RF06</strong>: L’administrador ha de poder canviar l’estat (activat o desactivat) dels usuaris enregistrats.</p>
+</li>
+<li>
+<p><strong>RF07</strong>:  L’administrador ha de poder eliminar un usuari.</p>
+</li>
+<li>
+<p><strong>RF08</strong>:  L’administrador ha de poder llistar tots els usuaris.</p>
+</li>
+<li>
+<p><strong>RF09</strong>: L’administrador ha de poder modificar un usuari.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="gestio-de-categories"><a class="anchor" href="#gestio-de-categories"></a>Gestio de categories</h4>
+<div class="paragraph">
+<p>Requeriments relacionats amb la creació, visualització i gestió de Categories.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>RF10</strong>: Crear nova categoria. Només l’usuari administrador ha de poder crear una nova categoria que contingui com a mínim un nom, una imatge i una descripció.</p>
+</li>
+<li>
+<p><strong>RF11</strong>: Llistar categories. L’usuari ha de poder veure una llista de totes les categories existents.</p>
+</li>
+<li>
+<p><strong>RF12</strong>: Filtrar categories. L’usuari ha de poder cercar categories pel seu nom i veure els resultats ordenats alfabèticament.</p>
+</li>
+<li>
+<p><strong>RF13</strong>: Ampliar informació de categoria. L’usuari ha de poder seleccionar una categoria i veure tota la informació associada (nom, imatge i descripció).</p>
+</li>
+<li>
+<p><strong>RF14</strong>: Modificar categoria. Només l’usuari administrador ha de poder modificar el nom, la imatge i la descripció de qualsevol categoria.</p>
+</li>
+<li>
+<p><strong>RF15</strong>: Eliminar categoria. Només l’usuari administrador ha de poder eliminar una categoria, sempre que no tingui anuncis associats.</p>
+</li>
+<li>
+<p><strong>RF16</strong>: Filtrar anuncis per categoria. L’usuari ha de poder veure només els anuncis que pertanyen a una categoria seleccionada.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="gestio-danuncis"><a class="anchor" href="#gestio-danuncis"></a>Gestio d&#8217;anuncis</h4>
+<div class="paragraph">
+<p>Requeriments relacionats amb la creació, visualització i gestió anuncis.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>RF20</strong>: Crear nou anunci. L’usuari ha de poder crear un nou anunci que contingui, com a mínim, una imatge, títol, descripció curta, preu, data de creació, autor, numero telefon autori categoria.</p>
+</li>
+<li>
+<p><strong>RF21</strong>: Llistar anuncis. L’usuari ha de poder veure una llista de tots els anuncis existents, mostrant-ne la imatge i títol, amb un botó per ampliar informació.</p>
+</li>
+<li>
+<p><strong>RF22</strong>: Filtrar anunci per camps. L’usuari ha de poder filtrar els anuncis basant-se en qualsevol dels camps disponibles dels anuncis (com el títol, l&#8217;autor, o la data de creació, entre d’altres).</p>
+</li>
+<li>
+<p><strong>RF23</strong>: Ordenar anuncis per camps. L’usuari ha de poder ordenar la llista dels anuncis segons qualsevol camp disponible, com el títol, la data de creació o l’autor.</p>
+</li>
+<li>
+<p><strong>RF24</strong>: Ampliar informació del anunci. L’usuari ha de poder veure tots els detalls d’un anunci seleccionat (títol, imatge, descripció, autor, data de creació.</p>
+</li>
+<li>
+<p><strong>RF25</strong>: Modificar anunci. Només l’usuari que ha creat un anunci, o l’administrador, han de poder modificar-ne la informació, excepte l’autor, la data de creació, les valoracions i els comentaris.</p>
+</li>
+<li>
+<p><strong>RF26</strong>: Eliminar anunci. Només l’usuari que ha creat un anunci, o l’administrador, han de poder eliminar-lo.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="requisits-de-negoci"><a class="anchor" href="#requisits-de-negoci"></a>Requisits de negoci</h4>
+<div class="paragraph">
+<p>Requeriments de negoci addicionals per al funcionament de la nostra aplicació.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>RF27</strong>: Els usuaris poden guardar anuncis que els hi interessin, afeixintlos a la seva propia llista personal de guardats.</p>
+</li>
+<li>
+<p><strong>RF28</strong>: Els usuaris podran llistar els anuncis guardats en la seva llista personal de guardats.</p>
+</li>
+<li>
+<p><strong>RF29</strong>: Els usuaris podran borrar els anuncis de la seva llista personal de guardats.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="requisits-no-funcionals"><a class="anchor" href="#requisits-no-funcionals"></a>Requisits no funcionals</h3>
+<div class="sect3">
+<h4 id="requisits-tècnics-part-frontend-mobile"><a class="anchor" href="#requisits-tècnics-part-frontend-mobile"></a>Requisits Tècnics part frontend Mobile</h4>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>RN01</strong>: L’aplicació s’ha de desenvolupar utilitzant l’IDE Android Studio, implementant el llenguatge Kotlin per crear una aplicació nativa compatible amb dispositius Android.</p>
+</li>
+<li>
+<p><strong>RN02</strong>: L’aplicació ha de tenir l’arquitectura MVVM (Model-View-ViewModel) i el ViewModel ha de gestionar l&#8217;estat de l&#8217;aplicació amb MutableStateFlow i StateFlow.</p>
+</li>
+<li>
+<p><strong>RN03</strong>: S’ha d’utilitzar Jetpack Compose per implementar la interfície gràfica.</p>
+</li>
+<li>
+<p><strong>RN07</strong>: S’ha d&#8217;utilitzar el git/gitlab per implementar el projecte en equip de forma òptima i adient.</p>
+</li>
+<li>
+<p><strong>RN08</strong>: S’han de fer servir les següents branques: main/master, developer i branques per features, bugfix, etc.</p>
+</li>
+<li>
+<p><strong>RN09</strong>: Tots els merges de funcionalitats s’han de fer per merge-request a developer.</p>
+</li>
+<li>
+<p><strong>RN10</strong>: Les branques fusionades s’eliminen després del merge-request.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="requisits-dinterfície-ui-ux-accessibilitat-frontend-mobile"><a class="anchor" href="#requisits-dinterfície-ui-ux-accessibilitat-frontend-mobile"></a>Requisits d’Interfície (UI/UX, Accessibilitat) frontend Mobile</h4>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>RN11</strong>: L’app ha d’estar en català, castellà i anglès.</p>
+</li>
+<li>
+<p><strong>RN12</strong>: La interfície de l&#8217;usuari ha de complir amb les directrius de disseny Material Design. El disseny visual ha de ser atractiu amb coherència de colors, fonts, icones, bona distribució i agrupació de components. Mateix disseny per totes les pantalles.</p>
+</li>
+<li>
+<p><strong>RN13</strong>: Responsive: En cas de variar la grandària de la pantalla del mòbil (no cal per tablet), s’ha d’adaptar el contingut de forma proporcionada.</p>
+</li>
+<li>
+<p><strong>RN14</strong>: Usabilitat (UX): Interfície amigable, efectiva, intuïtiva i eficient. No pot haver-hi passos innecessaris entre el que vols fer i com fer-ho. Ha de quedar molt clar què es pot fer. També cal que tingui coherència amb les funcionalitats disponibles i no disponibles en cada moment.</p>
+</li>
+<li>
+<p><strong>RN15</strong>: App accessible: Els elements interactius han de tenir etiquetes descriptives per facilitar-ne l&#8217;ús.</p>
+</li>
+<li>
+<p><strong>RN16</strong>: S’ha d&#8217;utilitzar el menú Bottom Navigation per a la navegació a les funcionalitats principals.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="requisits-operatius-frontend-mobile"><a class="anchor" href="#requisits-operatius-frontend-mobile"></a>Requisits operatius frontend Mobile</h4>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>RN17</strong>: L’app s’ha de poder executar en qualsevol emulador o dispositiu mòbil amb sistema operatiu Android.</p>
+</li>
+<li>
+<p><strong>RN18</strong>: Fluïdesa: L’app ha de respondre a les entrades de l&#8217;usuari en tot moment. Això vol dir que en cap cas pot quedar “congelada” mentre realitza qualsevol operació.</p>
+</li>
+<li>
+<p><strong>RN19</strong>: Gestió d’excepcions: Totes les possibles situacions excepcionals han de quedar gestionades de forma correcta i proporcionar missatges d’errors descriptius i útils per a l’usuari quan falli.</p>
+</li>
+<li>
+<p><strong>RN20</strong>: El codi ha de ser optimitzat, eficient i sense redundàncies.</p>
+</li>
+<li>
+<p><strong>RN21</strong>: S’han d’utilitzar les classes, interfícies i mètodes i packages de forma òptima i adient.
+RN22: Qualsevol entrada per teclat per part de l’usuari ha de validar-se i filtrar-se per garantir que les dades recollides siguin correctes, coherents i segures.</p>
+</li>
+<li>
+<p><strong>RN23</strong>: Totes les capçaleres de mètodes i classes han d’estar degudament comentades en format JavaDOC.</p>
+</li>
+<li>
+<p><strong>RN24</strong>: Els logs han d&#8217;estar disponibles per al monitoratge i depuració.</p>
+</li>
+<li>
+<p><strong>RN25</strong>: L’aplicació ha de garantir que només els usuaris amb els permisos adequats puguin accedir a determinades funcionalitats.</p>
+</li>
+<li>
+<p><strong>RN26</strong>: La capa presentació ha d’estar ubicada en el frontend Mobile.</p>
+</li>
+<li>
+<p><strong>RN27</strong>: La comunicació entre el frontend Mobile i el backend s’ha de portar a terme mitjançant els principis REST</p>
+</li>
+<li>
+<p><strong>RN28</strong>: L’administrador pot fer totes les funcionalitats.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="requisits-backend"><a class="anchor" href="#requisits-backend"></a>Requisits backend</h4>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>RN40</strong>: Les capes de servei, lógica de negoci i de persistència han d’estar ubicades al backend.</p>
+</li>
+<li>
+<p><strong>RN42</strong>: El backend s’ha d’implementar mitjançant SpringBoot.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2025-01-27 12:01:35 +0100
+Last updated 2025-01-27 14:05:04 +0100
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js"></script>

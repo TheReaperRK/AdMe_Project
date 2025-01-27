@@ -1,11 +1,11 @@
-= Memòria Tècnica - Project 3
+= *Memòria Tècnica - Project 3*
 :author: Equip 4
 :date: 2025-01-21
 :toc: 
 :toclevels: 3
 
 [[proposta-didea-del-projecte]]
-== Proposta d'idea del projecte: OfertApp
+== *Proposta d'idea del projecte: OfertApp*
 
 [[introduccio]]
 === Introducció
@@ -38,3 +38,97 @@ El target d'OfertApp és molt variat, arribant a un públic comprès entre els 1
 [[processos-de-negoci]]
 === Processos de negoci
 - **Guardar anuncis com a favorits**: Els usuaris d'OfertApp podran guardar els anuncis que els interessin com a favorits, amb la possibilitat de llistar-los i eliminar-los més tard.
+
+[[especificacio-de-requisits]]
+== *Especificacio de requisits*
+
+[[requisits-funcionals]]
+=== Requisits funcionals
+
+[[gestio-dusuaris]]
+==== Gestio d'usuaris
+Requeriments relacionats amb l’autenticació, perfil i accions generals dels usuaris.
+
+- *RF01*: Login. L’usuari ha de poder iniciar sessió a l’aplicació amb el  seu correu electrònic i contrasenya i sempre que estigui activat.
+- *RF02*: Registre. L’usuari ha de poder registrar-se per poder utilitzar l’app. Un nou usuari enregistrat, per defecte està en estat desactivat.
+- *RF03*: Recuperar contrasenya. L’usuari ha de poder recuperar la contrasenya en cas d’oblit.
+- *RF04*: Editar perfil usuari. L’usuari ha de poder modificar les dades del seu perfil, inclosa la seva foto.
+- *RF05*: Logout. L’usuari ha de poder tancar la sessió de manera segura.
+- *RF06*: L’administrador ha de poder canviar l’estat (activat o desactivat) dels usuaris enregistrats.
+- *RF07*:  L’administrador ha de poder eliminar un usuari.
+- *RF08*:  L’administrador ha de poder llistar tots els usuaris.
+- *RF09*: L’administrador ha de poder modificar un usuari.
+
+[[gestio-de-categories]]
+==== Gestio de categories
+Requeriments relacionats amb la creació, visualització i gestió de Categories.
+
+- *RF10*: Crear nova categoria. Només l’usuari administrador ha de poder crear una nova categoria que contingui com a mínim un nom, una imatge i una descripció.
+- *RF11*: Llistar categories. L’usuari ha de poder veure una llista de totes les categories existents.
+- *RF12*: Filtrar categories. L’usuari ha de poder cercar categories pel seu nom i veure els resultats ordenats alfabèticament.
+- *RF13*: Ampliar informació de categoria. L’usuari ha de poder seleccionar una categoria i veure tota la informació associada (nom, imatge i descripció).
+- *RF14*: Modificar categoria. Només l’usuari administrador ha de poder modificar el nom, la imatge i la descripció de qualsevol categoria.
+- *RF15*: Eliminar categoria. Només l’usuari administrador ha de poder eliminar una categoria, sempre que no tingui anuncis associats.
+- *RF16*: Filtrar anuncis per categoria. L’usuari ha de poder veure només els anuncis que pertanyen a una categoria seleccionada.
+
+[[gestio-danuncis]]
+==== Gestio d'anuncis
+Requeriments relacionats amb la creació, visualització i gestió anuncis.
+
+- *RF20*: Crear nou anunci. L’usuari ha de poder crear un nou anunci que contingui, com a mínim, una imatge, títol, descripció curta, preu, data de creació, autor, numero telefon autori categoria.
+- *RF21*: Llistar anuncis. L’usuari ha de poder veure una llista de tots els anuncis existents, mostrant-ne la imatge i títol, amb un botó per ampliar informació.
+- *RF22*: Filtrar anunci per camps. L’usuari ha de poder filtrar els anuncis basant-se en qualsevol dels camps disponibles dels anuncis (com el títol, l'autor, o la data de creació, entre d’altres).
+- *RF23*: Ordenar anuncis per camps. L’usuari ha de poder ordenar la llista dels anuncis segons qualsevol camp disponible, com el títol, la data de creació o l’autor.
+- *RF24*: Ampliar informació del anunci. L’usuari ha de poder veure tots els detalls d’un anunci seleccionat (títol, imatge, descripció, autor, data de creació.
+- *RF25*: Modificar anunci. Només l’usuari que ha creat un anunci, o l’administrador, han de poder modificar-ne la informació, excepte l’autor, la data de creació, les valoracions i els comentaris.
+- *RF26*: Eliminar anunci. Només l’usuari que ha creat un anunci, o l’administrador, han de poder eliminar-lo.
+
+[[requisits-de-negoci]]
+==== Requisits de negoci
+Requeriments de negoci addicionals per al funcionament de la nostra aplicació.
+
+- *RF27*: Els usuaris poden guardar anuncis que els hi interessin, afeixintlos a la seva propia llista personal de guardats.
+- *RF28*: Els usuaris podran llistar els anuncis guardats en la seva llista personal de guardats.
+- *RF29*: Els usuaris podran borrar els anuncis de la seva llista personal de guardats.
+
+[[requisits-no-funcionals]]
+=== Requisits no funcionals
+
+[[requisits-tècnics-part-frontend-mobile]]
+==== Requisits Tècnics part frontend Mobile
+- *RN01*: L’aplicació s’ha de desenvolupar utilitzant l’IDE Android Studio, implementant el llenguatge Kotlin per crear una aplicació nativa compatible amb dispositius Android.
+- *RN02*: L’aplicació ha de tenir l’arquitectura MVVM (Model-View-ViewModel) i el ViewModel ha de gestionar l'estat de l'aplicació amb MutableStateFlow i StateFlow.
+- *RN03*: S’ha d’utilitzar Jetpack Compose per implementar la interfície gràfica.
+- *RN07*: S’ha d'utilitzar el git/gitlab per implementar el projecte en equip de forma òptima i adient.
+- *RN08*: S’han de fer servir les següents branques: main/master, developer i branques per features, bugfix, etc.
+- *RN09*: Tots els merges de funcionalitats s’han de fer per merge-request a developer.
+- *RN10*: Les branques fusionades s’eliminen després del merge-request.
+
+[[requisits-dinterfície-ui-ux-accessibilitat-frontend-mobile]]
+==== Requisits d’Interfície (UI/UX, Accessibilitat) frontend Mobile
+- *RN11*: L’app ha d’estar en català, castellà i anglès.
+- *RN12*: La interfície de l'usuari ha de complir amb les directrius de disseny Material Design. El disseny visual ha de ser atractiu amb coherència de colors, fonts, icones, bona distribució i agrupació de components. Mateix disseny per totes les pantalles.
+- *RN13*: Responsive: En cas de variar la grandària de la pantalla del mòbil (no cal per tablet), s’ha d’adaptar el contingut de forma proporcionada.
+- *RN14*: Usabilitat (UX): Interfície amigable, efectiva, intuïtiva i eficient. No pot haver-hi passos innecessaris entre el que vols fer i com fer-ho. Ha de quedar molt clar què es pot fer. També cal que tingui coherència amb les funcionalitats disponibles i no disponibles en cada moment.
+- *RN15*: App accessible: Els elements interactius han de tenir etiquetes descriptives per facilitar-ne l'ús.
+- *RN16*: S’ha d'utilitzar el menú Bottom Navigation per a la navegació a les funcionalitats principals.
+
+[[requisits-operatius-frontend-mobile]]
+==== Requisits operatius frontend Mobile
+- *RN17*: L’app s’ha de poder executar en qualsevol emulador o dispositiu mòbil amb sistema operatiu Android.
+- *RN18*: Fluïdesa: L’app ha de respondre a les entrades de l'usuari en tot moment. Això vol dir que en cap cas pot quedar “congelada” mentre realitza qualsevol operació.
+- *RN19*: Gestió d’excepcions: Totes les possibles situacions excepcionals han de quedar gestionades de forma correcta i proporcionar missatges d’errors descriptius i útils per a l’usuari quan falli.
+- *RN20*: El codi ha de ser optimitzat, eficient i sense redundàncies.
+- *RN21*: S’han d’utilitzar les classes, interfícies i mètodes i packages de forma òptima i adient.
+RN22: Qualsevol entrada per teclat per part de l’usuari ha de validar-se i filtrar-se per garantir que les dades recollides siguin correctes, coherents i segures.
+- *RN23*: Totes les capçaleres de mètodes i classes han d’estar degudament comentades en format JavaDOC.
+- *RN24*: Els logs han d'estar disponibles per al monitoratge i depuració.
+- *RN25*: L’aplicació ha de garantir que només els usuaris amb els permisos adequats puguin accedir a determinades funcionalitats.
+- *RN26*: La capa presentació ha d’estar ubicada en el frontend Mobile.
+- *RN27*: La comunicació entre el frontend Mobile i el backend s’ha de portar a terme mitjançant els principis REST
+- *RN28*: L’administrador pot fer totes les funcionalitats.
+
+[[requisits-backend]]
+==== Requisits backend 
+- *RN40*: Les capes de servei, lógica de negoci i de persistència han d’estar ubicades al backend.
+- *RN42*: El backend s’ha d’implementar mitjançant SpringBoot.
