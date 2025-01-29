@@ -4,50 +4,53 @@
 :toc: 
 :toclevels: 6
 :imagesdir: ./images
-
+:toc!:
+.Portada del Documento
+image::0001.jpg[][width=100%]
+:toc:
 [[proposta-didea-del-projecte]]
 == *1. Proposta d'idea del projecte: OfertApp*
 
 [[introduccio]]
-=== Introducció
+=== 1.1 Introducció
 OfertApp és una aplicació per crear, buscar i compartir anuncis de particulars o autònoms basats en categories.
 
 [[objectiu-de-lapp-i-quines-necessitats-resol]]
-=== Ojectiu de l'app i quines necessitats resol
+=== 1.2 Ojectiu de l'app i quines necessitats resol
 L'objectiu d'OfertApp és posar en contacte oferents, particulars i autònoms de tota mena de serveis o compra-venda d'objectes, amb usuaris interessats. Permet als usuaris crear anuncis i compartir-los a través de l'app, així com buscar, filtrar i trobar ofertes o anuncis d'altres usuaris.
 
 Aquesta aplicació respon a la necessitat d’un mercat mòbil senzill i dinàmic per a particulars i autònoms, oferint una plataforma on els usuaris poden anunciar-se o buscar ofertes de manera segura i transparent.
 [[estudi-de-mercat]]
-=== Estudi de mercat
+=== 1.3 Estudi de mercat
 
-==== Aplicacions similars
+==== I. Aplicacions similars
 - **Wallapop**: Wallapop és una aplicació per a la venda d'objectes de segona mà.
 - **MilAnuncios**: És una aplicació per oferir i buscar anuncis a internet.
 
-==== Diferenciació
+==== II. Diferenciació
 OfertApp es centra en la simplicitat i la comunitat. A diferència d’altres plataformes més complexes, aquesta aplicació està dissenyada exclusivament per a dispositius mòbils, amb un sistema senzill de creació d'anuncis i una interfície intuïtiva basada en filtres i categories.
 
 [[target]]
-=== Target
+=== 1.4 Target
 El target d'OfertApp és molt variat, arribant a un públic comprès entre els 18 i els 50 anys.
 
 [[item-i-categoria]]
-=== Ítem i categoria
+=== 1.5 Ítem i categoria
 - **Ítem**: Anuncis o ofertes de qualsevol tipus.
 - **Categoria**: Categories dels diversos tipus i temes principals d'anuncis a l'aplicació.
 
 [[processos-de-negoci]]
-=== Processos de negoci
+=== 1.6 Processos de negoci
 - **Proposar noves categories**: Els usuaris d'ApMe podran crear propostes de categories, aquestes no seran visibles en els llistats de categories ni poden ser usades fins que un administrador les activi, fent-les "Oficials".
 
 [[especificacio-de-requisits]]
 == *2. Especificacio de requisits*
 
 [[requisits-funcionals]]
-=== Requisits funcionals
+=== 2.1 Requisits funcionals
 
 [[gestio-dusuaris]]
-==== Gestio d'usuaris
+==== I. Gestio d'usuaris
 Requeriments relacionats amb l’autenticació, perfil i accions generals dels usuaris.
 
 - *RF01*: Login. L’usuari ha de poder iniciar sessió a l’aplicació amb el  seu correu electrònic i contrasenya i sempre que estigui activat.
@@ -61,7 +64,7 @@ Requeriments relacionats amb l’autenticació, perfil i accions generals dels u
 - *RF09*: L’administrador ha de poder modificar un usuari.
 
 [[gestio-de-categories]]
-==== Gestio de categories
+==== II. Gestio de categories
 Requeriments relacionats amb la creació, visualització i gestió de Categories.
 
 - *RF10*:  Crear nova categoria. l’usuari ha de poder crear una nova categoria de tipus “Proposta” per defecte que contingui com a mínim un nom, una imatge i una descripció.
@@ -79,7 +82,7 @@ Requeriments relacionats amb la creació, visualització i gestió de Categories
 - *RF16*: Filtrar anuncis per categoria. L’usuari ha de poder veure només els anuncis que pertanyen a una categoria seleccionada.
 
 [[gestio-danuncis]]
-==== Gestio d'anuncis
+==== III. Gestio d'anuncis
 Requeriments relacionats amb la creació, visualització i gestió anuncis.
 
 - *RF20*: Crear nou anunci. L’usuari ha de poder crear un nou anunci que contingui, com a mínim, una imatge, títol, descripció curta, preu, data de creació, autor, numero telefon autori categoria.
@@ -97,7 +100,7 @@ Requeriments relacionats amb la creació, visualització i gestió anuncis.
 - *RF26*: Eliminar anunci. Només l’usuari que ha creat un anunci, o l’administrador, han de poder eliminar-lo.
 
 [[requisits-de-negoci]]
-==== Requisits de negoci
+==== IV. Requisits de negoci
 Requeriments de negoci addicionals per al funcionament de la nostra aplicació.
 
 - *RF27*: L’administrador a de poder “activar” o fer “Oficials” les propostes de categorías modificant les.(Les categories poden ser de 2 tipus: “Oficial” i “Proposta”).
@@ -105,16 +108,16 @@ Requeriments de negoci addicionals per al funcionament de la nostra aplicació.
 - *RF28*: L’administrador a de poder llistar totes les categories de tipus “Proposta”.
 
 [[proposta-de-millora]]
-=== Proposta de millora
+=== 2.2 Proposta de millora
 Proposem per a millorar en futures versions de l’aplicació una funció de xat a través la cual els usuaris puguin interactuar, conversar i negociar desde la mateixa aplicació.
 
 
 [[requisits-no-funcionals]]
 
-=== Requisits no funcionals
+=== 2.3 Requisits no funcionals
 
 [[requisits-tècnics-part-frontend-mobile]]
-==== Requisits Tècnics part frontend Mobile
+==== I. Requisits Tècnics part frontend Mobile
 - *RN01*: L’aplicació s’ha de desenvolupar utilitzant l’IDE Android Studio, implementant el llenguatge Kotlin per crear una aplicació nativa compatible amb dispositius Android.
 - *RN02*: L’aplicació ha de tenir l’arquitectura MVVM (Model-View-ViewModel) i el ViewModel ha de gestionar l'estat de l'aplicació amb MutableStateFlow i StateFlow.
 - *RN03*: S’ha d’utilitzar Jetpack Compose per implementar la interfície gràfica.
@@ -124,7 +127,7 @@ Proposem per a millorar en futures versions de l’aplicació una funció de xat
 - *RN10*: Les branques fusionades s’eliminen després del merge-request.
 
 [[requisits-dinterfície-ui-ux-accessibilitat-frontend-mobile]]
-==== Requisits d’Interfície (UI/UX, Accessibilitat) frontend Mobile
+==== II. Requisits d’Interfície (UI/UX, Accessibilitat) frontend Mobile
 - *RN11*: L’app ha d’estar en català, castellà i anglès.
 - *RN12*: La interfície de l'usuari ha de complir amb les directrius de disseny Material Design. El disseny visual ha de ser atractiu amb coherència de colors, fonts, icones, bona distribució i agrupació de components. Mateix disseny per totes les pantalles.
 - *RN13*: Responsive: En cas de variar la grandària de la pantalla del mòbil (no cal per tablet), s’ha d’adaptar el contingut de forma proporcionada.
@@ -133,7 +136,7 @@ Proposem per a millorar en futures versions de l’aplicació una funció de xat
 - *RN16*: S’ha d'utilitzar el menú Bottom Navigation per a la navegació a les funcionalitats principals.
 
 [[requisits-operatius-frontend-mobile]]
-==== Requisits operatius frontend Mobile
+==== III. Requisits operatius frontend Mobile
 - *RN17*: L’app s’ha de poder executar en qualsevol emulador o dispositiu mòbil amb sistema operatiu Android.
 - *RN18*: Fluïdesa: L’app ha de respondre a les entrades de l'usuari en tot moment. Això vol dir que en cap cas pot quedar “congelada” mentre realitza qualsevol operació.
 - *RN19*: Gestió d’excepcions: Totes les possibles situacions excepcionals han de quedar gestionades de forma correcta i proporcionar missatges d’errors descriptius i útils per a l’usuari quan falli.
@@ -148,7 +151,7 @@ RN22: Qualsevol entrada per teclat per part de l’usuari ha de validar-se i fil
 - *RN28*: L’administrador pot fer totes les funcionalitats.
 
 [[requisits-backend]]
-==== Requisits backend 
+==== IV. Requisits backend 
 - *RN40*: Les capes de servei, lógica de negoci i de persistència han d’estar ubicades al backend.
 - *RN42*: El backend s’ha d’implementar mitjançant SpringBoot.
 
@@ -156,7 +159,7 @@ RN22: Qualsevol entrada per teclat per part de l’usuari ha de validar-se i fil
 == *3. Guions per actors*
 
 [[usuari-anonim]]
-=== Usuari Anonim
+=== 3.1 Usuari Anonim
 [cols="1,8", options="header"]
 |===
 |Actor |Usuari Anonim
@@ -172,7 +175,7 @@ RN22: Qualsevol entrada per teclat per part de l’usuari ha de validar-se i fil
 |===
 
 [[usuari-autenticat]]
-=== Usuari autenticat
+=== 3.2 Usuari autenticat
 [cols="1,8", options="header"]
 |===
 |Actor |Usuari autenticat
@@ -188,9 +191,11 @@ RN22: Qualsevol entrada per teclat per part de l’usuari ha de validar-se i fil
 
 *RF10*: Crear noves categories amb nom, imatge i descripció.
 
-*RF11*: Veure la llista de categories existents.  
+*RF11*: Veure la llista de categories existents.
 
 *RF13*: Ampliar informació de categories seleccionades (nom, imatge i descripció).  
+
+*RF16*: Veure anuncis agrupats per categories seleccionades.
 
 *RF20*: Crear nous anuncis amb detalls (imatge, títol, descripció, preu, categoria, etc.).  
 
@@ -206,11 +211,10 @@ RN22: Qualsevol entrada per teclat per part de l’usuari ha de validar-se i fil
 
 *RF26*: Eliminar anuncis creats per l'usuari.  
 
-*RF16*: Veure anuncis agrupats per categories seleccionades.
 |===
 
 [[Administrador]]
-=== Administrador
+=== 3.3 Administrador
 [cols="1,8", options="header"]
 |===
 |Actor |Administrador
@@ -218,6 +222,12 @@ RN22: Qualsevol entrada per teclat per part de l’usuari ha de validar-se i fil
 |Descripció |Aquest actor té tots els permisos incloent permisos especials per gestionar l'aplicació.
 
 |Guió |
+*RF03*: L'usuari autenticat pot recuperar la contrasenya en cas d'oblit.
+
+*RF04*: L'usuari autenticat pot editar el seu perfil (incloent foto).
+
+*RF05*: Logout. L’usuari ha de poder tancar la sessió de manera segura.
+
 *RF06*: Activar o desactivar usuaris registrats.
 
 *RF07*: Eliminar usuaris.
@@ -228,9 +238,25 @@ RN22: Qualsevol entrada per teclat per part de l’usuari ha de validar-se i fil
 
 *RF10*: Crear noves categories amb nom, imatge i descripció.
 
+*RF11*: Veure la llista de categories existents.
+
+*RF13*: Ampliar informació de categories seleccionades (nom, imatge i descripció).
+
 *RF14*: Modificar categories existents.
 
 *RF15*: Eliminar categories sense anuncis associats.
+
+*RF16*: Veure anuncis agrupats per categories seleccionades.
+
+*RF20*: Crear nous anuncis amb detalls (imatge, títol, descripció, preu, categoria, etc.).
+
+*RF21*: Veure una llista de tots els anuncis existents.
+
+*RF22*: Filtrar anuncis basant-se en camps específics.
+
+*RF23*: Ordenar anuncis segons camps (data, autor, etc.).
+
+*RF24*: Ampliar informació d'un anunci seleccionat.
 
 *RF25*: Modificar anuncis creats per altres usuaris.
 
@@ -246,30 +272,43 @@ RN22: Qualsevol entrada per teclat per part de l’usuari ha de validar-se i fil
 == *4. Diagrames*
 
 [[diagrama-de-classes]]
-=== https://drive.google.com/file/d/16MHxO5ho9Ku3YAQt_wtkEaHCgg2okdm5/view?usp=sharing[*4.1 Diagrama de classes*]
+=== https://drive.google.com/file/d/16MHxO5ho9Ku3YAQt_wtkEaHCgg2okdm5/view?usp=sharing[4.1 Diagrama de classes]
 
 image::diagramaClasses.png[]
 
 [[diagrama-entitat-relacio]]
-=== https://drive.google.com/file/d/1vfIS1HOmU2JpTOrofv0mNdlRCwPapYMo/view?usp=sharing[*4.2 Diagrama Entitat Relació (ER)*]
+=== https://drive.google.com/file/d/1vfIS1HOmU2JpTOrofv0mNdlRCwPapYMo/view?usp=sharing[4.2 Diagrama Entitat Relació (ER)]
 
 image::DiagramaER.png[]
 
 [[diagrama-de-casos-dus]]
-=== https://drive.google.com/file/d/1aUyL8f_LzVAcohG1619ODSqFxXxZVJd_/view?usp=sharing[*4.3 Diagrama de casos d'ús*]
+=== https://drive.google.com/file/d/1aUyL8f_LzVAcohG1619ODSqFxXxZVJd_/view?usp=sharing[4.3 Diagrama de casos d'ús]
 
 image::diagramaCassosUs.png[]
 
 
 [[diagrama-darquitectura]]
-=== https://drive.google.com/file/d/1lj64N7D_mLZmjTBy8MeeEp_FVF7mYDlW/view?usp=sharing[*4.4 Diagrama d’arquitectura*]
+=== https://drive.google.com/file/d/1lj64N7D_mLZmjTBy8MeeEp_FVF7mYDlW/view?usp=sharing[4.4 Diagrama d’arquitectura]
 
 image::diagramaArquitectura.png[align="center"]
 
 [[especificacions-casos-dus-negoci]]
 == *5. Especificacions casos d’ús de negoci*
-Fes les especificacions dels casos d’ús de negoci que s’han validat en la fase de proposta.
+Aquestes son les especificacions dels casos d’ús de negoci que s’han validat en la fase de proposta.
 
+[[cu10]]
+[underline]#*CU10*#
+
+image::cu10.png[]
+
+[[cu11]]
+[underline]#*CU11*#
+
+image::cu11.png[]
+
+[[altres_especificacions-casos-dus]]
+=== 5.1. Altres especificacions casos d’ús
+Aquest son alguns exemples de casos d'ús (*CU1* - *CU9*).
 [[cu1]]
 [underline]#*CU1*#
 
@@ -317,16 +356,89 @@ image::cu9.png[]
 
 [[diseny-de-pantalles]]
 == *6. Disseny de pantalles*
-Utilitza l’eina de disseny Figma per crear les pantalles de l’aplicació. 
-El projecte figma ha d’estar dividit amb 3 pàgines: Disseny de les pantalles App, Components, Guia d’estils
-Realitza un prototip amb Figma que es pugui navegar per les pantalles dissenyades.
-Documenta a la memòria:
--Link al projecte figma compartit amb dam2m@copernicat.cat
--La Guia d’estils
--Els components fets
--Per cada cada pantalla hi ha d’haver la següent informació:
--Nom de la pantalla
--Captura de la pantalla
+
+[[pantalles]]
+=== 6.1 Pantalles
+
+[[IniciSessió]]
+
+[underline]#*Inici Sessió*#
+
+image::105846.png[]
+
+[[recuperar-contrasenya]]
+[underline]#*Recuperar contrasenya*#
+
+image::105925.png[]
+
+[[home]]
+[underline]#*Home*#
+
+image::105945.png[]
+
+[[proposta anunci]]
+[underline]#*Proposta Anunci*#
+
+image::110002.png[]
+
+[[llista-anuncis]]
+[underline]#*Llista Anuncis*#
+
+image::110020.png[]
+
+[[perfil-usuari]]
+[underline]#*Perfil Usuari*#
+
+image::110043.png[]
+
+[[menu-usuari]]
+[underline]#*Menú Usuari*#
+
+image::110059.png[]
+
+[[llista-usuari]]
+[underline]#*Llista Usuaris*#
+
+image::110115.png[]
+
+[[proposta-categories]]
+[underline]#*Proposta Categories*#
+
+image::110136.png[]
+
+[[crear-anunci]]
+[underline]#*Crear Anunci*#
+
+image::110159.png[]
+
+[[guia-destils]]
+=== *6.2 Guia d'estils*
+
+image::estils.png[]
+
+[[components-botons]]
+=== *6.3 Components i botons*
+
+image::botons.png[]
 
 
 
+[[link-prototip-figma]]
+=== *6.4 Link prototip figma*
+https://www.figma.com/proto/SfX5rrJKVpRCjcew9FnqqC/AdMe?node-id=0-1&t=TKVrv6w7ZGXZnwov-1[Prototip AdMe Figma]
+[[diseny-de-la-bbdd]]
+== *7. Disseny de la Base de dades*
+
+[[justificaio-bbdd]]
+=== 7.1 Justificació BBDD
+El disseny de BBDD que hem escollit és de Base de dades relacional amb (SQL), la nostra decisió es basa en els següents punts principals:
+
+- *La proposta de negoci*: La nostra proposta de negoci és més simple d'aplicar en una BBDD relacional com SQL.
+
+- *Practica i experiencia*: Estem més acostumats a treballar amb BBDD relacionals com SQL i, per tant, tenim molta més pràctica i experiència, cosa que facilitaria la resolució de problemes futurs.
+
+- *BBDD no relacional no requerida*: No és necessari per a cap aspecte de la nostra app utilitzar una BBDD no relacional com MongoDB.
+
+[[diagrama-disseny-bbdd]]
+=== 7.2 Diagrama del disseny de la BBDD
+image::dissenyDiagramaBBDD.png[]
