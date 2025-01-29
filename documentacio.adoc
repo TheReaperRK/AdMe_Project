@@ -6,6 +6,7 @@
 :imagesdir: ./images
 :toc!:
 .Portada del Documento
+
 image::0001.jpg[][width=100%]
 :toc:
 [[proposta-didea-del-projecte]]
