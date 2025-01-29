@@ -376,7 +376,7 @@ image::105925.png[]
 
 image::105945.png[]
 
-[[proposta anunci]]
+[[proposta-anunci]]
 [underline]#*Proposta Anunci*#
 
 image::110002.png[]
