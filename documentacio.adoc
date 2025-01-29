@@ -2,10 +2,11 @@
 :author: Equip 4
 :date: 2025-01-21
 :toc: 
-:toclevels: 3
+:toclevels: 6
+:imagesdir: ./images
 
 [[proposta-didea-del-projecte]]
-== *Proposta d'idea del projecte: OfertApp*
+== *1. Proposta d'idea del projecte: OfertApp*
 
 [[introduccio]]
 === Introducció
@@ -37,10 +38,10 @@ El target d'OfertApp és molt variat, arribant a un públic comprès entre els 1
 
 [[processos-de-negoci]]
 === Processos de negoci
-- **Guardar anuncis com a favorits**: Els usuaris d'OfertApp podran guardar els anuncis que els interessin com a favorits, amb la possibilitat de llistar-los i eliminar-los més tard.
+- **Proposar noves categories**: Els usuaris d'ApMe podran crear propostes de categories, aquestes no seran visibles en els llistats de categories ni poden ser usades fins que un administrador les activi, fent-les "Oficials".
 
 [[especificacio-de-requisits]]
-== *Especificacio de requisits*
+== *2. Especificacio de requisits*
 
 [[requisits-funcionals]]
 === Requisits funcionals
@@ -63,12 +64,18 @@ Requeriments relacionats amb l’autenticació, perfil i accions generals dels u
 ==== Gestio de categories
 Requeriments relacionats amb la creació, visualització i gestió de Categories.
 
-- *RF10*: Crear nova categoria. Només l’usuari administrador ha de poder crear una nova categoria que contingui com a mínim un nom, una imatge i una descripció.
-- *RF11*: Llistar categories. L’usuari ha de poder veure una llista de totes les categories existents.
+- *RF10*:  Crear nova categoria. l’usuari ha de poder crear una nova categoria de tipus “Proposta” per defecte que contingui com a mínim un nom, una imatge i una descripció.
+
+- *RF11*: Llistar categories. L’usuari ha de poder veure una llista de totes les categories existents de tipus “Oficial”.
+
 - *RF12*: Filtrar categories. L’usuari ha de poder cercar categories pel seu nom i veure els resultats ordenats alfabèticament.
+
 - *RF13*: Ampliar informació de categoria. L’usuari ha de poder seleccionar una categoria i veure tota la informació associada (nom, imatge i descripció).
-- *RF14*: Modificar categoria. Només l’usuari administrador ha de poder modificar el nom, la imatge i la descripció de qualsevol categoria.
+
+- *RF14*: Modificar categoria. Només l’usuari administrador ha de poder modificar el nom, la imatge, la descripció i el tipus (“Oficial”, “Proposta”) de qualsevol categoria.
+
 - *RF15*: Eliminar categoria. Només l’usuari administrador ha de poder eliminar una categoria, sempre que no tingui anuncis associats.
+
 - *RF16*: Filtrar anuncis per categoria. L’usuari ha de poder veure només els anuncis que pertanyen a una categoria seleccionada.
 
 [[gestio-danuncis]]
@@ -76,22 +83,34 @@ Requeriments relacionats amb la creació, visualització i gestió de Categories
 Requeriments relacionats amb la creació, visualització i gestió anuncis.
 
 - *RF20*: Crear nou anunci. L’usuari ha de poder crear un nou anunci que contingui, com a mínim, una imatge, títol, descripció curta, preu, data de creació, autor, numero telefon autori categoria.
+
 - *RF21*: Llistar anuncis. L’usuari ha de poder veure una llista de tots els anuncis existents, mostrant-ne la imatge i títol, amb un botó per ampliar informació.
+
 - *RF22*: Filtrar anunci per camps. L’usuari ha de poder filtrar els anuncis basant-se en qualsevol dels camps disponibles dels anuncis (com el títol, l'autor, o la data de creació, entre d’altres).
+
 - *RF23*: Ordenar anuncis per camps. L’usuari ha de poder ordenar la llista dels anuncis segons qualsevol camp disponible, com el títol, la data de creació o l’autor.
+
 - *RF24*: Ampliar informació del anunci. L’usuari ha de poder veure tots els detalls d’un anunci seleccionat (títol, imatge, descripció, autor, data de creació.
+
 - *RF25*: Modificar anunci. Només l’usuari que ha creat un anunci, o l’administrador, han de poder modificar-ne la informació, excepte l’autor, la data de creació, les valoracions i els comentaris.
+
 - *RF26*: Eliminar anunci. Només l’usuari que ha creat un anunci, o l’administrador, han de poder eliminar-lo.
 
 [[requisits-de-negoci]]
 ==== Requisits de negoci
 Requeriments de negoci addicionals per al funcionament de la nostra aplicació.
 
-- *RF27*: Els usuaris poden guardar anuncis que els hi interessin, afeixintlos a la seva llista personal de favorits.
-- *RF28*: Els usuaris podran llistar els anuncis guardats en la seva llista personal de favorits.
-- *RF29*: Els usuaris podran borrar els anuncis de la seva llista personal de favorits.
+- *RF27*: L’administrador a de poder “activar” o fer “Oficials” les propostes de categorías modificant les.(Les categories poden ser de 2 tipus: “Oficial” i “Proposta”).
+
+- *RF28*: L’administrador a de poder llistar totes les categories de tipus “Proposta”.
+
+[[proposta-de-millora]]
+=== Proposta de millora
+Proposem per a millorar en futures versions de l’aplicació una funció de xat a través la cual els usuaris puguin interactuar, conversar i negociar desde la mateixa aplicació.
+
 
 [[requisits-no-funcionals]]
+
 === Requisits no funcionals
 
 [[requisits-tècnics-part-frontend-mobile]]
@@ -132,3 +151,182 @@ RN22: Qualsevol entrada per teclat per part de l’usuari ha de validar-se i fil
 ==== Requisits backend 
 - *RN40*: Les capes de servei, lógica de negoci i de persistència han d’estar ubicades al backend.
 - *RN42*: El backend s’ha d’implementar mitjançant SpringBoot.
+
+[[guions-per-actors]]
+== *3. Guions per actors*
+
+[[usuari-anonim]]
+=== Usuari Anonim
+[cols="1,8", options="header"]
+|===
+|Actor |Usuari Anonim
+
+|Descripció |Aquest actor representa un usuari que encara no s’ha autenticat independentment de si s’ha registrat prèviament i no té accés a l'aplicació, només al login i registre.
+
+
+|Guió |
+*RF01*: L'usuari anònim pot iniciar sessió amb correu i contrasenya i sempre que estigui activat.
+
+*RF02*: L’usuari anònim pot registrar-se per poder utilitzar l’app. (estara per defecte desactivat).
+
+|===
+
+[[usuari-autenticat]]
+=== Usuari autenticat
+[cols="1,8", options="header"]
+|===
+|Actor |Usuari autenticat
+
+|Descripció |Aquest actor representa un usuari que s'ha autenticat havent-se registrat prèviament i té accés a les funcionalitats bàsiques de l'aplicació.
+
+|Guió |
+ 
+*RF03*: L'usuari pot recuperar la contrasenya en cas d'oblit.  
+
+*RF04*: L'usuari pot editar el seu perfil (incloent foto). 
+*RF05*: Logout. L’usuari ha de poder tancar la sessió de manera segura.
+
+*RF10*: Crear noves categories amb nom, imatge i descripció.
+
+*RF11*: Veure la llista de categories existents.  
+
+*RF13*: Ampliar informació de categories seleccionades (nom, imatge i descripció).  
+
+*RF20*: Crear nous anuncis amb detalls (imatge, títol, descripció, preu, categoria, etc.).  
+
+*RF21*: Veure una llista de tots els anuncis existents.  
+
+*RF22*: Filtrar anuncis basant-se en camps específics.  
+
+*RF23*: Ordenar anuncis segons camps (data, autor, etc.).  
+
+*RF24*: Ampliar informació d'un anunci seleccionat.  
+
+*RF25*: Modificar anuncis creats per l'usuari.  
+
+*RF26*: Eliminar anuncis creats per l'usuari.  
+
+*RF16*: Veure anuncis agrupats per categories seleccionades.
+|===
+
+[[Administrador]]
+=== Administrador
+[cols="1,8", options="header"]
+|===
+|Actor |Administrador
+
+|Descripció |Aquest actor té tots els permisos incloent permisos especials per gestionar l'aplicació.
+
+|Guió |
+*RF06*: Activar o desactivar usuaris registrats.
+
+*RF07*: Eliminar usuaris.
+
+*RF08*: Llistar tots els usuaris.
+
+*RF09*: Modificar dades dels usuaris.
+
+*RF10*: Crear noves categories amb nom, imatge i descripció.
+
+*RF14*: Modificar categories existents.
+
+*RF15*: Eliminar categories sense anuncis associats.
+
+*RF25*: Modificar anuncis creats per altres usuaris.
+
+*RF26*: Eliminar anuncis creats per altres usuaris.
+
+*RF27*: Poder “activar” o fer “Oficials” les propostes de categorías.
+
+*RF28*: Poder llistar totes les categories de tipus “Proposta”.
+
+|===
+
+[[diagrames]]
+== *4. Diagrames*
+
+[[diagrama-de-classes]]
+=== https://drive.google.com/file/d/16MHxO5ho9Ku3YAQt_wtkEaHCgg2okdm5/view?usp=sharing[*4.1 Diagrama de classes*]
+
+image::diagramaClasses.png[]
+
+[[diagrama-entitat-relacio]]
+=== https://drive.google.com/file/d/1vfIS1HOmU2JpTOrofv0mNdlRCwPapYMo/view?usp=sharing[*4.2 Diagrama Entitat Relació (ER)*]
+
+image::DiagramaER.png[]
+
+[[diagrama-de-casos-dus]]
+=== https://drive.google.com/file/d/1aUyL8f_LzVAcohG1619ODSqFxXxZVJd_/view?usp=sharing[*4.3 Diagrama de casos d'ús*]
+
+image::diagramaCassosUs.png[]
+
+
+[[diagrama-darquitectura]]
+=== https://drive.google.com/file/d/1lj64N7D_mLZmjTBy8MeeEp_FVF7mYDlW/view?usp=sharing[*4.4 Diagrama d’arquitectura*]
+
+image::diagramaArquitectura.png[align="center"]
+
+[[especificacions-casos-dus-negoci]]
+== *5. Especificacions casos d’ús de negoci*
+Fes les especificacions dels casos d’ús de negoci que s’han validat en la fase de proposta.
+
+[[cu1]]
+[underline]#*CU1*#
+
+image::cu1.png[]
+
+[[cu2]]
+[underline]#*CU2*#
+
+image::cu2.png[]
+
+[[cu3]]
+[underline]#*CU3*#
+
+image::cu3.png[]
+
+[[cu4]]
+[underline]#*CU4*#
+
+image::cu4.png[]
+
+[[cu5]]
+[underline]#*CU5*#
+
+image::cu5.png[]
+
+[[cu6]]
+[underline]#*CU6*#
+
+image::cu6.png[]
+
+[[cu7]]
+[underline]#*CU7*#
+
+image::cu7.png[]
+
+[[cu8]]
+[underline]#*CU8*#
+
+image::cu8.png[]
+
+[[cu9]]
+[underline]#*CU9*#
+
+image::cu9.png[]
+
+[[diseny-de-pantalles]]
+== *6. Disseny de pantalles*
+Utilitza l’eina de disseny Figma per crear les pantalles de l’aplicació. 
+El projecte figma ha d’estar dividit amb 3 pàgines: Disseny de les pantalles App, Components, Guia d’estils
+Realitza un prototip amb Figma que es pugui navegar per les pantalles dissenyades.
+Documenta a la memòria:
+-Link al projecte figma compartit amb dam2m@copernicat.cat
+-La Guia d’estils
+-Els components fets
+-Per cada cada pantalla hi ha d’haver la següent informació:
+-Nom de la pantalla
+-Captura de la pantalla
+
+
+
