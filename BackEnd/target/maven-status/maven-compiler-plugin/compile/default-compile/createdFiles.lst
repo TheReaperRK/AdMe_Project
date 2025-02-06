@@ -1,1 +1,9 @@
-cat\copernic\mavenproject1\Mavenproject1.class
+cat\copernic\mavenproject1\Entity\User.class
+cat\copernic\mavenproject1\apiControllers\UserApiController.class
+cat\copernic\mavenproject1\AdMeApplication.class
+cat\copernic\mavenproject1\repository\UserRepo.class
+cat\copernic\mavenproject1\Entity\Category.class
+cat\copernic\mavenproject1\Entity\Ad.class
+cat\copernic\mavenproject1\enums\Roles.class
+cat\copernic\mavenproject1\webControllers\UserViewController.class
+cat\copernic\mavenproject1\logic\UserLogic.class
