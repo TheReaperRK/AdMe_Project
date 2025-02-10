@@ -1,24 +1,22 @@
 = *Memòria Tècnica - Project 3*
 :author: Equip 4
 :date: 2025-01-21
-:toc: 
+:toc: left
 :toclevels: 6
 :imagesdir: ./images
-:toc!:
-.Portada del Documento
 
 image::0001.jpg[][width=100%]
-:toc:
-[[proposta-didea-del-projecte]]
-== *1. Proposta d'idea del projecte: OfertApp*
+sad
+[[proposta-didea-del-projecate]]
+== *1. Proposta d'idea del projecte: AdMe*
 
 [[introduccio]]
 === 1.1 Introducció
-OfertApp és una aplicació per crear, buscar i compartir anuncis de particulars o autònoms basats en categories.
+AdMe és una aplicació per crear, buscar i compartir anuncis de particulars o autònoms basats en categories.
 
 [[objectiu-de-lapp-i-quines-necessitats-resol]]
 === 1.2 Ojectiu de l'app i quines necessitats resol
-L'objectiu d'OfertApp és posar en contacte oferents, particulars i autònoms de tota mena de serveis o compra-venda d'objectes, amb usuaris interessats. Permet als usuaris crear anuncis i compartir-los a través de l'app, així com buscar, filtrar i trobar ofertes o anuncis d'altres usuaris.
+L'objectiu d'AdMe és posar en contacte oferents, particulars i autònoms de tota mena de serveis o compra-venda d'objectes, amb usuaris interessats. Permet als usuaris crear anuncis i compartir-los a través de l'app, així com buscar, filtrar i trobar ofertes o anuncis d'altres usuaris.
 
 Aquesta aplicació respon a la necessitat d’un mercat mòbil senzill i dinàmic per a particulars i autònoms, oferint una plataforma on els usuaris poden anunciar-se o buscar ofertes de manera segura i transparent.
 [[estudi-de-mercat]]
@@ -29,11 +27,11 @@ Aquesta aplicació respon a la necessitat d’un mercat mòbil senzill i dinàmi
 - **MilAnuncios**: És una aplicació per oferir i buscar anuncis a internet.
 
 ==== II. Diferenciació
-OfertApp es centra en la simplicitat i la comunitat. A diferència d’altres plataformes més complexes, aquesta aplicació està dissenyada exclusivament per a dispositius mòbils, amb un sistema senzill de creació d'anuncis i una interfície intuïtiva basada en filtres i categories.
+AdMe es centra en la simplicitat i la comunitat. A diferència d’altres plataformes més complexes, aquesta aplicació està dissenyada exclusivament per a dispositius mòbils, amb un sistema senzill de creació d'anuncis i una interfície intuïtiva basada en filtres i categories.
 
 [[target]]
 === 1.4 Target
-El target d'OfertApp és molt variat, arribant a un públic comprès entre els 18 i els 50 anys.
+El target d'AdMe és molt variat, arribant a un públic comprès entre els 18 i els 50 anys.
 
 [[item-i-categoria]]
 === 1.5 Ítem i categoria
@@ -42,7 +40,7 @@ El target d'OfertApp és molt variat, arribant a un públic comprès entre els 1
 
 [[processos-de-negoci]]
 === 1.6 Processos de negoci
-- **Proposar noves categories**: Els usuaris d'ApMe podran crear propostes de categories, aquestes no seran visibles en els llistats de categories ni poden ser usades fins que un administrador les activi, fent-les "Oficials".
+- **Proposar noves categories**: Els usuaris d'AdMe podran crear propostes de categories, aquestes no seran visibles en els llistats de categories ni poden ser usades fins que un administrador les activi, fent-les "Oficials".
 
 [[especificacio-de-requisits]]
 == *2. Especificacio de requisits*
