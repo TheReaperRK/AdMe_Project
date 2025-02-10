@@ -4,6 +4,7 @@
     import jakarta.persistence.*;
     import java.util.ArrayList;
     import java.util.List;
+import java.util.Objects;
     import lombok.AllArgsConstructor;
     import lombok.Data;
     import lombok.NoArgsConstructor;
@@ -81,6 +82,31 @@
             this.status = status;
             this.role = role;
         }   
+        
+        public User(String name, String email, String phoneNumber, String password, boolean status, Roles role, List<Ad> ads) {
+            this.name = name;
+            this.email = email;
+            this.phoneNumber = phoneNumber;
+            this.password = password;
+            this.status = status;
+            this.role = role;
+            this.ads = ads;
+        }   
+        
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            User user = (User) o;
+            return status == user.status &&
+                   Objects.equals(id, user.id) &&
+                   Objects.equals(name, user.name) &&
+                   Objects.equals(email, user.email) &&
+                   Objects.equals(phoneNumber, user.phoneNumber) &&
+                   Objects.equals(password, user.password) &&
+                   role == user.role;  // Excluye ads de la comparación
+                   
+        }
     }
 
 
