@@ -1,5 +1,6 @@
 package cat.copernic.mavenproject1.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,5 +57,9 @@ public class Category {
      * This is a one-to-many relationship with Ad entities.
      */
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<Ad> ads = new ArrayList<>();
+    
+
+
 }

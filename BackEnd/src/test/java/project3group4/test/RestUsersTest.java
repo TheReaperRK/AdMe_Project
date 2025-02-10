@@ -350,6 +350,7 @@ public class RestUsersTest {
         // Verificamos la respuesta
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
+    
 
 }
 

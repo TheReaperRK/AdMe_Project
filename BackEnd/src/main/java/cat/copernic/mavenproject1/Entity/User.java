@@ -1,6 +1,7 @@
     package cat.copernic.mavenproject1.Entity;
 
     import cat.copernic.mavenproject1.enums.Roles;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
     import jakarta.persistence.*;
     import java.util.ArrayList;
     import java.util.List;
@@ -71,6 +72,7 @@ import java.util.Objects;
          * This is a one-to-many relationship with Ad entities.
          */
         @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
+        @JsonManagedReference
         private List<Ad> ads = new ArrayList<>();
 
         
