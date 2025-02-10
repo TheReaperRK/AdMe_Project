@@ -1,8 +1,9 @@
 deploy:
   stage: deploy
   script:
-    - mkdir -p public  
-    - cp -r * public/  
+  - mkdir public
+  - cp -r ./* public
+ 
   artifacts:
     paths:
       - public
