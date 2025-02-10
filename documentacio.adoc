@@ -2,7 +2,7 @@
 :author: Equip 4
 :date: 2025-01-21
 :toc: left
-:toclevels: 6
+:toclevels: 4
 :imagesdir: ./images
 
 image::0001.jpg[][width=100%]
