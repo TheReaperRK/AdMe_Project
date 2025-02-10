@@ -23,38 +23,37 @@ public class Ad {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(unique = true, nullable = false)
     private Long id;
     
     /**
      * Title of the advertisement. Must be unique and cannot be null.
      */
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String title;
     
     /**
      * Description of the advertisement. Must be unique and cannot be null.
      */
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String description;
     
     /**
      * Binary content of the advertisement image. Stored as a large object (LOB).
      */
     @Lob
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private byte[] data;
     
     /**
      * Price of the advertisement. Must be unique and cannot be null.
      */
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private double price;
     
     /**
      * Date when the advertisement was created. Must be unique and cannot be null.
      */
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private LocalDate creationDate;
     
     /**

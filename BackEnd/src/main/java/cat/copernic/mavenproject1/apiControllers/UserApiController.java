@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -126,7 +127,7 @@ public class UserApiController {
     */
     
     @GetMapping("/byId/{userId}")
-    public ResponseEntity<User> byId(@PathVariable Long prodId){
+    public ResponseEntity<User> byId(@PathVariable Long userId){
         
         //los datos a devolver (payload)
         User p;
@@ -138,9 +139,13 @@ public class UserApiController {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Cache-Control", "no-store"); //no usar caché
         
+        logger.info("Buscando usuario con ID: {}", userId);
+        p = userLogic.getUserById(userId);
+        logger.info("Usuario encontrado: {}", p);
         try {
             
-            p = userLogic.getUserById(prodId);
+            p = userLogic.getUserById(userId);
+            logger.info("Usuario encontrado: {}", p);       
             
             if (p == null)
             {
@@ -159,4 +164,26 @@ public class UserApiController {
         return response;
     }
     
+    @PostMapping("/create")
+    public ResponseEntity<Long> createUser(@RequestBody User user) {
+       ResponseEntity response;
+        Long userId;
+        
+        try {
+            
+            if (user == null)
+                response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            else
+            {
+                userId = userLogic.saveUser(user);
+                response = new ResponseEntity<>(userId,HttpStatus.CREATED);
+            }
+    
+        } catch (Exception e) {
+            response = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        
+        return response;  
+        
+    }
 }

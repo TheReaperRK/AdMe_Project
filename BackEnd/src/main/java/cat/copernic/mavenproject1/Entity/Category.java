@@ -24,32 +24,31 @@ public class Category {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(unique = true, nullable = false)
     private Long id;
 
     /**
      * Name of the category. Must be unique and cannot be null.
      */
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String name;
     
     /**
      * Description of the category. Must be unique and cannot be null.
      */
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String description;
     
     /**
      * Binary content of the category image. Stored as a large object (LOB).
      */
     @Lob
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private byte[] image; 
 
     /**
      * Indicates whether the category is a proposal. Must be unique and cannot be null.
      */
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private boolean proposal;
 
     /**
