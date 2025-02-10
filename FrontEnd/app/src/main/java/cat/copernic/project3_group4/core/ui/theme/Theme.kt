@@ -1,4 +1,4 @@
-package cat.copernic.project3_group4.ui.theme
+package cat.copernic.project3_group4.core.ui.theme
 
 import android.app.Activity
 import android.os.Build
