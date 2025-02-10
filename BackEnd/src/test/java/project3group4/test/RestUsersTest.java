@@ -267,7 +267,7 @@ public class RestUsersTest {
         
                 
          // URL completa con puerto dinámico
-        String url = "http://localhost:" + port + "/rest/user/create";
+        String url = "http://localhost:" + port + "/rest/users/create";
         
         //generem les capçaleres de la petició
         HttpHeaders headers = new HttpHeaders();
@@ -282,24 +282,28 @@ public class RestUsersTest {
         );
 
         // Verificamos la respuesta
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         
     }
     
-    /*
+    
     @Test
     public void testUpdateOk() {
         
+        List<Ad> ads = new ArrayList<>(); // Lista vacía de anuncios
         //creem directament un producte a la BBDD
-        User p = new User("producte a modificar", 10.50, 10);
-        productRepo.save(p);
-        
+        User p = new User("carlos", "carlosmendoza2003@gmail.com", "653035737", 
+                     "adygyudgaufaiof", true, Roles.ADMIN, ads);
+        userRepo.save(p);
+       
+        List<Ad> ads2 = new ArrayList<>(); // Lista vacía de anuncios
         //creem un nou producte amb el mateix id, pero amb les dades modificades
-        User p2 = new User("descripció modificada", 11.50, 100);
+        User p2 = new User("carlos2", "carlosmendoza20032@gmail.com", "653035738", 
+                     "adygyudgaufaiof2", false, Roles.USER, ads2);
         p2.setId(p.getId());
         
          // URL completa con puerto dinámico
-        String url = "http://localhost:" + port + "/rest/products/update";
+        String url = "http://localhost:" + port + "/rest/users/update";
 
         //generem les capçaleres de la petició
         HttpHeaders headers = new HttpHeaders();
@@ -316,16 +320,17 @@ public class RestUsersTest {
         // Verificamos la respuesta
         assertEquals(HttpStatus.OK, response.getStatusCode());
         
-        User resultat = productRepo.findById(p.getId()).orElse(null);
+        User resultat = userRepo.findById(p.getId()).orElse(null);
         
         assertTrue(p2.equals(resultat));
     }
     
+    
     @Test
     public void testUpdateIdNotExist() {
         
-        User p = new User("producte a modificar", 10.50, 10);
-        p.setId(Long.MAX_VALUE);
+        User p = new User("carlos", "carlosmendoza2003@gmail.com", "653035737", 
+                     "adygyudgaufaiof", true, Roles.ADMIN);
         
          // URL completa con puerto dinámico
         String url = "http://localhost:" + port + "/rest/products/update";
@@ -345,6 +350,6 @@ public class RestUsersTest {
         // Verificamos la respuesta
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
-*/
+
 }
 

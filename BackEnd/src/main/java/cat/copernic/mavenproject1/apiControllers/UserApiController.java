@@ -100,7 +100,7 @@ public class UserApiController {
      * @param user
      * @param user
      * @return 
-     *
+     */
     @PutMapping("/update")
     public ResponseEntity<Void> update(@RequestBody User user){
         
@@ -124,7 +124,7 @@ public class UserApiController {
         
         return response;
     }
-    */
+    
     
     @GetMapping("/byId/{userId}")
     public ResponseEntity<User> byId(@PathVariable Long userId){
