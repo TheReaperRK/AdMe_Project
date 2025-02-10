@@ -1,4 +1,4 @@
-package cat.copernic.project3_group4
+package cat.copernic.project3_group4.main
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -11,7 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import cat.copernic.project3_group4.ui.theme.Project3_Group4Theme
+import cat.copernic.project3_group4.core.ui.theme.Project3_Group4Theme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
