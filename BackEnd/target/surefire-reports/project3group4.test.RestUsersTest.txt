@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: project3group4.test.RestUsersTest
--------------------------------------------------------------------------------
-Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 6.639 s -- in project3group4.test.RestUsersTest

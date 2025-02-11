@@ -255,7 +255,7 @@ public class RestUsersTest {
         assertEquals(p.getName(), p2.getName());
         assertEquals(p.getEmail(), p2.getEmail());
         assertEquals(p.getPhoneNumber(), p2.getPhoneNumber());
-        assertEquals(p.getPassword(), p2.getPassword());
+        assertEquals(p.getWord(), p2.getWord());
         assertEquals(p.isStatus(), p2.isStatus());
         assertEquals(p.getRole(), p2.getRole());
         
@@ -294,12 +294,16 @@ public class RestUsersTest {
         //creem directament un producte a la BBDD
         User p = new User("carlos", "carlosmendoza2003@gmail.com", "653035737", 
                      "adygyudgaufaiof", true, Roles.ADMIN, ads);
-        userRepo.save(p);
+        
+        userLogic.createUser(p);
        
         List<Ad> ads2 = new ArrayList<>(); // Lista vacía de anuncios
         //creem un nou producte amb el mateix id, pero amb les dades modificades
         User p2 = new User("carlos2", "carlosmendoza20032@gmail.com", "653035738", 
                      "adygyudgaufaiof2", false, Roles.USER, ads2);
+        
+        userLogic.createUser(p2);
+
         p2.setId(p.getId());
         
          // URL completa con puerto dinámico

@@ -5,6 +5,7 @@
 package cat.copernic.mavenproject1.apiControllers;
 
 import cat.copernic.mavenproject1.Entity.User;
+import cat.copernic.mavenproject1.enums.Roles;
 import cat.copernic.mavenproject1.logic.UserLogic;
 import jakarta.annotation.PostConstruct;
 import java.util.List;
@@ -53,6 +54,12 @@ public class UserApiController {
         
         //el transporte HTTP
         ResponseEntity<List<User>> response;
+        
+        
+        User user1 = new User("carlos2", "carlosmendoza20032@gmail.com", "653035738", 
+                     "adygyudgaufaiof2", false, Roles.USER);
+        userLogic.tryCreation(user1);
+        
         
         //la cabecera del transporte
         HttpHeaders headers = new HttpHeaders();
@@ -175,7 +182,7 @@ public class UserApiController {
                 response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             else
             {
-                userId = userLogic.saveUser(user);
+                userId = userLogic.createUser(user);
                 response = new ResponseEntity<>(userId,HttpStatus.CREATED);
             }
     

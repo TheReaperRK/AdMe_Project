@@ -37,7 +37,7 @@ import java.util.Objects;
         /**
          * Email of the user. Cannot be null.
          */
-        @Column(nullable = false)
+        @Column(nullable = false, unique = true)
         private String email;
 
          /**
@@ -50,7 +50,7 @@ import java.util.Objects;
          * Password of the user. Cannot be null.
          */
         @Column(nullable = false)
-        private String password;
+        private String word;
 
         /**
          * Status of the user. Indicates whether the user is active or not.
@@ -74,20 +74,20 @@ import java.util.Objects;
         private List<Ad> ads = new ArrayList<>();
 
         
-        public User(String name, String email, String phoneNumber, String password, boolean status, Roles role) {
+        public User(String name, String email, String phoneNumber, String word, boolean status, Roles role) {
             this.name = name;
             this.email = email;
             this.phoneNumber = phoneNumber;
-            this.password = password;
+            this.word = word;
             this.status = status;
             this.role = role;
         }   
         
-        public User(String name, String email, String phoneNumber, String password, boolean status, Roles role, List<Ad> ads) {
+        public User(String name, String email, String phoneNumber, String word, boolean status, Roles role, List<Ad> ads) {
             this.name = name;
             this.email = email;
             this.phoneNumber = phoneNumber;
-            this.password = password;
+            this.word = word;
             this.status = status;
             this.role = role;
             this.ads = ads;
@@ -103,7 +103,7 @@ import java.util.Objects;
                    Objects.equals(name, user.name) &&
                    Objects.equals(email, user.email) &&
                    Objects.equals(phoneNumber, user.phoneNumber) &&
-                   Objects.equals(password, user.password) &&
+                   Objects.equals(word, user.word) &&
                    role == user.role;  // Excluye ads de la comparación
                    
         }
