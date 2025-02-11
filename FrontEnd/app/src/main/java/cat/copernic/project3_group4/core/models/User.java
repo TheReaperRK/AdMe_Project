@@ -33,7 +33,7 @@ public class User {
     /**
      * Password of the user. Cannot be null.
      */
-    private String password;
+    private String word;
 
     /**
      * Status of the user. Indicates whether the user is active or not.
@@ -50,20 +50,20 @@ public class User {
     private List<Ad> ads = new ArrayList<>();
 
 
-    public User(String name, String email, String phoneNumber, String password, boolean status, Roles role) {
+    public User(String name, String email, String phoneNumber, String word, boolean status, Roles role) {
         this.name = name;
         this.email = email;
         this.phoneNumber = phoneNumber;
-        this.password = password;
+        this.word = word;
         this.status = status;
         this.role = role;
     }
 
-    public User(String name, String email, String phoneNumber, String password, boolean status, Roles role, List<Ad> ads) {
+    public User(String name, String email, String phoneNumber, String word, boolean status, Roles role, List<Ad> ads) {
         this.name = name;
         this.email = email;
         this.phoneNumber = phoneNumber;
-        this.password = password;
+        this.word = word;
         this.status = status;
         this.role = role;
         this.ads = ads;
@@ -79,10 +79,33 @@ public class User {
                 Objects.equals(name, user.name) &&
                 Objects.equals(email, user.email) &&
                 Objects.equals(phoneNumber, user.phoneNumber) &&
-                Objects.equals(password, user.password) &&
+                Objects.equals(word, user.word) &&
                 role == user.role;  // Excluye ads de la comparación
 
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public Roles getRole() {
+        return role;
+    }
+
+
+
 }
 
 
