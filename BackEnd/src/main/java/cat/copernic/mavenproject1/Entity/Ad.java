@@ -1,5 +1,6 @@
 package cat.copernic.mavenproject1.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import lombok.AllArgsConstructor;
@@ -61,6 +62,7 @@ public class Ad {
      */
     @ManyToOne
     @JoinColumn(name = "author_id", nullable = false)
+    @JsonBackReference
     private User author;
     
     /**
