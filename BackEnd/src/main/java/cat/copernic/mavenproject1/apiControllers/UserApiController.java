@@ -60,6 +60,10 @@ public class UserApiController {
                      "adygyudgaufaiof2", false, Roles.USER);
         userLogic.tryCreation(user1);
         
+        User user2 = new User("carlos2", "carlosmendosza20032@gmail.com", "653035738", 
+                     "adygyudgaufaiof2", false, Roles.USER);
+        userLogic.tryCreation(user2);
+        
         
         //la cabecera del transporte
         HttpHeaders headers = new HttpHeaders();
@@ -182,8 +186,11 @@ public class UserApiController {
                 response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             else
             {
-                userId = userLogic.createUser(user);
-                response = new ResponseEntity<>(userId,HttpStatus.CREATED);
+                if (userLogic.userIsUnique(user)){
+                    userId = userLogic.createUser(user);
+                    response = new ResponseEntity<>(userId,HttpStatus.CREATED);
+                }
+                response = new ResponseEntity<>(HttpStatus.IM_USED);
             }
     
         } catch (Exception e) {
