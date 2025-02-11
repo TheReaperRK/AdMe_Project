@@ -1,8 +1,13 @@
 = *Memòria Tècnica - Project 3*
 :author: Equip 4
 :date: 2025-01-21
+:revnumber: la versió p.ex. 1.0
+:doctype: book
+:encoding: utf-8
+:lang: ca
+:icons: font
 :toc: left
-:toclevels: 6
+:toclevels: 4
 :imagesdir: ./images
 
 image::0001.jpg[][width=100%]
