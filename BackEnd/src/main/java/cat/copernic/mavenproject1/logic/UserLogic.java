@@ -7,11 +7,11 @@ package cat.copernic.mavenproject1.logic;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import cat.copernic.mavenproject1.Entity.User;
 import cat.copernic.mavenproject1.repository.UserRepo;
+
 
 /**
  *
@@ -23,8 +23,8 @@ public class UserLogic {
     @Autowired
     UserRepo userRepo;
     
-     //PasswordEncoder instance(BCrypt)
-    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     
     public User getUser(Long login)
     {
@@ -65,15 +65,8 @@ public class UserLogic {
     
     public boolean userIsUnique (User user){
         
-        boolean ret = true;
-        
-        try {
-            userRepo.save(user);
-        } catch (Exception E) {
-            ret = false;
-        }
-        
-        return ret;
+        return userRepo.findByEmail(user.getEmail()) == null;
+
     }
     
     public void tryCreation (User user) {
@@ -84,18 +77,42 @@ public class UserLogic {
     
     public Long createUser(User user) {
         
-        // Ecrypts the password
-        user.setWord(passwordEncoder.encode(user.getWord()));
-        User ret = userRepo.save(user);
-
-        
-        return ret.getId();
+        try {
+            user.setWord(passwordEncoder.encode(user.getWord()));
+            User savedUser = userRepo.save(user);
+            return savedUser.getId();
+        } catch (Exception e) {
+            return null;
+        }
 
     }
     
     public boolean checkPassword(String rawPassword, String encodedPassword) {
         return passwordEncoder.matches(rawPassword, encodedPassword);
     }
+    
+    public User authenticateUser(String email, String rawPassword) {
+        
+        
+    User user = userRepo.findByEmail(email);
+    
+    if (user == null) {
+        System.out.println("Usuario no encontrado");
+        return null;
+    }
+    
+        System.out.println("Email: " + user.getEmail() + ", Hash almacenado: " + user.getWord());
+        System.out.println("Contraseña ingresada: " + rawPassword);
+
+        if (passwordEncoder.matches(rawPassword, user.getWord())) {
+            System.out.println("✅ Autenticación exitosa");
+            return user;
+        }
+
+        System.out.println("❌ Autenticación fallida");
+        return null;
+}
+
     
     public Long saveUser(User user){
         

@@ -1,5 +1,7 @@
 cat\copernic\mavenproject1\Entity\User.class
 cat\copernic\mavenproject1\repository\AdRepo.class
+cat\copernic\mavenproject1\configuration\Config.class
+cat\copernic\mavenproject1\apiControllers\AuthController.class
 cat\copernic\mavenproject1\apiControllers\AdApiController.class
 cat\copernic\mavenproject1\apiControllers\UserApiController.class
 cat\copernic\mavenproject1\repository\CategoryRepo.class
