@@ -5,6 +5,7 @@
 package cat.copernic.mavenproject1.apiControllers;
 
 import cat.copernic.mavenproject1.Entity.User;
+import cat.copernic.mavenproject1.enums.Roles;
 import cat.copernic.mavenproject1.logic.UserLogic;
 import jakarta.annotation.PostConstruct;
 import java.util.List;
@@ -17,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -52,6 +54,12 @@ public class UserApiController {
         
         //el transporte HTTP
         ResponseEntity<List<User>> response;
+        
+        
+        User user1 = new User("carlos2", "carlosmendoza20032@gmail.com", "653035738", 
+                     "adygyudgaufaiof2", false, Roles.USER);
+        userLogic.tryCreation(user1);
+        
         
         //la cabecera del transporte
         HttpHeaders headers = new HttpHeaders();
@@ -99,7 +107,7 @@ public class UserApiController {
      * @param user
      * @param user
      * @return 
-     *
+     */
     @PutMapping("/update")
     public ResponseEntity<Void> update(@RequestBody User user){
         
@@ -123,10 +131,10 @@ public class UserApiController {
         
         return response;
     }
-    */
+    
     
     @GetMapping("/byId/{userId}")
-    public ResponseEntity<User> byId(@PathVariable Long prodId){
+    public ResponseEntity<User> byId(@PathVariable Long userId){
         
         //los datos a devolver (payload)
         User p;
@@ -138,9 +146,13 @@ public class UserApiController {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Cache-Control", "no-store"); //no usar caché
         
+        logger.info("Buscando usuario con ID: {}", userId);
+        p = userLogic.getUserById(userId);
+        logger.info("Usuario encontrado: {}", p);
         try {
             
-            p = userLogic.getUserById(prodId);
+            p = userLogic.getUserById(userId);
+            logger.info("Usuario encontrado: {}", p);       
             
             if (p == null)
             {
@@ -159,4 +171,26 @@ public class UserApiController {
         return response;
     }
     
+    @PostMapping("/create")
+    public ResponseEntity<Long> createUser(@RequestBody User user) {
+       ResponseEntity response;
+        Long userId;
+        
+        try {
+            
+            if (user == null)
+                response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            else
+            {
+                userId = userLogic.createUser(user);
+                response = new ResponseEntity<>(userId,HttpStatus.CREATED);
+            }
+    
+        } catch (Exception e) {
+            response = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        
+        return response;  
+        
+    }
 }
