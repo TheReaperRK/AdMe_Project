@@ -1,5 +1,6 @@
 package cat.copernic.mavenproject1.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,32 +25,31 @@ public class Category {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(unique = true, nullable = false)
     private Long id;
 
     /**
      * Name of the category. Must be unique and cannot be null.
      */
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String name;
     
     /**
      * Description of the category. Must be unique and cannot be null.
      */
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String description;
     
     /**
      * Binary content of the category image. Stored as a large object (LOB).
      */
     @Lob
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private byte[] image; 
 
     /**
      * Indicates whether the category is a proposal. Must be unique and cannot be null.
      */
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private boolean proposal;
 
     /**
@@ -57,5 +57,9 @@ public class Category {
      * This is a one-to-many relationship with Ad entities.
      */
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<Ad> ads = new ArrayList<>();
+    
+
+
 }

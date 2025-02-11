@@ -4,12 +4,14 @@
  */
 package cat.copernic.mavenproject1.logic;
 
-import cat.copernic.mavenproject1.Entity.User;
-import cat.copernic.mavenproject1.repository.UserRepo;
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import cat.copernic.mavenproject1.Entity.User;
+import cat.copernic.mavenproject1.repository.UserRepo;
 
 /**
  *
@@ -20,6 +22,9 @@ public class UserLogic {
     
     @Autowired
     UserRepo userRepo;
+    
+     //PasswordEncoder instance(BCrypt)
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     
     public User getUser(Long login)
     {
@@ -58,6 +63,40 @@ public class UserLogic {
         
     }
     
+    public boolean userIsUnique (User user){
+        
+        boolean ret = true;
+        
+        try {
+            userRepo.save(user);
+        } catch (Exception E) {
+            ret = false;
+        }
+        
+        return ret;
+    }
+    
+    public void tryCreation (User user) {
+        if (userIsUnique(user)){
+            createUser(user);
+        }
+    }
+    
+    public Long createUser(User user) {
+        
+        // Ecrypts the password
+        user.setWord(passwordEncoder.encode(user.getWord()));
+        User ret = userRepo.save(user);
+
+        
+        return ret.getId();
+
+    }
+    
+    public boolean checkPassword(String rawPassword, String encodedPassword) {
+        return passwordEncoder.matches(rawPassword, encodedPassword);
+    }
+    
     public Long saveUser(User user){
         
         //TODO: validacions de negoci
@@ -75,4 +114,6 @@ public class UserLogic {
         return userRepo.findById(id).orElse(null);
         
     }
+    
+    
 }
