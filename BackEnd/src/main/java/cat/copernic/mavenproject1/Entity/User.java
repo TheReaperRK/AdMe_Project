@@ -1,11 +1,11 @@
     package cat.copernic.mavenproject1.Entity;
 
     import cat.copernic.mavenproject1.enums.Roles;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+    import com.fasterxml.jackson.annotation.JsonManagedReference;
     import jakarta.persistence.*;
     import java.util.ArrayList;
     import java.util.List;
-import java.util.Objects;
+    import java.util.Objects;
     import lombok.AllArgsConstructor;
     import lombok.Data;
     import lombok.NoArgsConstructor;
@@ -48,6 +48,14 @@ import java.util.Objects;
         private String phoneNumber;
 
         /**
+        * Binary content of the category image. Stored as a large object (LOB).
+        */
+        
+        @Lob
+        @Column(nullable = true)
+        private byte[] image; 
+       
+        /**
          * Password of the user. Cannot be null.
          */
         @Column(nullable = false)
@@ -75,6 +83,7 @@ import java.util.Objects;
         @JsonManagedReference
         private List<Ad> ads = new ArrayList<>();
 
+        
         
         public User(String name, String email, String phoneNumber, String word, boolean status, Roles role) {
             this.name = name;
@@ -109,6 +118,10 @@ import java.util.Objects;
                    Objects.equals(word, user.word) &&
                    role == user.role;  // Excluye ads de la comparación
                    
+        }
+        
+        public void setImage(byte[] imagee){
+            this.image = imagee;
         }
     }
 

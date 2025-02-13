@@ -8,6 +8,10 @@ import cat.copernic.mavenproject1.Entity.User;
 import cat.copernic.mavenproject1.enums.Roles;
 import cat.copernic.mavenproject1.logic.UserLogic;
 import jakarta.annotation.PostConstruct;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +27,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.mock.web.MockMultipartFile;
+
 
 /**
  *
@@ -47,7 +54,7 @@ public class UserApiController {
     }
     
     @GetMapping("/all")
-    public ResponseEntity<List<User>> findAll(){
+    public ResponseEntity<List<User>> findAll() throws IOException{
         
         //los datos a devolver (payload)
         List<User> llista;
@@ -55,14 +62,20 @@ public class UserApiController {
         //el transporte HTTP
         ResponseEntity<List<User>> response;
         
+        // Ruta de la imagen en el sistema de archivos
+        Path imagePath = Paths.get("C:\\Users\\carlo\\Documents\\projects\\proyect3_group4\\BackEnd\\src\\main\\java\\cat\\copernic\\mavenproject1\\tux.jpg");
+        byte[] imageBytes = Files.readAllBytes(imagePath);
+
+        // Convertir a MultipartFile simulado
+        MultipartFile imageFile = new MockMultipartFile("imagen.jpg", imageBytes);
         
-        User user1 = new User("carlos2", "carlosmendoza20032@gmail.com", "653035738", 
+        User user1 = new User("carlos2", "carlosmendoza20032@gmail.com", "653035738",  
                      "adygyudgaufaiof2", false, Roles.USER);
-        userLogic.tryCreation(user1);
+        userLogic.tryCreation(user1, imageFile);
         
         User user2 = new User("carlos2", "carlosmendosza20032@gmail.com", "653035738", 
                      "adygyudgaufaiof2", false, Roles.USER);
-        userLogic.tryCreation(user2);
+        userLogic.tryCreation(user2, imageFile);
         
         
         //la cabecera del transporte
@@ -176,9 +189,16 @@ public class UserApiController {
     }
     
     @PostMapping("/create")
-    public ResponseEntity<Long> createUser(@RequestBody User user) {
+    public ResponseEntity<Long> createUser(@RequestBody User user) throws IOException {
        ResponseEntity response;
         Long userId;
+        
+        // Ruta de la imagen en el sistema de archivos
+        Path imagePath = Paths.get("C:\\Users\\carlo\\Documents\\projects\\proyect3_group4\\BackEnd\\src\\main\\java\\cat\\copernic\\mavenproject1\\tux.jpg");
+        byte[] imageBytes = Files.readAllBytes(imagePath);
+
+        // Convertir a MultipartFile simulado
+        MultipartFile imageFile = new MockMultipartFile("imagen.jpg", imageBytes);
         
         try {
             
@@ -187,7 +207,7 @@ public class UserApiController {
             else
             {
                 if (userLogic.userIsUnique(user)){
-                    userId = userLogic.createUser(user);
+                    userId = userLogic.createUser(user, imageFile);
                     response = new ResponseEntity<>(userId,HttpStatus.CREATED);
                 }
                 response = new ResponseEntity<>(HttpStatus.IM_USED);
