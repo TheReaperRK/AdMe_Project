@@ -71,8 +71,27 @@ public Ad getAdById(Long id) {
     }
 
     public Long saveAd(Ad ad) {
+        
         Ad savedAd = adRepo.save(ad);
         return savedAd.getId();
+    }
+    public Long updateAd(Ad ad) {
+        try{
+        Ad oldAd = getAdById(ad.getId());
+        
+        oldAd.setAuthor(ad.getAuthor());
+        oldAd.setCategory(ad.getCategory());
+        oldAd.setCreationDate(ad.getCreationDate());
+        oldAd.setData(ad.getData());
+        oldAd.setDescription(ad.getDescription());
+        oldAd.setPrice(ad.getPrice());
+        oldAd.setTitle(ad.getTitle());
+        
+        adRepo.save(oldAd);
+        return oldAd.getId();
+        }catch(Exception e){
+            return null;
+        }
     }
     
     public List<Ad> findAdsByCategory(Long categoryId) {

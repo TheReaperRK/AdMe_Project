@@ -64,23 +64,6 @@ public class UserApiController {
         //los datos a devolver (payload)
         List<User> llista;
         
-        //el transporte HTTP
-        ResponseEntity<List<User>> response;
-        
-        // Ruta de la imagen en el sistema de archivos
-        Path imagePath = Paths.get("C:\\Users\\carlo\\Documents\\projects\\proyect3_group4\\BackEnd\\src\\main\\java\\cat\\copernic\\mavenproject1\\tux.jpg");
-        byte[] imageBytes = Files.readAllBytes(imagePath);
-
-        // Convertir a MultipartFile simulado
-        MultipartFile imageFile = new MockMultipartFile("imagen.jpg", imageBytes);
-        
-        User user1 = new User("carlos2", "carlosmendoza20032@gmail.com", "653035738",  
-                     "adygyudgaufaiof2", false, Roles.USER);
-        userLogic.tryCreation(user1, imageFile);
-        
-        User user2 = new User("carlos2", "carlosmendosza20032@gmail.com", "653035738", 
-                     "adygyudgaufaiof2", false, Roles.USER);
-        userLogic.tryCreation(user2, imageFile);
         
         
         //la cabecera del transporte
@@ -91,14 +74,14 @@ public class UserApiController {
             
             llista = userLogic.findAllUsers();
             
-            response = new ResponseEntity<>(llista, headers, HttpStatus.OK);
+            return new ResponseEntity<>(llista, headers, HttpStatus.OK);
             
         } catch (Exception e) {
            
-            response = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
         
-        return response;
+       
     }
     
     @DeleteMapping("/delete/{userId}")
@@ -127,31 +110,30 @@ public class UserApiController {
     /***
      * TODO: refactor de la part de verificar si existeix producte.
      * @param user
-     * @param user
      * @return 
      */
     @PutMapping("/update")
     public ResponseEntity<Void> update(@RequestBody User user){
         
-        ResponseEntity<Void> response;
+        
         
         try {
             if (userLogic.existsById(user.getId()))
             {
-                userLogic.saveUser(user);
+                userLogic.updateUser(user);
                 
-                response = ResponseEntity.ok().build();
+                return ResponseEntity.ok().build();
             }
             else
-                response = ResponseEntity.notFound().build();
+                return ResponseEntity.notFound().build();
 
 
         } catch (Exception e) {
 
-            response = ResponseEntity.internalServerError().build();
+            return ResponseEntity.internalServerError().build();
         }
         
-        return response;
+        
     }
     
     
@@ -195,11 +177,15 @@ public class UserApiController {
     
     @PostMapping("/create")
     public ResponseEntity<Long> createUser(@RequestBody User user) throws IOException {
-       ResponseEntity response;
-        Long userId;
+       //ResponseEntity<Long> response;
+        
         
         // Ruta de la imagen en el sistema de archivos
-        Path imagePath = Paths.get("C:\\Users\\carlo\\Documents\\projects\\proyect3_group4\\BackEnd\\src\\main\\java\\cat\\copernic\\mavenproject1\\tux.jpg");
+       Path projectPath = Paths.get("").toAbsolutePath();
+
+        // Construir la ruta dinámica a la imagen
+        Path imagePath = projectPath.resolve("src/main/java/cat/copernic/mavenproject1/tux.jpg");
+        //Path imagePath = Paths.get("C:\\Users\\carlo\\Documents\\projects\\proyect3_group4\\BackEnd\\src\\main\\java\\cat\\copernic\\mavenproject1\\tux.jpg");
         byte[] imageBytes = Files.readAllBytes(imagePath);
 
         // Convertir a MultipartFile simulado
@@ -208,21 +194,24 @@ public class UserApiController {
         try {
             
             if (user == null)
-                response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             else
             {
+                
                 if (userLogic.userIsUnique(user)){
-                    userId = userLogic.createUser(user, imageFile);
-                    response = new ResponseEntity<>(userId,HttpStatus.CREATED);
+                    Long userId = userLogic.createUser(user, imageFile);
+                    return new ResponseEntity<>(userId, HttpStatus.CREATED);
+                }else{
+                    return new ResponseEntity<>(HttpStatus.IM_USED);
                 }
-                response = new ResponseEntity<>(HttpStatus.IM_USED);
+                
             }
     
         } catch (Exception e) {
-            response = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
         
-        return response;  
+         
         
     }
     
