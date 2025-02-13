@@ -446,3 +446,99 @@ El disseny de BBDD que hem escollit és de Base de dades relacional amb (SQL), l
 [[diagrama-disseny-bbdd]]
 === 7.2 Diagrama del disseny de la BBDD
 image::dissenyDiagramaBBDD.png[]
+[[seguiment-sprints]]
+= *Seguiment dels sprints*
+[sprint 1]]
+== *Sprint 1*
+
+[[planificacio-trello]]
+=== 1. Planificació Trello
+https://trello.com/invite/b/67a1d1bfc7a1b5638db61d1b/ATTI48ae2e1e265dfd7b635b86cb1f15b1a886A0CDBD/adme[Link Tauler trello]
+
+[[dialy-stand-up]]
+=== 2. Dialy stand up
+image::daily6.png[]
+image::daily10.png[]
+image::daily11.png[]
+image::daily12.png[]
+image::daily13.png[]
+
+
+[[analisi-individual]]
+=== 3. Anàlisi del treball individual.
+
+[[Carlos]]
+==== *Carlos*
+
+- *Hores dedicades:* 28h
+- *Tasques realitzades*
+** Entitat User backend
+** Entitat Ad backend
+** Entitat Category backend
+** Entitat User frontend
+** Entitat Ad frontend
+** Entitat Category frontend
+** Registre
+** Compose ProfileScreen
+** Login
+** Llistar Usuaris
+** Test User
+
+- *Aspectes positius del treball realitzat*
+
+Alt rendiment i Eficacía a l'hora de completar les tasques, rapida resolucio de problemes.
+
+- *Problemes trobats durant l’sprint*
+
+problemes menors que son mes deguts a errors de codi o problemes temporals poc importants de planificacio del sprint.
+
+- *Accions concretes per aplicar millores en els següents sprints*
+
+aplicar els coneixements adquirits en el sprint per a solucionar futurs problemescde planificació.
+
+[[Toni]]
+==== *Toni*
+
+- *Hores dedicades:* 24h
+- *Tasques realitzades* 
+** Test Ad
+** Test Category
+** Llistar Categories
+** LListar Ads per Categories
+** Entitat Ad frontend
+** Entitat Category frontend
+
+- *Aspectes positius del treball realitzat*
+
+Eficaç i tenacitat a l'hora d'afrontar les tasques
+
+- *Problemes trobats durant l’sprint*
+
+Algunes resolucions als problemes i dificultats trobades y superades en les tasques poden generar problemes de codi i son poc intuitius
+
+- *Accions concretes per aplicar millores en els següents sprints*
+
+Asegurarse de que les seves resolucions de bugs del codi no afectin a altres parts d'aquest
+
+
+[[David]]
+==== *David*
+
+- *Hores dedicades:* 34h
+- *Tasques realitzades*
+
+** Estructura Packages Graddle a Android Studio
+** Test Category (Fix)
+** Test Ad (Fix)
+** Test User (Fix)
+** Asciidoc memoria sprint 1
+
+- *Aspectes positius del treball realitzat*
+
+Eficacia a l'hora de resoldre errors de codi i qualitat en aquestes resolucions
+
+- *Problemes trobats durant l’sprint*
+Baixa asistencia a clase sobretot a primera hora lo que dificulta la coordinacio i assignació de tasques, problemes de compatibilitat de llibreries com Lombok
+- *Accions concretes per aplicar millores en els següents sprints*
+
+Aumentar la asistencia a clase y a primera hora aixi com aumentar la coordinacio de tasques
