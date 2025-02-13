@@ -8,6 +8,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -57,6 +58,17 @@ fun RegisterScreen(navController: NavController) {
         contentAlignment = Alignment.Center
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.padding(32.dp)) {
+            Button(
+                onClick = { navController.navigate("login") },
+                modifier = Modifier
+                    .padding(16.dp)
+                    .size(48.dp)
+                    .align(Alignment.Start),
+                shape = CircleShape,
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF7B4328))
+            ) {
+                Text("Tornar", color = Color.White, fontSize = 20.sp, fontWeight = FontWeight.Bold)
+            }
             // Mostrar la imagen seleccionada o un ícono por defecto
             selectedImageUri?.let {
                 Image(
