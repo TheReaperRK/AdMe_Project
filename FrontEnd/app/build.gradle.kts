@@ -41,8 +41,12 @@ android {
 
 dependencies {
 
+    implementation(libs.coil.compose) // Última versión en 2024
     implementation(libs.androidx.core.ktx)
-    implementation("androidx.navigation:navigation-compose:2.7.6")
+    implementation ("androidx.activity:activity-compose:1.7.2")
+    implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
+    implementation("androidx.navigation:navigation-compose:2.8.7")
+    implementation ("com.squareup.okhttp3:okhttp:4.11.0")
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))

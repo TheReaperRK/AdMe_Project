@@ -55,7 +55,7 @@ public class RestAdTest {
     public void setup() {
         adRepo.deleteAll();
 
-        User user = new User(null, "Carlos", "carlos@gmail.com", "123456789", "password", true, Roles.ADMIN, null);
+        User user = new User("Carlos", "carlos@gmail.com", "123456789", "password", true, Roles.ADMIN, null);
         userRepo.save(user);
 
         Category category = new Category(null, "Electronics", "Description for Electronics", new byte[0], false, new ArrayList<>());

@@ -11,6 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import cat.copernic.mavenproject1.Entity.User;
 import cat.copernic.mavenproject1.repository.UserRepo;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
+import org.springframework.web.multipart.MultipartFile;
 
 
 /**
@@ -69,15 +74,19 @@ public class UserLogic {
 
     }
     
-    public void tryCreation (User user) {
+    public void tryCreation (User user, MultipartFile imageFile) {
         if (userIsUnique(user)){
-            createUser(user);
+            createUser(user, imageFile);
         }
     }
     
-    public Long createUser(User user) {
+    public Long createUser(User user, MultipartFile imageFile) {
         
         try {
+            if (imageFile != null && !imageFile.isEmpty()) {
+                user.setImage(convertImageToBlob(imageFile));
+            }
+            
             user.setWord(passwordEncoder.encode(user.getWord()));
             User savedUser = userRepo.save(user);
             return savedUser.getId();
@@ -132,5 +141,8 @@ public class UserLogic {
         
     }
     
+    public byte[] convertImageToBlob(MultipartFile file) throws IOException {
+        return file.getBytes();
+    }
     
 }
