@@ -22,6 +22,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -40,19 +41,24 @@ public class RestCategoryTest {
 
     @BeforeEach
     public void setup() {
-        categoryRepo.deleteAll();
+        
+        if(categoryRepo.findByName("ElectronicsTest") ==null){
+            categoryRepo.saveAndFlush(new Category(1L, "ElectronicsTest", "Devices and gadgets", new byte[]{1, 2, 3}, false, List.of()));
+        }
+        if(categoryRepo.findByName("FurnitureTest") ==null){
+            categoryRepo.saveAndFlush(new Category(1L, "FurnitureTest", "Devices and gadgets", new byte[]{1, 2, 3}, false, List.of()));
+        }
+        if(categoryRepo.findByName("VehiclesTest") ==null){
+            categoryRepo.saveAndFlush(new Category(1L, "VehiclesTest", "Devices and gadgets", new byte[]{1, 2, 3}, false, List.of()));
+        }
 
-        List<Category> categories = List.of(
-                new Category(1L, "Electronics", "Devices and gadgets", new byte[]{1, 2, 3}, false, List.of()),
-                new Category(2L, "Furniture", "Home and office furniture", new byte[]{4, 5, 6}, true, List.of()),
-                new Category(3L, "Vehicles", "Cars and motorbikes", new byte[]{7, 8, 9}, false, List.of())
-        );
 
-        categoryRepo.saveAll(categories);
+        
     }
 
     @Test
     public void testGetAllCategoriesOk() {
+        int totalCategories = categoryRepo.findAll().size();
         String url = "http://localhost:" + port + "/rest/categories/all";
         ResponseEntity<List<Category>> response = restTemplate.exchange(
                 url, HttpMethod.GET, null, new ParameterizedTypeReference<List<Category>>() {
@@ -60,7 +66,7 @@ public class RestCategoryTest {
         );
         List<Category> receivedList = response.getBody();
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(3, receivedList.size());
+        assertEquals(totalCategories, receivedList.size());
     }
 
     @Test
@@ -88,12 +94,14 @@ public class RestCategoryTest {
 
     @Test
     public void testGetByIdOk() {
-        Category c = new Category(null, "Books", "Various genres of books", new byte[]{13, 14, 15}, false, List.of());
-        categoryRepo.save(c);
-        categoryRepo.flush();
+        Category c = categoryRepo.findAll().getLast();
+        
+        
         String url = "http://localhost:" + port + "/rest/categories/byId/" + c.getId();
         ResponseEntity<Category> response = restTemplate.exchange(url, HttpMethod.GET, null, Category.class);
         assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(c.getName(), response.getBody().getName());
+        assertEquals(c.getId(), response.getBody().getId());
     }
 
     @Test
@@ -112,12 +120,15 @@ public class RestCategoryTest {
 
     @Test
     public void testCreateOk() {
-        Category c = new Category(null, "Toys", "Children’s toys and games", new byte[]{16, 17, 18}, false, List.of());
+        Category c = new Category(null, "test", "Children’s toys and games", new byte[]{16, 17, 18}, false, List.of());
         String url = "http://localhost:" + port + "/rest/categories/create";
         HttpHeaders headers = new HttpHeaders();
         headers.set("Content-Type", "application/json");
+        
         ResponseEntity<Long> response = restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(c, headers), Long.class);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        
+        categoryRepo.delete(c);
     }
 
     @Test
@@ -131,14 +142,11 @@ public class RestCategoryTest {
 
     @Test
     public void testUpdateOk() {
-        // 1️⃣ Guardar una categoría y obtener su ID
-        Category c = new Category(null, "Music", "Musical instruments", new byte[]{19, 20, 21}, true, List.of());
-        categoryRepo.save(c);
-        categoryRepo.flush(); // 🔹 Asegurar que el ID se genere
+        Category c = categoryRepo.findAll().get(0);
         System.out.println("ID asignado a la categoría guardada: " + c.getId());
 
         // 2️⃣ Crear una categoría actualizada con el mismo ID
-        Category updatedCategory = new Category(c.getId(), "Music & Audio", "All music-related items", new byte[]{22, 23, 24}, false, List.of());
+        Category updatedCategory = new Category(c.getId(), "Modified category", "All music-related items", new byte[]{22, 23, 24}, false, List.of());
 
         // 3️⃣ Enviar la solicitud de actualización
         String url = "http://localhost:" + port + "/rest/categories/update";

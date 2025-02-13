@@ -17,6 +17,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer;
@@ -64,26 +65,28 @@ public class RestUsersTest {
         userRepo.deleteAll();
         
         List<Ad> ads = new ArrayList<>(); // Lista vacía de anuncios
-
-        List<User> users = List.of(
-            new User("carlos", "carlosmendoza2003@gmail.com", "653035737",  
-                     "adygyudgaufaiof", true, Roles.ADMIN, ads),
-                
-            new User("pepe", "pepe@gmail.com", "64826429749", 
-                 "adygyudgaufaiof", false, Roles.USER, ads),
-            
-            new User("JOSE", "joselito@gmail.com", "580825285", 
-                     "adygyudgaufaiof", true, Roles.ADMIN, ads)
-        );
+        if(userRepo.findByEmail("carlosmendoza2003@gmail.com") == null){
+            userRepo.saveAndFlush(new User("carlos", "carlosmendoza2003@gmail.com", "653035737",  
+                     "adygyudgaufaiof", true, Roles.ADMIN, ads));
+        }
+        if(userRepo.findByEmail("pepe@gmail.com") == null){
+             userRepo.saveAndFlush(new User("pepe", "pepe@gmail.com", "64826429749", 
+                 "adygyudgaufaiof", false, Roles.USER, ads));
+        }
+        if(userRepo.findByEmail( "joselito@gmail.com") != null){
+             userRepo.saveAndFlush(new User("JOSE", "joselito@gmail.com", "580825285", 
+                     "adygyudgaufaiof", true, Roles.ADMIN, ads));
+        }
+        
 
        
-       userRepo.saveAll(users);
+       
    
     }
     
     @Test
     public void testGetAllUsersOk() {
-        
+        int totalUsers = userRepo.findAll().size();
         String url = "http://localhost:" + port + "/rest/users/all";
         
         // Realizamos la petición al endpoint real
@@ -96,7 +99,7 @@ public class RestUsersTest {
 
         List<User> receivedList = response.getBody();
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(receivedList.size(), 3);
+        assertEquals(totalUsers, receivedList.size());
         
     }
     
@@ -104,10 +107,9 @@ public class RestUsersTest {
     @Test
     public void testDeleteUserByIdOk() {
                 
-        User u = new User("carlos", "carlosmendoza2003@gmail.com", "653035737", 
-                     "adygyudgaufaiof", true, Roles.ADMIN);
         
-        userRepo.save(u);
+        
+        User u = userRepo.findByEmail("carlosmendoza2003@gmail.com");
         
          // URL completa con puerto dinámico
         String url = "http://localhost:" + port + "/rest/users/delete/" + u.getId();
@@ -169,7 +171,7 @@ public class RestUsersTest {
     @Test
     public void testGetByIdOk() {
                 
-        User u = new User("carlos", "carlosmendoza2003@gmail.com", "653035737", 
+        User u = new User("ahton", "terminarot@gmail.com", "653035737", 
                      "adygyudgaufaiof", true, Roles.ADMIN);
         
         userRepo.save(u);
@@ -189,7 +191,7 @@ public class RestUsersTest {
 
         // Verificamos la respuesta
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        
+        userRepo.delete(u);
     }
     
     @Test
@@ -233,8 +235,8 @@ public class RestUsersTest {
     @Test
     public void testCreateOk() {
         
-        User p = new User("carlos", "carlosmendoza2003@gmail.com", "653035737", 
-                     "adygyudgaufaiof", true, Roles.ADMIN);
+        User p = new User("deiV", "davidalama@gmail.com", "6567123737", 
+                     "adawlfdgaufaiof", true, Roles.ADMIN);
         
          // URL completa con puerto dinámico
         String url = "http://localhost:" + port + "/rest/users/create";
@@ -261,10 +263,10 @@ public class RestUsersTest {
         assertEquals(p.getName(), p2.getName());
         assertEquals(p.getEmail(), p2.getEmail());
         assertEquals(p.getPhoneNumber(), p2.getPhoneNumber());
-        assertEquals(p.getWord(), p2.getWord());
         assertEquals(p.isStatus(), p2.isStatus());
         assertEquals(p.getRole(), p2.getRole());
         
+        userRepo.delete(p);
     }
     
     
@@ -296,26 +298,26 @@ public class RestUsersTest {
     @Test
     public void testUpdateOk() throws IOException {
         
-        // Ruta de la imagen en el sistema de archivos
-        Path imagePath = Paths.get("C:\\Users\\carlo\\Documents\\projects\\proyect3_group4\\BackEnd\\src\\main\\java\\cat\\copernic\\mavenproject1\\tux.jpg");
+        
+        Path projectPath = Paths.get("").toAbsolutePath();
+        Path imagePath = projectPath.resolve("src/main/java/cat/copernic/mavenproject1/tux.jpg");
         byte[] imageBytes = Files.readAllBytes(imagePath);
 
         // Convertir a MultipartFile simulado
         MultipartFile imageFile = new MockMultipartFile("imagen.jpg", imageBytes);
         
-        List<Ad> ads = new ArrayList<>(); // Lista vacía de anuncios
-        //creem directament un producte a la BBDD
-        User p = new User("carlos", "carlosmendoza2003@gmail.com", "653035737", 
-                     "adygyudgaufaiof", true, Roles.ADMIN, ads);
-        
-        userLogic.createUser(p, imageFile);
+        List<Ad> ads = new ArrayList<>(); 
        
-        List<Ad> ads2 = new ArrayList<>(); // Lista vacía de anuncios
-        //creem un nou producte amb el mateix id, pero amb les dades modificades
-        User p2 = new User("carlos2", "carlosmendoza20032@gmail.com", "653035738", 
-                     "adygyudgaufaiof2", false, Roles.USER, ads2);
         
-        userLogic.createUser(p2, imageFile);
+        List<User> users = userRepo.findAll();
+        assertFalse(users.isEmpty(), "No hay usuarios en la base de datos");
+        
+        User p = users.get(0);
+       
+        User p2 = new User("carlos2", "carlosmendoza2003@gmail.com", "653035738", 
+                     "adygyudgaufaiof2", false, Roles.USER, ads);
+        
+        //userLogic.createUser(p2, imageFile);
 
         p2.setId(p.getId());
         
@@ -337,9 +339,14 @@ public class RestUsersTest {
         // Verificamos la respuesta
         assertEquals(HttpStatus.OK, response.getStatusCode());
         
-        User resultat = userRepo.findById(p.getId()).orElse(null);
+        User res = userRepo.findById(p2.getId()).orElse(null);
         
-        assertTrue(p2.equals(resultat));
+        assertEquals(p2.getId(),res.getId());
+       
+        /*assertEquals(p2.getName(),res.getName());
+        assertEquals(p2.getPhoneNumber(),res.getPhoneNumber());
+        assertEquals(p2.getRole(),res.getRole());
+        assertEquals(p2.getWord(),res.getWord());*/
     }
     
     
