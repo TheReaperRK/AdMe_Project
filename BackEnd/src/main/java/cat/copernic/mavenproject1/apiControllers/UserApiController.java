@@ -5,22 +5,33 @@
 package cat.copernic.mavenproject1.apiControllers;
 
 import cat.copernic.mavenproject1.Entity.User;
+import cat.copernic.mavenproject1.enums.Roles;
 import cat.copernic.mavenproject1.logic.UserLogic;
+import cat.copernic.mavenproject1.repository.UserRepo;
 import jakarta.annotation.PostConstruct;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.mock.web.MockMultipartFile;
+
 
 /**
  *
@@ -38,6 +49,9 @@ public class UserApiController {
     @Autowired
     private UserLogic userLogic;
     
+    @Autowired
+    private UserRepo userRepo;
+    
     @PostConstruct
     private void init()
     {
@@ -45,13 +59,12 @@ public class UserApiController {
     }
     
     @GetMapping("/all")
-    public ResponseEntity<List<User>> findAll(){
+    public ResponseEntity<List<User>> findAll() throws IOException{
         
         //los datos a devolver (payload)
         List<User> llista;
         
-        //el transporte HTTP
-        ResponseEntity<List<User>> response;
+        
         
         //la cabecera del transporte
         HttpHeaders headers = new HttpHeaders();
@@ -61,14 +74,14 @@ public class UserApiController {
             
             llista = userLogic.findAllUsers();
             
-            response = new ResponseEntity<>(llista, headers, HttpStatus.OK);
+            return new ResponseEntity<>(llista, headers, HttpStatus.OK);
             
         } catch (Exception e) {
            
-            response = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
         
-        return response;
+       
     }
     
     @DeleteMapping("/delete/{userId}")
@@ -97,36 +110,35 @@ public class UserApiController {
     /***
      * TODO: refactor de la part de verificar si existeix producte.
      * @param user
-     * @param user
      * @return 
-     *
+     */
     @PutMapping("/update")
     public ResponseEntity<Void> update(@RequestBody User user){
         
-        ResponseEntity<Void> response;
+        
         
         try {
             if (userLogic.existsById(user.getId()))
             {
-                userLogic.saveUser(user);
+                userLogic.updateUser(user);
                 
-                response = ResponseEntity.ok().build();
+                return ResponseEntity.ok().build();
             }
             else
-                response = ResponseEntity.notFound().build();
+                return ResponseEntity.notFound().build();
 
 
         } catch (Exception e) {
 
-            response = ResponseEntity.internalServerError().build();
+            return ResponseEntity.internalServerError().build();
         }
         
-        return response;
+        
     }
-    */
+    
     
     @GetMapping("/byId/{userId}")
-    public ResponseEntity<User> byId(@PathVariable Long prodId){
+    public ResponseEntity<User> byId(@PathVariable Long userId){
         
         //los datos a devolver (payload)
         User p;
@@ -138,9 +150,13 @@ public class UserApiController {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Cache-Control", "no-store"); //no usar caché
         
+        logger.info("Buscando usuario con ID: {}", userId);
+        p = userLogic.getUserById(userId);
+        logger.info("Usuario encontrado: {}", p);
         try {
             
-            p = userLogic.getUserById(prodId);
+            p = userLogic.getUserById(userId);
+            logger.info("Usuario encontrado: {}", p);       
             
             if (p == null)
             {
@@ -159,4 +175,51 @@ public class UserApiController {
         return response;
     }
     
+    @PostMapping("/create")
+    public ResponseEntity<Long> createUser(@RequestBody User user) throws IOException {
+       //ResponseEntity<Long> response;
+        
+        
+        // Ruta de la imagen en el sistema de archivos
+       Path projectPath = Paths.get("").toAbsolutePath();
+
+        // Construir la ruta dinámica a la imagen
+        Path imagePath = projectPath.resolve("src/main/java/cat/copernic/mavenproject1/tux.jpg");
+        //Path imagePath = Paths.get("C:\\Users\\carlo\\Documents\\projects\\proyect3_group4\\BackEnd\\src\\main\\java\\cat\\copernic\\mavenproject1\\tux.jpg");
+        byte[] imageBytes = Files.readAllBytes(imagePath);
+
+        // Convertir a MultipartFile simulado
+        MultipartFile imageFile = new MockMultipartFile("imagen.jpg", imageBytes);
+        
+        try {
+            
+            if (user == null)
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            else
+            {
+                
+                if (userLogic.userIsUnique(user)){
+                    Long userId = userLogic.createUser(user, imageFile);
+                    return new ResponseEntity<>(userId, HttpStatus.CREATED);
+                }else{
+                    return new ResponseEntity<>(HttpStatus.IM_USED);
+                }
+                
+            }
+    
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        
+         
+        
+    }
+    
+    @GetMapping("/user/{id}/image")
+    public ResponseEntity<byte[]> getUserImage(@PathVariable Long id) {
+        User user = userRepo.findById(id).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        return ResponseEntity.ok()
+            .contentType(MediaType.IMAGE_JPEG) // O el tipo de imagen que corresponda
+            .body(user.getImage());
+    }
 }
