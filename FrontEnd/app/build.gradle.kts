@@ -42,7 +42,7 @@ android {
 dependencies {
 
     implementation(libs.androidx.core.ktx)
-    implementation("androidx.navigation:navigation-compose:2.7.6")
+    implementation("androidx.navigation:navigation-compose:2.8.6")
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
@@ -52,6 +52,8 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.support.annotations)
     implementation(libs.androidx.runtime.livedata)
+    implementation(libs.litert.support.api)
+    implementation(libs.interactivemedia)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -71,6 +73,8 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
+    implementation("io.coil-kt:coil-compose:2.0.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.2")
 
 
 }
