@@ -74,4 +74,8 @@ public Ad getAdById(Long id) {
         Ad savedAd = adRepo.save(ad);
         return savedAd.getId();
     }
+    
+    public List<Ad> findAdsByCategory(Long categoryId) {
+        return adRepo.findByCategory_Id(categoryId); // 🔥 Método corregido
+    }
 }
