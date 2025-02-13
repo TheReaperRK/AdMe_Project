@@ -11,6 +11,7 @@ import cat.copernic.mavenproject1.logic.UserLogic;
 import cat.copernic.mavenproject1.Entity.User;
 import cat.copernic.mavenproject1.enums.Roles;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -24,20 +25,10 @@ public class AuthController {
     @Autowired
     private UserLogic userLogic;
     
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    User user1 = new User("carlos2", "carlosmendoza20032@gmail.com", "653035738", 
-                     "adygyudgaufaiof2", false, Roles.USER);
-    
         
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestParam String email, @RequestParam String password) {
         
-        userLogic.tryCreation(user1);
-        
-        System.out.println("🔍 Email recibido: " + email);
-        System.out.println("🔍 Password recibido: " + password);
         
         User user = userLogic.authenticateUser(email, password);
 
@@ -45,11 +36,24 @@ public class AuthController {
         if (user != null) {
             return ResponseEntity.ok(user);  // Enviar los datos del usuario si es correcto
         } else {
-            System.out.println("🔍 Email recibido: " + email);
-            System.out.println("🔍 Password recibido: " + password);
-            System.out.println("pasword recibido haseado: " + passwordEncoder.encode(password));
+            
             return ResponseEntity.status(401).body("Credenciales incorrectas");
         }
+    }
+    
+    @PostMapping("/register")
+    public ResponseEntity<?> registerUser(@RequestParam String name, @RequestParam String email,
+            @RequestParam String phone, @RequestParam String password,
+            @RequestParam(value = "image", required = false) MultipartFile imageFile) {
+        
+        User createdUser = new User (name, email, phone, password, false, Roles.USER);
+        
+        if (userLogic.userIsUnique(createdUser)) {
+            userLogic.tryCreation(createdUser, imageFile);
+            return ResponseEntity.ok(createdUser);
+        }
+        
+        return ResponseEntity.status(401).body("No s'ha pogut crear");
     }
 }
 

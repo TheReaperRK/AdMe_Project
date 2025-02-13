@@ -1,6 +1,8 @@
 package cat.copernic.project3_group4.core.models;
 
 
+import android.util.Base64;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -29,6 +31,13 @@ public class User {
      * Phone number of the user. Cannot be null.
      */
     private String phoneNumber;
+
+    /**
+     * Binary content of the category image. Stored as a large object (LOB).
+     */
+
+    private String image;
+
 
     /**
      * Password of the user. Cannot be null.
@@ -69,6 +78,17 @@ public class User {
         this.ads = ads;
     }
 
+    public User(String name, String email, String phoneNumber, String image, String word, boolean status, Roles role, List<Ad> ads) {
+        this.name = name;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.image = image;
+        this.word = word;
+        this.status = status;
+        this.role = role;
+        this.ads = ads;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -82,6 +102,18 @@ public class User {
                 Objects.equals(word, user.word) &&
                 role == user.role;  // Excluye ads de la comparación
 
+    }
+
+    public byte[] getImageBytes() {
+        return image != null ? Base64.decode(image, Base64.DEFAULT) : null;
+    }
+
+    public void setImageBytes(byte[] imageBytes) {
+        this.image = Base64.encodeToString(imageBytes, Base64.DEFAULT);
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getName() {

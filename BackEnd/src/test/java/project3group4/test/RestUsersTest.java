@@ -11,6 +11,10 @@ import cat.copernic.mavenproject1.logic.UserLogic;
 import cat.copernic.mavenproject1.repository.UserRepo;
 import java.util.List;
 import cat.copernic.mavenproject1.enums.Roles;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -29,6 +33,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -60,13 +66,13 @@ public class RestUsersTest {
         List<Ad> ads = new ArrayList<>(); // Lista vacía de anuncios
 
         List<User> users = List.of(
-            new User(1L, "carlos", "carlosmendoza2003@gmail.com", "653035737", 
+            new User("carlos", "carlosmendoza2003@gmail.com", "653035737",  
                      "adygyudgaufaiof", true, Roles.ADMIN, ads),
                 
-            new User(2L, "pepe", "pepe@gmail.com", "64826429749", 
+            new User("pepe", "pepe@gmail.com", "64826429749", 
                  "adygyudgaufaiof", false, Roles.USER, ads),
             
-            new User(3L, "JOSE", "joselito@gmail.com", "580825285", 
+            new User("JOSE", "joselito@gmail.com", "580825285", 
                      "adygyudgaufaiof", true, Roles.ADMIN, ads)
         );
 
@@ -288,21 +294,28 @@ public class RestUsersTest {
     
     
     @Test
-    public void testUpdateOk() {
+    public void testUpdateOk() throws IOException {
+        
+        // Ruta de la imagen en el sistema de archivos
+        Path imagePath = Paths.get("C:\\Users\\carlo\\Documents\\projects\\proyect3_group4\\BackEnd\\src\\main\\java\\cat\\copernic\\mavenproject1\\tux.jpg");
+        byte[] imageBytes = Files.readAllBytes(imagePath);
+
+        // Convertir a MultipartFile simulado
+        MultipartFile imageFile = new MockMultipartFile("imagen.jpg", imageBytes);
         
         List<Ad> ads = new ArrayList<>(); // Lista vacía de anuncios
         //creem directament un producte a la BBDD
         User p = new User("carlos", "carlosmendoza2003@gmail.com", "653035737", 
                      "adygyudgaufaiof", true, Roles.ADMIN, ads);
         
-        userLogic.createUser(p);
+        userLogic.createUser(p, imageFile);
        
         List<Ad> ads2 = new ArrayList<>(); // Lista vacía de anuncios
         //creem un nou producte amb el mateix id, pero amb les dades modificades
         User p2 = new User("carlos2", "carlosmendoza20032@gmail.com", "653035738", 
                      "adygyudgaufaiof2", false, Roles.USER, ads2);
         
-        userLogic.createUser(p2);
+        userLogic.createUser(p2, imageFile);
 
         p2.setId(p.getId());
         

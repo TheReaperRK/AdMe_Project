@@ -1,5 +1,6 @@
 package cat.copernic.project3_group4.main
 
+import LoginScreen
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -10,13 +11,17 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 
 import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import cat.copernic.project3_group4.core.ui.theme.Project3_Group4Theme
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import cat.copernic.project3_group4.main.screens.LoginScreen
+import cat.copernic.project3_group4.core.models.User
+import cat.copernic.project3_group4.main.screens.ProfileScreen
+import cat.copernic.project3_group4.main.screens.RegisterScreen
 import cat.copernic.project3_group4.main.screens.UserListScreen
 
 
@@ -28,15 +33,20 @@ class MainActivity : ComponentActivity() {
             Project3_Group4Theme {
                 val navController: NavHostController = rememberNavController()
 
+                // Aquí guardamos el usuario autenticado
+                val userState = rememberSaveable { mutableStateOf<User?>(null) }
+
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     NavHost(
                         navController = navController,
                         startDestination = "login",
                         modifier = Modifier.padding(innerPadding)
                     ) {
+                        composable("login") { LoginScreen(navController, userState) }
+                        composable("user_list") { UserListScreen(navController) }
+                        composable("profile") { ProfileScreen(userState, navController) }
+                        composable("register") { RegisterScreen(navController) }
 
-                        composable("login") { LoginScreen(navController) }
-                        composable("user_list") { UserListScreen() }
                     }
                 }
             }
