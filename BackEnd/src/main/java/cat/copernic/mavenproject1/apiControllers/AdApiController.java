@@ -111,4 +111,10 @@ public ResponseEntity<Long> createAd(@RequestBody Ad ad) {
             return ResponseEntity.internalServerError().build();
         }
     }
+    
+    @GetMapping("/byCategory/{categoryId}")
+    public ResponseEntity<List<Ad>> getAdsByCategory(@PathVariable Long categoryId) {
+        List<Ad> ads = adLogic.findAdsByCategory(categoryId);
+        return new ResponseEntity<>(ads, HttpStatus.OK);
+    }
 }
