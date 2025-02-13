@@ -7,6 +7,7 @@ package cat.copernic.mavenproject1.apiControllers;
 import cat.copernic.mavenproject1.Entity.User;
 import cat.copernic.mavenproject1.enums.Roles;
 import cat.copernic.mavenproject1.logic.UserLogic;
+import cat.copernic.mavenproject1.repository.UserRepo;
 import jakarta.annotation.PostConstruct;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -18,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -46,6 +48,9 @@ public class UserApiController {
     
     @Autowired
     private UserLogic userLogic;
+    
+    @Autowired
+    private UserRepo userRepo;
     
     @PostConstruct
     private void init()
@@ -219,5 +224,13 @@ public class UserApiController {
         
         return response;  
         
+    }
+    
+    @GetMapping("/user/{id}/image")
+    public ResponseEntity<byte[]> getUserImage(@PathVariable Long id) {
+        User user = userRepo.findById(id).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        return ResponseEntity.ok()
+            .contentType(MediaType.IMAGE_JPEG) // O el tipo de imagen que corresponda
+            .body(user.getImage());
     }
 }

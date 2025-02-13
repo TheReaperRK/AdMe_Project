@@ -92,7 +92,7 @@ fun LoginScreen(navController: NavController, userState: MutableState<User?>) {
                             val authenticatedUser = response.body()
                             if (authenticatedUser != null) {
                                 userState.value = authenticatedUser
-                                navController.navigate("profile")
+                                navController.navigate("categoryScreen")
                             }
                         } else {
                             Toast.makeText(context, "Credenciales incorrectas", Toast.LENGTH_SHORT)
