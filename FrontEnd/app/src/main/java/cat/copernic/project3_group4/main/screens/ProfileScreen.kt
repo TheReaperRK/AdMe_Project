@@ -1,60 +1,128 @@
 package cat.copernic.project3_group4.main.screens
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import android.graphics.BitmapFactory
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color.Companion.Black
-import androidx.compose.ui.graphics.Color.Companion.White
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import cat.copernic.project3_group4.core.models.User
+import androidx.compose.ui.text.style.TextAlign
 
 @Composable
 fun ProfileScreen(userState: MutableState<User?>, navController: NavController) {
     val user = userState.value
 
     if (user == null) {
-        Text("No hay usuario autenticado")
+        Text("No hay usuario autenticado", textAlign = TextAlign.Center, modifier = Modifier.fillMaxSize())
         return
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(text = "Perfil de ${user.name}", style = MaterialTheme.typography.headlineSmall)
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(text = "Email: ${user.email}")
-        Text(text = "Teléfono: ${user.phoneNumber}")
-        Text(text = "Estado: ${if (user.isStatus) "Activo" else "Inactivo"}")
-        Text(text = "Rol: ${user.role}")
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Button(
-            onClick = {
-                userState.value = null
-                navController.navigate("login")
-            },
-            shape = RoundedCornerShape(12.dp),
-            modifier = Modifier.fillMaxWidth(),
-            colors = ButtonDefaults.buttonColors(containerColor = Black)
+    val imageBitmap = user.imageBytes?.let { BitmapFactory.decodeByteArray(it, 0, it.size) }
+    Box(modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.White) //
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text("Cerrar sesión", color = White)
+            Button(
+                onClick = { navController.navigate("user_list") },
+                modifier = Modifier
+                    .padding(16.dp)
+                    .size(48.dp)
+                    .align(Alignment.Start),
+                shape = CircleShape,
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFA500))
+            ) {
+                Text("<", color = Color.White, fontSize = 20.sp, fontWeight = FontWeight.Bold)
+            }
+            Spacer(modifier = Modifier.height(20.dp))
+            imageBitmap?.let {
+                Image(
+                    bitmap = it.asImageBitmap(),
+                    contentDescription = "Profile Image",
+                    modifier = Modifier
+                        .size(100.dp)
+                        .clip(CircleShape),
+                    contentScale = ContentScale.Crop
+                )
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+            Text(
+                text = user.name,
+                fontSize = 22.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black
+            )
+
+            Spacer(modifier = Modifier.height(6.dp))
+            Text(
+                text = "Email: ${user.email}",
+                fontSize = 14.sp,
+                color = Color.Gray
+            )
+
+            Spacer(modifier = Modifier.height(6.dp))
+            Text(
+                text = "Teléfono: ${user.phoneNumber}",
+                fontSize = 14.sp,
+                color = Color.Gray
+            )
+
+            Spacer(modifier = Modifier.height(6.dp))
+            Text(
+                text = "Estado: ${if (user.isStatus) "Activo" else "Inactivo"}",
+                fontSize = 14.sp,
+                color = Color.Gray
+            )
+
+            Spacer(modifier = Modifier.height(6.dp))
+            Text(
+                text = "Rol: ${user.role}",
+                fontSize = 14.sp,
+                color = Color.Gray
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+            Button(
+                onClick = { /* Acción de restablecer contraseña */ },
+                shape = RoundedCornerShape(12.dp),
+                modifier = Modifier.fillMaxWidth(0.6f),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFA500)) // Naranja
+            ) {
+                Text("Restablecer contraseña", color = Color.White)
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+            Button(
+                onClick = {
+                    userState.value = null
+                    navController.navigate("login")
+                },
+                shape = RoundedCornerShape(12.dp),
+                modifier = Modifier.fillMaxWidth(0.6f),
+                colors = ButtonDefaults.buttonColors(containerColor = Color.Black)
+            ) {
+                Text("Cerrar sesión", color = Color.White)
+            }
+
+
         }
     }
 }

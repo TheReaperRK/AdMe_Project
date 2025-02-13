@@ -3,10 +3,15 @@ package cat.copernic.project3_group4.main.screens
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import cat.copernic.project3_group4.core.models.User
 import cat.copernic.project3_group4.user_management.data.datasource.UserApiRest
@@ -38,6 +43,17 @@ fun UserListScreen(navController: NavController, modifier: Modifier = Modifier) 
     }
 
     Column(modifier = modifier.padding(16.dp)) {
+        Button(
+            onClick = { navController.navigate("profile") },
+            modifier = Modifier
+                .padding(16.dp)
+                .size(48.dp)
+                .align(Alignment.Start),
+            shape = CircleShape,
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFA500))
+        ) {
+            Text("<", color = Color.White, fontSize = 20.sp, fontWeight = FontWeight.Bold)
+        }
         Text(text = "Total de usuarios: ${users.size}", style = MaterialTheme.typography.titleLarge)
 
         LazyColumn(modifier = Modifier.fillMaxSize()) {
