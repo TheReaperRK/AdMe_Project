@@ -53,26 +53,39 @@ public class RestAdTest {
 
     @BeforeEach
     public void setup() {
-        adRepo.deleteAll();
+       
+        User user = userRepo.findByEmail("carlos@gmail.com");
+        if (user == null) {
+            user = new User("Carlos", "carlos@gmail.com", "123456789", "password", true, Roles.ADMIN, new ArrayList<>());
+            user = userRepo.saveAndFlush(user);
+        }
 
-        User user = new User("Carlos", "carlos@gmail.com", "123456789", "password", true, Roles.ADMIN, null);
-        userRepo.save(user);
+        Category category = categoryRepo.findByName("ElectronicsTest");
+        if (category == null) {
+            category = new Category("ElectronicsTest", "Description for Electronics", new byte[0], false, new ArrayList<>());
+            category = categoryRepo.saveAndFlush(category);
+        }
 
-        Category category = new Category(null, "Electronics", "Description for Electronics", new byte[0], false, new ArrayList<>());
-        categoryRepo.save(category);
-
-        List<Ad> ads = List.of(
-                new Ad(null, "Ad1", "Description1", new byte[]{}, 100.0, LocalDate.now(), user, category),
-                new Ad(null, "Ad2", "Description2", new byte[]{}, 200.0, LocalDate.now(), user, category),
-                new Ad(null, "Ad3", "Description3", new byte[]{}, 300.0, LocalDate.now(), user, category)
-        );
-        adRepo.saveAll(ads);
+        if (adRepo.findByCategory_Id(category.getId()).size() != 3) {
+            
+            adRepo.deleteAll(adRepo.findByCategory_Id(category.getId()));
+            List<Ad> ads = List.of(
+                    new Ad("Ad1", "Description1", new byte[]{}, 100.0, LocalDate.now(), user, category),
+                    new Ad("Ad2", "Description2", new byte[]{}, 200.0, LocalDate.now(), user, category),
+                    new Ad("Ad3", "Description3", new byte[]{}, 300.0, LocalDate.now(), user, category)
+            );
+            
+            adRepo.saveAll(ads);
+        }
+            
+        
+        
     }
 
     @Test
     public void testGetAllAdsOk() {
         String url = "http://localhost:" + port + "/rest/ads/all";
-
+        int numAds = adRepo.findAll().size();
         ResponseEntity<List<Ad>> response = restTemplate.exchange(
                 url,
                 HttpMethod.GET,
@@ -82,7 +95,7 @@ public class RestAdTest {
 
         List<Ad> ads = response.getBody();
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(3, ads.size());
+        assertEquals(numAds, ads.size());
     }
 
     @Test
@@ -130,29 +143,27 @@ public class RestAdTest {
     @Test
     public void testCreateAdOk() {
         // Verificar si ya hay un usuario en la base de datos
-        List<User> users = userRepo.findAll();
-        User user;
-        if (users.isEmpty()) {
-            user = new User("Carlos", "carlosmendoza@gmail.com", "653035737",
-                    "password123", true, Roles.ADMIN);
-            user = userRepo.save(user);
-        } else {
-            user = users.get(0);
+        
+        User user = userRepo.findByEmail("carlos@gmail.com");
+        if (user == null) {
+            user = new User("Carlos", "carlos@gmail.com", "123456789", "password", true, Roles.ADMIN, new ArrayList<>());
+            user = userRepo.saveAndFlush(user);
         }
+        
+        
+        
+            
+        
 
         // Verificar si ya hay una categoría en la base de datos
         List<Category> categories = categoryRepo.findAll();
-        Category category;
-        if (categories.isEmpty()) {
-            category = new Category(user.getId(), "Tecnología", "Categoría de productos tecnológicos", new byte[]{1, 2, 3}, false, new ArrayList<>());
-
-            category = categoryRepo.save(category);
-        } else {
-            category = categories.get(0);
-        }
+        Category category = categories.get(0);
+        
+             
+        
 
         // Crear un anuncio con datos válidos
-        Ad ad = new Ad(null, "New Ad", "New ad description.", new byte[]{1, 2, 3}, 200.0, LocalDate.now(), user, category);
+        Ad ad = new Ad("New Ad", "New ad description.", new byte[]{1, 2, 3}, 200.0, LocalDate.now(), user, category);
 
         String url = "http://localhost:" + port + "/rest/ads/create";
         HttpHeaders headers = new HttpHeaders();
@@ -169,14 +180,22 @@ public class RestAdTest {
 
     @Test
     public void testUpdateAdOk() {
+
         List<Ad> ads = adRepo.findAll();
         assertFalse(ads.isEmpty(), "No hay anuncios en la base de datos");
-
+        
         Ad ad = ads.get(0);
-        assertNotNull(ad.getAuthor(), "El autor del anuncio es null");
-        assertNotNull(ad.getCategory(), "La categoría del anuncio es null");
+        //creem directament un producte a la BBDD
+        User user = ad.getAuthor();
+        
+        //creem un nou producte amb el mateix id, pero amb les dades modificades
+        Ad ad2 = new Ad("Modificado Ad", "descripcio modificada.", new byte[]{1, 2, 3}, 200.0, LocalDate.now(), user, ad.getCategory());
+        ad2.setId(ad.getId());
+        
+        assertNotNull(ad2.getAuthor(), "El autor del anuncio es null");
+        assertNotNull(ad2.getCategory(), "La categoría del anuncio es null");
 
-        ad.setTitle("Updated Ad");
+        
 
         String url = "http://localhost:" + port + "/rest/ads/update";
         HttpHeaders headers = new HttpHeaders();
@@ -185,7 +204,7 @@ public class RestAdTest {
         ResponseEntity<Void> response = restTemplate.exchange(
                 url,
                 HttpMethod.PUT,
-                new HttpEntity<>(ad, headers),
+                new HttpEntity<>(ad2, headers),
                 Void.class);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());

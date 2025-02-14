@@ -132,6 +132,25 @@ public class UserLogic {
         return ret.getId();
         
     }
+    public Long updateUser(User user) {
+        
+        User oldUser = userRepo.findById(user.getId()).orElse(null);
+        try{
+            oldUser.setAds(user.getAds());
+            oldUser.setId(user.getId());
+            oldUser.setImage(user.getImage());
+            oldUser.setName(user.getName());
+            oldUser.setPhoneNumber(user.getPhoneNumber());
+            oldUser.setRole(user.getRole());
+            oldUser.setStatus(user.isStatus());
+            oldUser.setWord(passwordEncoder.encode(user.getWord()));
+        
+        userRepo.saveAndFlush(oldUser);
+        return oldUser.getId();
+        }catch(Exception e){
+            return null;
+        }
+    }
     
     public User getUserById(Long id){
         

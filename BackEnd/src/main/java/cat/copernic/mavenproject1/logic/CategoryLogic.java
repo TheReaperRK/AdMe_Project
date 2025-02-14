@@ -20,6 +20,15 @@ public class CategoryLogic {
         return categoryRepo.findById(id).orElse(null);
     }
     
+    public Category getCategoryByName(String name) {
+        try{
+            return categoryRepo.findByName(name);
+        }catch(Exception e){
+            return null;
+        }
+        
+    }
+    
     public boolean existsById(Long id) {
         return categoryRepo.existsById(id);
     }
@@ -29,6 +38,27 @@ public class CategoryLogic {
     }
     
     public Long saveCategory(Category category) {
-        return categoryRepo.save(category).getId();
+        try{
+           Long idCat =  categoryRepo.save(category).getId();
+        return idCat;
+        }catch(Exception e){
+            return null;
+        }
+    }
+    
+    public Long updateCategory(Category category) {
+        try{
+        Category oldCategory = getCategoryById(category.getId());
+        
+        oldCategory.setAds(category.getAds());
+        oldCategory.setDescription(category.getDescription());
+        oldCategory.setImage(category.getImage());
+        oldCategory.setName(category.getName());
+        oldCategory.setProposal(category.isProposal());
+        categoryRepo.save(oldCategory);
+        return oldCategory.getId();
+        }catch(Exception e){
+            return null;
+        }
     }
 }

@@ -11,7 +11,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import cat.copernic.mavenproject1.Entity.User;
+import cat.copernic.mavenproject1.Entity.Category;
+import java.util.Optional;
 /**
  * Controlador REST para la entidad Ad
  */
@@ -64,6 +66,7 @@ public class AdApiController {
 @PostMapping("/create")
 public ResponseEntity<Long> createAd(@RequestBody Ad ad) {
     try {
+        
         logger.info("Intentando crear un anuncio: {}", ad);
         
         if (ad == null) {
@@ -101,7 +104,13 @@ public ResponseEntity<Long> createAd(@RequestBody Ad ad) {
     public ResponseEntity<Void> updateAd(@RequestBody Ad ad) {
         try {
             if (adLogic.existsById(ad.getId())) {
-                adLogic.saveAd(ad);
+                
+                
+                if (ad.getAuthor() == null || ad.getAuthor().getId() == null) {
+                    Ad existingAd = adLogic.getAdById(ad.getId());
+                    ad.setAuthor(existingAd.getAuthor());
+                }
+                adLogic.updateAd(ad);
                 return ResponseEntity.ok().build();
             } else {
                 return ResponseEntity.notFound().build();

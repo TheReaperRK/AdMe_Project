@@ -4,9 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+//import lombok.AllArgsConstructor;
+//import lombok.Data;
+//import lombok.NoArgsConstructor;
 
 /**
  * Represents a category in the AdMe application.
@@ -15,9 +15,9 @@ import lombok.NoArgsConstructor;
  */
 @Entity
 @Table(name = "categories")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+//@Data
+//@NoArgsConstructor
+//@AllArgsConstructor
 public class Category {
 
     /**
@@ -30,7 +30,7 @@ public class Category {
     /**
      * Name of the category. Must be unique and cannot be null.
      */
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String name;
     
     /**
@@ -60,6 +60,79 @@ public class Category {
     @JsonIgnore
     private List<Ad> ads = new ArrayList<>();
     
+    //Constructors
 
+    public Category() {
+    }
 
+    
+    
+    public Category(Long id, String name, String description, byte[] image, boolean proposal, List<Ad> ads) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.image = image;
+        this.proposal = proposal;
+        this.ads = ads;
+    }
+
+    public Category(String name, String description, byte[] image, boolean proposal, List<Ad> ads) {
+        this.name = name;
+        this.description = description;
+        this.image = image;
+        this.proposal = proposal;
+        this.ads = ads;
+    }
+    
+    //Getters i setters
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
+    }
+
+    public boolean isProposal() {
+        return proposal;
+    }
+
+    public void setProposal(boolean proposal) {
+        this.proposal = proposal;
+    }
+
+    public List<Ad> getAds() {
+        return ads;
+    }
+
+    public void setAds(List<Ad> ads) {
+        this.ads = ads;
+    }
+    
+    
 }
