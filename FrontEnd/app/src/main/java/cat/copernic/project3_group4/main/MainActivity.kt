@@ -35,6 +35,7 @@ import cat.copernic.project3_group4.main.screens.AdsScreen
 import cat.copernic.project3_group4.main.screens.CategoryScreen
 import cat.copernic.project3_group4.category_management.presentation.CategoryViewModel
 import cat.copernic.project3_group4.ad_management.presentation.AdsViewModel
+import cat.copernic.project3_group4.main.screens.CreateAdScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -77,7 +78,7 @@ class MainActivity : ComponentActivity() {
                                 navController
                             ) // Se pasa como Long en lugar de String
                         }
-
+                        composable("createAdScreen") { CreateAdScreen(navController, viewModel = categoryViewModel, userState) }
                     }
                 }
             }
