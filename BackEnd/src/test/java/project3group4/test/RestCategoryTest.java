@@ -40,7 +40,7 @@ public class RestCategoryTest {
 
     @BeforeEach
     public void setup() {
-        categoryRepo.deleteAll();
+        categoryRepo.deleteAll();   
 
         List<Category> categories = List.of(
                 new Category(1L, "Electronics", "Devices and gadgets", new byte[]{1, 2, 3}, false, List.of()),
