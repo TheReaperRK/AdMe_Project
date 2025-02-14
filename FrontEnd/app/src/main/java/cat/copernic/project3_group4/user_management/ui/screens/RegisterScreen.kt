@@ -1,4 +1,4 @@
-package cat.copernic.project3_group4.main.screens
+package cat.copernic.project3_group4.user_management.ui.screens
 
 import android.net.Uri
 import android.widget.Toast
@@ -16,11 +16,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
@@ -33,8 +31,6 @@ import cat.copernic.project3_group4.core.utils.uriToMultipartBodyPart
 import cat.copernic.project3_group4.user_management.data.datasource.AuthRetrofitInstance
 import kotlinx.coroutines.launch
 import coil.compose.rememberAsyncImagePainter
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-
 
 
 @OptIn(ExperimentalMaterial3Api::class)

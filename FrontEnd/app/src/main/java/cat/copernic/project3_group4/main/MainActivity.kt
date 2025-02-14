@@ -1,12 +1,11 @@
 package cat.copernic.project3_group4.main
 
-import LoginScreen
+import cat.copernic.project3_group4.user_management.ui.screens.LoginScreen
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 
 import androidx.compose.material3.Scaffold
@@ -23,18 +22,16 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import cat.copernic.project3_group4.core.ui.theme.Project3_Group4Theme
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import cat.copernic.project3_group4.core.models.User
-import cat.copernic.project3_group4.main.screens.ProfileScreen
-import cat.copernic.project3_group4.main.screens.RegisterScreen
-import cat.copernic.project3_group4.main.screens.UserListScreen
+import cat.copernic.project3_group4.user_management.ui.screens.ProfileScreen
+import cat.copernic.project3_group4.user_management.ui.screens.RegisterScreen
+import cat.copernic.project3_group4.user_management.ui.screens.UserListScreen
 
 import cat.copernic.project3_group4.main.screens.AdsScreen
 import cat.copernic.project3_group4.main.screens.CategoryScreen
-import cat.copernic.project3_group4.category_management.presentation.CategoryViewModel
-import cat.copernic.project3_group4.ad_management.presentation.AdsViewModel
+import cat.copernic.project3_group4.category_management.ui.viewmodels.CategoryViewModel
+import cat.copernic.project3_group4.ad_management.ui.viewmodels.AdsViewModel
+import cat.copernic.project3_group4.category_management.ui.screens.CategoryFormScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -77,6 +74,13 @@ class MainActivity : ComponentActivity() {
                                 navController
                             ) // Se pasa como Long en lugar de String
                         }
+                        composable("categoryFormScreen"){
+                               CategoryFormScreen(
+                                   categoryViewModel = categoryViewModel,
+                                   userState = userState,
+                                   navController = navController
+                               )
+                           }
 
                     }
                 }

@@ -1,10 +1,10 @@
-package cat.copernic.project3_group4.ad_management.presentation;
+package cat.copernic.project3_group4.ad_management.ui.viewmodels;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.viewModelScope;
-import cat.copernic.project3_group4.user_management.data.datasource.AdRetrofitInstance;
+import cat.copernic.project3_group4.ad_management.data.datasource.AdRetrofitInstance;
 import cat.copernic.project3_group4.ad_management.data.datasource.AdApiRest;
 import cat.copernic.project3_group4.core.models.Ad;
 import kotlinx.coroutines.launch;

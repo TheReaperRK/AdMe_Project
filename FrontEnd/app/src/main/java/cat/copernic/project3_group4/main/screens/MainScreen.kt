@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import cat.copernic.project3_group4.category_management.presentation.CategoryViewModel
+import cat.copernic.project3_group4.category_management.ui.viewmodels.CategoryViewModel
 import cat.copernic.project3_group4.core.models.Category
 
 @Composable
@@ -34,7 +34,7 @@ fun CategoryScreen(viewModel: CategoryViewModel, navController: NavController) {
             .background(Color.White)
     ) {
         TopBar()
-        FilterButtons()
+        FilterButtons(navController)
         CategoryList(categories, navController, Modifier.weight(1f))
         BottomNavigationBar(navController)
     }
@@ -51,7 +51,7 @@ fun TopBar() {
 }
 
 @Composable
-fun FilterButtons() {
+fun FilterButtons(navController: NavController) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -66,7 +66,7 @@ fun FilterButtons() {
         Button(onClick = {}, colors = buttonColor) {
             Text("Todos")
         }
-        Button(onClick = {}, colors = buttonColor) {
+        Button(onClick = {navController.navigate("categoryFormScreen")}, colors = buttonColor) {
             Text("Propuesta")
         }
     }

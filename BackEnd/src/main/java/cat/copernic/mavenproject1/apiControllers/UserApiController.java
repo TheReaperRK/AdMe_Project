@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.transaction.annotation.Transactional;
 
 
 /**
@@ -44,7 +45,7 @@ public class UserApiController {
     
     Logger logger = LoggerFactory.getLogger(UserApiController.class);
     
-   
+  
     
     @Autowired
     private UserLogic userLogic;
@@ -129,7 +130,7 @@ public class UserApiController {
 
 
         } catch (Exception e) {
-
+            logger.info("/n ERROR UPDATE"+e.getMessage());
             return ResponseEntity.internalServerError().build();
         }
         
