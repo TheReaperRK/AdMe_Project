@@ -1,27 +1,31 @@
-package cat.copernic.project3_group4.ad_management.presentation;
+package cat.copernic.project3_group4.ad_management.presentation
 
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
-import androidx.lifecycle.viewModelScope;
-import cat.copernic.project3_group4.user_management.data.datasource.AdRetrofitInstance;
-import cat.copernic.project3_group4.ad_management.data.datasource.AdApiRest;
-import cat.copernic.project3_group4.core.models.Ad;
-import kotlinx.coroutines.launch;
-import retrofit2.Response;
+import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import cat.copernic.project3_group4.ad_management.data.datasource.AdApiRest
+import cat.copernic.project3_group4.core.models.Ad
+import cat.copernic.project3_group4.core.models.Category
+import cat.copernic.project3_group4.user_management.data.datasource.AdRetrofitInstance
+import kotlinx.coroutines.launch
+import retrofit2.Response
 
 class AdsViewModel : ViewModel() {
     private val adApi: AdApiRest = AdRetrofitInstance.create(AdApiRest::class.java)
 
-    private val _ads: MutableLiveData<List<Ad>> = MutableLiveData()
+    private val _ads = MutableLiveData<List<Ad>>()
     val ads: LiveData<List<Ad>> = _ads
 
     private val _selectedCategory = MutableLiveData<String?>()
+    val selectedCategory: LiveData<String?> =
+        _selectedCategory  // ✅ Agregado para que se pueda observar
 
     fun fetchAds() {
         viewModelScope.launch {
             try {
-                val response: Response<List<Ad>> = adApi.getAllAds()
+                val response = adApi.getAllAds()
                 if (response.isSuccessful) {
                     _ads.postValue(response.body())
                 }
@@ -34,7 +38,7 @@ class AdsViewModel : ViewModel() {
     fun fetchAdsByCategory(categoryId: Long) {
         viewModelScope.launch {
             try {
-                val response: Response<List<Ad>> = adApi.getAdsByCategory(categoryId)
+                val response = adApi.getAdsByCategory(categoryId)
                 if (response.isSuccessful) {
                     _ads.postValue(response.body())
                 }
@@ -44,11 +48,28 @@ class AdsViewModel : ViewModel() {
         }
     }
 
+    fun createAd(ad: Ad) {
+        viewModelScope.launch {
+            try {
+                val response = adApi.createAd(ad)
+                if (response.isSuccessful) {
+                    Log.d("CreateAdScreen", "Anuncio creado correctamente: ${response.body()}")
+                } else {
+                    val errorBody = response.errorBody()?.string()
+                    Log.e(
+                        "CreateAdScreen",
+                        "Error al crear el anuncio: ${response.code()} - $errorBody"
+                    )
+                }
 
-    fun setSelectedCategory(categoryId: Long) { // Ahora usa Long
+            } catch (e: Exception) {
+                println("🚨 Error en createAd(): ${e.message}")
+            }
+        }
+    }
+
+    fun setSelectedCategory(categoryId: Long) {
         _selectedCategory.value = categoryId.toString()
         fetchAdsByCategory(categoryId)
     }
-
-
 }
