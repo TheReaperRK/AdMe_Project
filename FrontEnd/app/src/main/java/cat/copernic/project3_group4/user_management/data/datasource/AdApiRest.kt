@@ -19,7 +19,6 @@ interface AdApiRest {
 
     @DELETE("delete/{adId}")
     suspend fun deleteAd(@Path("adId") adId: Long): Response<Void>
-
     @GET("byCategory/{categoryId}")
     suspend fun getAdsByCategory(@Path("categoryId") categoryId: Long): Response<List<Ad>>
 
