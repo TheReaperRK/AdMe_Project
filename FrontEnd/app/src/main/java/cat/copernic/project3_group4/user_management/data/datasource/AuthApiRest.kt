@@ -23,19 +23,4 @@ interface AuthApiRest {
         @Part image: MultipartBody.Part?
     ): Response<User>
 
-
-    @Multipart
-    @POST("/api/auth/recover")
-    suspend fun recoverPassword(
-        @Part("email") email: RequestBody,
-    ): Response<User>
-
-    @Multipart
-    @POST("/api/auth/reset")
-    suspend fun resetPassword(
-        @Part("email") email: RequestBody,
-        @Part("token") token: RequestBody,
-        @Part("word") word: RequestBody
-    ): Response<User>
-
 }

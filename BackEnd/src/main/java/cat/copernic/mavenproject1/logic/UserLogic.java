@@ -38,12 +38,6 @@ public class UserLogic {
         return ret;
     }
     
-    public <Optional>User findByEmail (String email){
-        User ret = userRepo.findByEmail(email);
-        
-        return ret;
-    }
-    
     public List<User> findAllUsers(){
         
         List<User> ret = new ArrayList<>();
