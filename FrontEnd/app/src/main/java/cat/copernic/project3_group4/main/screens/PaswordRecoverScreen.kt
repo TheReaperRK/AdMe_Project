@@ -44,7 +44,7 @@ fun PasswordRecover(navController: NavController) {
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.padding(32.dp)
         ) {
-            // Botón de regreso
+            // Botón de regreso.
             IconButton(
                 onClick = { navController.popBackStack() },
                 modifier = Modifier
