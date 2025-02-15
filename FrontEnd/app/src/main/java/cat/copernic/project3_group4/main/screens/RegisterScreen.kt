@@ -10,6 +10,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -58,16 +60,19 @@ fun RegisterScreen(navController: NavController) {
         contentAlignment = Alignment.Center
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.padding(32.dp)) {
-            Button(
-                onClick = { navController.navigate("login") },
+            IconButton(
+                onClick = { navController.popBackStack() },
                 modifier = Modifier
-                    .padding(16.dp)
+                    .padding(start = 16.dp, top = 16.dp) // Espaciado desde los bordes
                     .size(48.dp)
-                    .align(Alignment.Start),
-                shape = CircleShape,
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF7B4328))
+                    .align(Alignment.Start)
+                    .offset(y = -20.dp) // Mueve la flecha más arriba
             ) {
-                Text("Tornar", color = Color.White, fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                Icon(
+                    imageVector = Icons.Default.ArrowBack,
+                    contentDescription = "Volver",
+                    tint = Color.White
+                )
             }
             // Mostrar la imagen seleccionada o un ícono por defecto
             selectedImageUri?.let {
