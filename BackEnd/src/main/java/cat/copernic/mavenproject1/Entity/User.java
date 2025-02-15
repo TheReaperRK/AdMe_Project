@@ -86,8 +86,6 @@ public class User {
     private List<Ad> ads = new ArrayList<>();
 
         //Constructors
-    
-    private String resetToken; // Token para restablecer contraseña
 
     public User() {
     }
@@ -238,12 +236,8 @@ public class User {
     public void setAds(List<Ad> ads) {
         this.ads = ads;
     }
-
-    public String getResetToken() {
-        return resetToken;
-    }
-
-    public void setResetToken(String resetToken) {
-        this.resetToken = resetToken;
-    }
+    
+    
+    
+    
 }
