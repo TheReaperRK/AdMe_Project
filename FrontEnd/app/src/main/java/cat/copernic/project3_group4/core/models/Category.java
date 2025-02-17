@@ -1,5 +1,7 @@
 package cat.copernic.project3_group4.core.models;
 
+import android.util.Base64;
+
 public class Category {
 
     /**
@@ -20,7 +22,7 @@ public class Category {
     /**
      * Image URL or Base64 string.
      */
-    private byte[] image;
+    private String image;
 
     /**
      * Indicates whether the category is a proposal.
@@ -32,7 +34,7 @@ public class Category {
     }
 
     // Constructor completo
-    public Category(Long id, String name, String description, byte[] image, boolean proposal) {
+    public Category(Long id, String name, String description, String image, boolean proposal) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -65,11 +67,11 @@ public class Category {
         this.description = description;
     }
 
-    public byte[] getImage() {
+    public String getImage() {
         return image;
     }
 
-    public void setImage(byte[] image) {
+    public void setImage(String image) {
         this.image = image;
     }
 
@@ -79,5 +81,9 @@ public class Category {
 
     public void setProposal(boolean proposal) {
         this.proposal = proposal;
+    }
+
+    public byte[] getImageBytes() {
+        return image != null ? Base64.decode(image, Base64.DEFAULT) : null;
     }
 }

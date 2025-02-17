@@ -1,24 +1,30 @@
 package cat.copernic.project3_group4.main.screens
 
+import android.graphics.BitmapFactory
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import cat.copernic.project3_group4.ad_management.ui.screens.base64ToByteArray
 import cat.copernic.project3_group4.category_management.ui.viewmodels.CategoryViewModel
 import cat.copernic.project3_group4.core.models.Category
+import coil.compose.AsyncImage
 
 @Composable
 fun CategoryScreen(viewModel: CategoryViewModel, navController: NavController) {
@@ -102,17 +108,21 @@ fun CategoryList(categories: List<Category>, navController: NavController, modif
 
 @Composable
 fun CategoryItem(category: Category, navController: NavController) {
+    val imageUrl = remember { base64ToByteArray(category.image) }
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
             .clickable { navController.navigate("adsScreen/${category.id}") } // Pasar el ID
     ) {
-        Box(
+        AsyncImage(
+            model = imageUrl,
+            contentDescription = null,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(150.dp)
-                .background(Color.Gray)
+                .clip(RoundedCornerShape(12.dp)), // Bordes redondeados
+            contentScale = ContentScale.Crop
         )
         Text(
             category.name,

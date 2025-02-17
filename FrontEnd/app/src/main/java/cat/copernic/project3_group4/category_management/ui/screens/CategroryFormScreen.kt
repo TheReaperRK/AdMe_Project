@@ -28,9 +28,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.SmallTopAppBar
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
@@ -75,6 +78,7 @@ import java.io.ByteArrayOutputStream
 import java.io.InputStream
 import java.sql.SQLException
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CategoryFormScreen(categoryViewModel: CategoryViewModel, userState: MutableState<User?>, navController: NavController ){
     val user = userState.value
@@ -108,7 +112,6 @@ fun CategoryFormScreen(categoryViewModel: CategoryViewModel, userState: MutableS
         horizontalAlignment = Alignment.CenterHorizontally
 
     ) {
-        Text("Proponer Categoria", color = Color.Black, fontSize = 38.sp, fontWeight = FontWeight.W500, modifier = Modifier.padding(16.dp))
         Spacer(modifier = Modifier.height(20.dp))
         Box(
             modifier = Modifier.fillMaxWidth(),
