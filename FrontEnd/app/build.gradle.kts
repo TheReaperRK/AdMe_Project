@@ -55,6 +55,7 @@ dependencies {
     implementation(libs.androidx.runtime.livedata)
     implementation(libs.litert.support.api)
     implementation(libs.interactivemedia)
+    implementation(libs.androidx.room.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

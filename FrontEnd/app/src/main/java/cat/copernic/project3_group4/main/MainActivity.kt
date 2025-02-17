@@ -23,7 +23,6 @@ import androidx.navigation.navArgument
 import cat.copernic.project3_group4.core.ui.theme.Project3_Group4Theme
 import androidx.navigation.NavHostController
 import cat.copernic.project3_group4.core.models.User
-import cat.copernic.project3_group4.user_management.ui.screens.ProfileScreen
 import cat.copernic.project3_group4.user_management.ui.screens.RegisterScreen
 import cat.copernic.project3_group4.user_management.ui.screens.UserListScreen
 
@@ -34,6 +33,7 @@ import cat.copernic.project3_group4.ad_management.ui.viewmodels.AdsViewModel
 import cat.copernic.project3_group4.category_management.ui.screens.CategoryFormScreen
 import cat.copernic.project3_group4.ad_management.ui.screens.CreateAdScreen
 import cat.copernic.project3_group4.main.screens.PasswordRecover
+import cat.copernic.project3_group4.main.screens.ProfileScreen
 import cat.copernic.project3_group4.main.screens.RecoverByToken
 
 class MainActivity : ComponentActivity() {

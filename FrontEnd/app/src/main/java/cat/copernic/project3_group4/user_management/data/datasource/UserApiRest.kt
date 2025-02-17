@@ -29,4 +29,10 @@ interface UserApiRest {
 
     @DELETE("delete/{userId}")
     suspend fun deleteUser(@Path("userId") userId: Long): Response<Void>
+
+    @PUT("activate/{userId}")
+    suspend fun activateUserStatus(@Path("userId") userId: Long): Response<Void>
+
+    @PUT("desactivate/{userId}")
+    suspend fun desactivateUserStatus(@Path("userId") userId: Long): Response<Void>
 }

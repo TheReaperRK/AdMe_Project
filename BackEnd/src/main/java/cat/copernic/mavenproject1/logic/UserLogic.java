@@ -4,22 +4,18 @@
  */
 package cat.copernic.mavenproject1.logic;
 
-import cat.copernic.mavenproject1.Entity.Ad;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import cat.copernic.mavenproject1.Entity.User;
-import cat.copernic.mavenproject1.apiControllers.AdApiController;
 import cat.copernic.mavenproject1.repository.UserRepo;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.transaction.annotation.Transactional;
+import java.util.Optional;
 import org.springframework.web.multipart.MultipartFile;
 
 
@@ -29,7 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
  */
 @Service
 public class UserLogic {
-    Logger logger = LoggerFactory.getLogger(AdApiController.class);
+    
     @Autowired
     UserRepo userRepo;
     
@@ -77,6 +73,37 @@ public class UserLogic {
         
         userRepo.deleteById(id);
         
+    }
+    
+    public void activateUserById(Long id) {
+    // Buscar el usuario por ID
+    Optional<User> optionalUser = userRepo.findById(id);
+    
+    // Verificar si el usuario existe
+    if (optionalUser.isPresent()) {
+        User user = optionalUser.get(); // Obtener el usuario de Optional
+        user.setStatus(true); // Modificar el estado
+        userRepo.save(user); // Guardar los cambios en la base de datos
+    } else {
+        throw new RuntimeException("Usuario no encontrado con ID: " + id);
+    }
+}
+
+    
+    public void desactivateUserById(Long id){
+        
+        // Buscar el usuario por ID
+        Optional<User> optionalUser = userRepo.findById(id);
+
+        // Verificar si el usuario existe
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get(); // Obtener el usuario de Optional
+            user.setStatus(false); // Modificar el estado
+            userRepo.save(user); // Guardar los cambios en la base de datos
+        } else {
+            throw new RuntimeException("Usuario no encontrado con ID: " + id);
+        }
+
     }
     
     public boolean userIsUnique (User user){
@@ -143,45 +170,21 @@ public class UserLogic {
         return ret.getId();
         
     }
-    @Transactional
     public Long updateUser(User user) {
         
         User oldUser = userRepo.findById(user.getId()).orElse(null);
-        
-        if(oldUser == null){
-            return null;
-        }
-        logger.info("Usuario antes de la actualización: " + oldUser.toString());
         try{
-
+            oldUser.setAds(user.getAds());
+            oldUser.setId(user.getId());
+            oldUser.setImage(user.getImage());
             oldUser.setName(user.getName());
             oldUser.setPhoneNumber(user.getPhoneNumber());
             oldUser.setRole(user.getRole());
             oldUser.setStatus(user.isStatus());
-            
-            
-            if (user.getWord() != null && !user.getWord().isEmpty()) {
-                oldUser.setWord(passwordEncoder.encode(user.getWord()));
-            }
-
-            if (user.getImage() != null) {
-                oldUser.setImage(user.getImage());
-            }
-
-           
-            oldUser.getAds().clear(); //Esto es pa borrar la referencia sin eliminarlos de la BBDD
-            if (user.getAds() != null) {
-                for (Ad ad : user.getAds()) {
-                    ad.setAuthor(oldUser); 
-                    oldUser.getAds().add(ad);
-                }
-            }
-            userRepo.save(oldUser);
+            oldUser.setWord(passwordEncoder.encode(user.getWord()));
         
-            // Recuperamos de la BD después del update
-            User updatedUser = userRepo.findById(user.getId()).orElse(null);
-            logger.info("Usuario después de la actualización: " + updatedUser.toString());
-            return oldUser.getId();
+        userRepo.saveAndFlush(oldUser);
+        return oldUser.getId();
         }catch(Exception e){
             return null;
         }

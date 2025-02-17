@@ -137,6 +137,50 @@ public class UserApiController {
         
     }
     
+    @PutMapping("/activate/{userId}")
+    public ResponseEntity<Void> activate(@PathVariable Long userId){
+                
+        ResponseEntity<Void> response;
+        
+        try {
+            if (userLogic.existsById(userId))
+            {
+                userLogic.activateUserById(userId);
+                response = ResponseEntity.noContent().build();
+            }
+            else
+                response = ResponseEntity.notFound().build();
+
+        } catch (Exception e) {
+
+            return ResponseEntity.internalServerError().build();
+        }
+        return response;
+    }
+    
+    @PutMapping("/desactivate/{userId}")
+    public ResponseEntity<Void> desactivate(@PathVariable Long userId){
+                
+                ResponseEntity<Void> response;
+
+        try {
+            if (userLogic.existsById(userId))
+            {
+                userLogic.desactivateUserById(userId);
+                response = ResponseEntity.noContent().build();
+            }
+            else
+                response = ResponseEntity.notFound().build();
+
+        } catch (Exception e) {
+
+            return ResponseEntity.internalServerError().build();
+        }
+            return response;
+
+    }
+    
+    
     
     @GetMapping("/byId/{userId}")
     public ResponseEntity<User> byId(@PathVariable Long userId){
