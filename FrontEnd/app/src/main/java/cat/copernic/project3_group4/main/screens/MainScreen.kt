@@ -108,6 +108,7 @@ fun CategoryItem(category: Category, navController: NavController) {
             .padding(8.dp)
             .clickable { navController.navigate("adsScreen/${category.id}") } // Pasar el ID
     ) {
+
         Box(
             modifier = Modifier
                 .fillMaxWidth()
