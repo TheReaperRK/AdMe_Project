@@ -8,7 +8,7 @@ cat\copernic\mavenproject1\repository\CategoryRepo.class
 cat\copernic\mavenproject1\Entity\Category.class
 cat\copernic\mavenproject1\Entity\Ad.class
 cat\copernic\mavenproject1\enums\Roles.class
-EmailConfig.class
+cat\copernic\mavenproject1\configuration\EmailConfig.class
 cat\copernic\mavenproject1\logic\CategoryLogic.class
 cat\copernic\mavenproject1\logic\AdLogic.class
 cat\copernic\mavenproject1\AdMeApplication.class
