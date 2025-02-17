@@ -10,5 +10,11 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface AdRepo extends JpaRepository<Ad, Long> {
-    List<Ad> findByCategory_Id(Long categoryId); // 🔥 Método corregido
+     List<Ad> findByCategory_Id(Long categoryId); // 🔥 Método corregido
+    
+    // ✅ Método para filtrar anuncios por rango de precios
+    List<Ad> findByPriceBetween(double minPrice, double maxPrice);
+    
+    // ✅ Método para filtrar anuncios por categoría y rango de precios
+    List<Ad> findByCategory_IdAndPriceBetween(Long categoryId, double minPrice, double maxPrice);
 }

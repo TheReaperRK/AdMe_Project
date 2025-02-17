@@ -1,4 +1,4 @@
-package cat.copernic.project3_group4.user_management.data.datasource
+package cat.copernic.project3_group4.category_management.data.datasource
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
