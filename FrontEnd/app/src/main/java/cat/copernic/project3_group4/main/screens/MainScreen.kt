@@ -117,10 +117,10 @@ fun BottomNavigationBar(navController: NavController) {
             label = { Text("Inicio") }
         )
         NavigationBarItem(
-            selected = currentRoute == "add",
-            onClick = {},
+            selected = currentRoute == "createAdScreen",
+            onClick = {navController.navigate("createAdScreen")},
             icon = { /* Icono aquí si lo necesitas */ },
-            label = { Text("add") }
+            label = { Text("create") }
         )
         NavigationBarItem(
             selected = currentRoute == "profile",

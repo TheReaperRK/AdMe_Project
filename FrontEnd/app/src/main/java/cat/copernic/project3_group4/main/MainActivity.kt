@@ -32,6 +32,9 @@ import cat.copernic.project3_group4.main.screens.CategoryScreen
 import cat.copernic.project3_group4.category_management.ui.viewmodels.CategoryViewModel
 import cat.copernic.project3_group4.ad_management.ui.viewmodels.AdsViewModel
 import cat.copernic.project3_group4.category_management.ui.screens.CategoryFormScreen
+import cat.copernic.project3_group4.main.screens.CreateAdScreen
+import cat.copernic.project3_group4.main.screens.PasswordRecover
+import cat.copernic.project3_group4.main.screens.RecoverByToken
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,6 +64,7 @@ class MainActivity : ComponentActivity() {
                                 navController = navController
                             )
                         }
+                        composable("paswordRecover") { PasswordRecover(navController) }
                         composable(
                             route = "adsScreen/{categoryId}",
                             arguments = listOf(navArgument("categoryId") {
@@ -81,6 +85,8 @@ class MainActivity : ComponentActivity() {
                                    navController = navController
                                )
                            }
+                        composable("createAdScreen") { CreateAdScreen(navController, viewModel = categoryViewModel, userState) }
+                        composable("recoverByToken") { RecoverByToken(navController) }
 
                     }
                 }

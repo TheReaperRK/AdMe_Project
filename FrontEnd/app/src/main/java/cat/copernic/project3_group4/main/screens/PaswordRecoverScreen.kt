@@ -1,11 +1,12 @@
-package cat.copernic.project3_group4.user_management.ui.screens
+package cat.copernic.project3_group4.main.screens
 
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -16,21 +17,20 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import cat.copernic.project3_group4.R
-import cat.copernic.project3_group4.core.models.User
 import cat.copernic.project3_group4.core.ui.theme.OrangePrimary
 import cat.copernic.project3_group4.user_management.data.datasource.AuthRetrofitInstance
 import kotlinx.coroutines.launch
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginScreen(navController: NavController, userState: MutableState<User?>) {
+fun PasswordRecover(navController: NavController) {
     var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
 
@@ -44,6 +44,20 @@ fun LoginScreen(navController: NavController, userState: MutableState<User?>) {
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.padding(32.dp)
         ) {
+            // Botón de regreso.
+            IconButton(
+                onClick = { navController.popBackStack() },
+                modifier = Modifier
+                    .padding(start = 16.dp, top = 16.dp)
+                    .align(Alignment.Start)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.ArrowBack,
+                    contentDescription = "Volver",
+                    tint = White
+                )
+            }
+
             Image(
                 painter = painterResource(id = R.drawable.ic_logo),
                 contentDescription = "Logo",
@@ -51,51 +65,34 @@ fun LoginScreen(navController: NavController, userState: MutableState<User?>) {
             )
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = "Iniciar Sesión",
-                style = TextStyle(fontSize = 28.sp, fontWeight = FontWeight.Bold, color = White)
+                text = "Recuperar Contraseña",
+                style = TextStyle(fontSize = 24.sp, fontWeight = FontWeight.Bold, color = White)
             )
             Spacer(modifier = Modifier.height(16.dp))
 
-            OutlinedTextField(value = email,
-                onValueChange =
-                { email = it },
-                label = { Text("Introduce el correo:") },
-                shape = RoundedCornerShape(12.dp),
-                modifier = Modifier.fillMaxWidth()
-            )
-            Spacer(modifier = Modifier.height(8.dp))
+            // Campo para el correo
             OutlinedTextField(
-                value = password,
-                onValueChange = { password = it },
-                label = { Text("Introduce la contraseña:") },
-                visualTransformation = PasswordVisualTransformation(),
+                value = email,
+                onValueChange = { email = it },
+                label = { Text("Introduce tu correo:") },
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier.fillMaxWidth()
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = "¿Has olvidado la contraseña?",
-                color = White,
-                fontSize = 14.sp,
-                modifier = Modifier.clickable { navController.navigate("paswordRecover") }
-            )
-
             Spacer(modifier = Modifier.height(16.dp))
 
+            // Botón para enviar la solicitud de recuperación
             Button(
                 onClick = {
                     coroutineScope.launch {
-                        val response = AuthRetrofitInstance.authApi.login(email, password)
+                        val emailRequestBody: RequestBody = email.toRequestBody("text/plain".toMediaTypeOrNull())
+                        val response = AuthRetrofitInstance.authApi.recoverPassword(emailRequestBody)
+
                         if (response.isSuccessful) {
-                            val authenticatedUser = response.body()
-                            if (authenticatedUser != null) {
-                                userState.value = authenticatedUser
-                                navController.navigate("categoryScreen")
-                            }
+                            Toast.makeText(context, "Correo de recuperación enviado", Toast.LENGTH_LONG).show()
+                            navController.navigate("recoverByToken")
                         } else {
-                            Toast.makeText(context, "Credenciales incorrectas", Toast.LENGTH_SHORT)
-                                .show()
+                            Toast.makeText(context, "Error al enviar la solicitud", Toast.LENGTH_SHORT).show()
                         }
                     }
                 },
@@ -103,20 +100,8 @@ fun LoginScreen(navController: NavController, userState: MutableState<User?>) {
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(containerColor = Black)
             ) {
-                Text("Iniciar sesión", color = White)
-            }
-            Spacer(modifier = Modifier.height(8.dp))
-            OutlinedButton(
-                onClick = {
-                    navController.navigate("register")
-              },
-                shape = RoundedCornerShape(12.dp),
-                modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(containerColor = White)
-            ) {
-                Text("Registrarse", color = Black)
+                Text("Recuperar Contraseña", color = White)
             }
         }
     }
 }
-
