@@ -89,6 +89,16 @@ public class User {
         this.ads = ads;
     }
 
+    public User(Long id, String name, String email,  String phoneNumber, boolean status, Roles role) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.status = status;
+        this.role = role;
+    }
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -130,6 +140,10 @@ public class User {
 
     public boolean isStatus() {
         return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
     }
 
     public Roles getRole() {

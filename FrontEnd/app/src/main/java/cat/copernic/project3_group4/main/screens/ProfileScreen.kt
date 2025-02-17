@@ -70,6 +70,9 @@ fun ProfileScreen(userState: MutableState<User?>, navController: NavController) 
                         userState.value = null
                         navController.navigate("login")
                     }
+                    DrawerButton("Restablecer contraseña") {
+                        navController.navigate("paswordRecover")
+                    }
                 }
             }
         }
@@ -136,15 +139,6 @@ fun ProfileScreen(userState: MutableState<User?>, navController: NavController) 
             Spacer(modifier = Modifier.height(6.dp))
             Text(text = "Rol: ${user.role}", fontSize = 14.sp, color = Color.Gray)
 
-            Spacer(modifier = Modifier.height(12.dp))
-            Button(
-                onClick = { /* Acción de restablecer contraseña */ },
-                shape = RoundedCornerShape(12.dp),
-                modifier = Modifier.fillMaxWidth(0.6f),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFA500)) // Naranja
-            ) {
-                Text("Restablecer contraseña", color = Color.White)
-            }
 
             Spacer(modifier = Modifier.height(24.dp))
 

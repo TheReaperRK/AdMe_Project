@@ -246,4 +246,11 @@ public class User {
     public void setResetToken(String resetToken) {
         this.resetToken = resetToken;
     }
+
+    @Override
+    public String toString() {
+        return "User{" + "id=" + id + ", name=" + name + ", email=" + email + ", phoneNumber=" + phoneNumber + ", image=" + image + ", word=" + word + ", status=" + status + ", role=" + role + ", ads=" + ads + ", resetToken=" + resetToken + '}';
+    }
+    
+    
 }
