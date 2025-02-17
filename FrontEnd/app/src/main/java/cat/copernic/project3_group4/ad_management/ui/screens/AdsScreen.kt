@@ -69,6 +69,7 @@ fun AdsScreen(adsViewModel: AdsViewModel, navController: NavController) {
             }
         }
 
+        Spacer(modifier = Modifier.weight(1f)) // Empuja el contenido hacia arriba para que el BottomNavigationBar esté siempre abajo
         BottomNavigationBar(navController)
     }
 }

@@ -60,13 +60,10 @@ fun CreateAdScreen(navController: NavController, viewModel: CategoryViewModel, u
         }
     }
 
-    Scaffold(
-        bottomBar = { BottomNavigationBar(navController) } // Usa Scaffold para el BottomNavigationBar
-    ) { paddingValues ->
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues) // Respeta el espacio del BottomNavigationBar
                 .background(Color.White)
         ) {
             SmallTopAppBar(
@@ -181,8 +178,10 @@ fun CreateAdScreen(navController: NavController, viewModel: CategoryViewModel, u
             }
 
             Spacer(modifier = Modifier.weight(1f)) // Empuja el contenido hacia arriba para que el BottomNavigationBar esté siempre abajo
+            BottomNavigationBar(navController)
+
         }
-    }
+
 }
 
 
