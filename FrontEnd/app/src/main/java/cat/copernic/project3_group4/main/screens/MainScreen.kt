@@ -42,7 +42,7 @@ fun CategoryScreen(viewModel: CategoryViewModel, navController: NavController) {
             .background(Color.White)
     ) {
         TopBar(searchText) { searchText = it }
-        FilterButtons()
+        FilterButtons(navController)
         CategoryList(filteredCategories, navController, Modifier.weight(1f))
         BottomNavigationBar(navController)
     }
@@ -70,7 +70,7 @@ fun TopBar(searchText: String, onSearchTextChange: (String) -> Unit) {
 
 
 @Composable
-fun FilterButtons() {
+fun FilterButtons(navController: NavController) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -85,7 +85,7 @@ fun FilterButtons() {
         Button(onClick = {}, colors = buttonColor) {
             Text("Todos")
         }
-        Button(onClick = {}, colors = buttonColor) {
+        Button(onClick = {navController.navigate("categoryFormScreen")}, colors = buttonColor, ) {
             Text("Propuesta")
         }
     }

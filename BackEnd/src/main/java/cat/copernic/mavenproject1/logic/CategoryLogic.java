@@ -2,9 +2,11 @@ package cat.copernic.mavenproject1.logic;
 
 import cat.copernic.mavenproject1.Entity.Category;
 import cat.copernic.mavenproject1.repository.CategoryRepo;
+import java.io.IOException;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class CategoryLogic {
@@ -37,8 +39,11 @@ public class CategoryLogic {
         categoryRepo.deleteById(id);
     }
     
-    public Long saveCategory(Category category) {
+    public Long saveCategory(Category category, MultipartFile imageFile) {
         try{
+            if (imageFile != null && !imageFile.isEmpty()) {
+                category.setImage(convertImageToBlob(imageFile));
+            }
            Long idCat =  categoryRepo.save(category).getId();
         return idCat;
         }catch(Exception e){
@@ -60,5 +65,8 @@ public class CategoryLogic {
         }catch(Exception e){
             return null;
         }
+    }
+    public byte[] convertImageToBlob(MultipartFile file) throws IOException {
+        return file.getBytes();
     }
 }

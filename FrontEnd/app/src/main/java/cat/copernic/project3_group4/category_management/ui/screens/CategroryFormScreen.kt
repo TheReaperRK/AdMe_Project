@@ -128,7 +128,7 @@ fun CategoryFormScreen(categoryViewModel: CategoryViewModel, userState: MutableS
                 )
                 imageSelected = true
             } ?: Image(
-                painter = painterResource(id = R.drawable.no_image),
+                painter = painterResource(id = R.drawable.add_image),
                 contentDescription = "Seleccionar imagen",
                 modifier = Modifier
                     .height(300.dp)

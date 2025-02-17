@@ -43,7 +43,7 @@ public class Category {
      * Binary content of the category image. Stored as a large object (LOB).
      */
     @Lob
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "LONGBLOB")
     private byte[] image; 
 
     /**
