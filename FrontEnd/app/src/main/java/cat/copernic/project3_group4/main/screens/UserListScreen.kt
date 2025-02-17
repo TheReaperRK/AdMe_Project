@@ -1,9 +1,11 @@
 package cat.copernic.project3_group4.main.screens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -13,10 +15,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.room.util.copy
 import cat.copernic.project3_group4.core.models.User
+import cat.copernic.project3_group4.core.ui.theme.BrownTertiary
+import cat.copernic.project3_group4.core.ui.theme.OrangePrimary
 import cat.copernic.project3_group4.user_management.data.datasource.UserApiRest
 import cat.copernic.project3_group4.user_management.data.datasource.UserRetrofitInstance
 import kotlinx.coroutines.launch
+
+// Definir el color marrón terciario
 
 @Composable
 fun UserListScreen(navController: NavController, modifier: Modifier = Modifier) {
@@ -42,19 +49,37 @@ fun UserListScreen(navController: NavController, modifier: Modifier = Modifier) 
         }
     }
 
-    Column(modifier = modifier.padding(16.dp)) {
-        Button(
-            onClick = { navController.navigate("profile") },
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .background(Color.White) // Fondo general blanco
+    ) {
+        // CABECERA NARANJA
+        Box(
             modifier = Modifier
-                .padding(16.dp)
-                .size(48.dp)
-                .align(Alignment.Start),
-            shape = CircleShape,
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFA500))
+                .fillMaxWidth()
+                .background(OrangePrimary)
+                .padding(vertical = 16.dp, horizontal = 16.dp),
+            contentAlignment = Alignment.CenterStart
         ) {
-            Text("<", color = Color.White, fontSize = 20.sp, fontWeight = FontWeight.Bold)
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                IconButton(
+                    onClick = { navController.popBackStack() }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.KeyboardArrowLeft,
+                        contentDescription = "Volver",
+                        tint = Color.White
+                    )
+                }
+                Text(
+                    text = "Usuarios (${users.size})",
+                    fontSize = 22.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
+                )
+            }
         }
-        Text(text = "Total de usuarios: ${users.size}", style = MaterialTheme.typography.titleLarge)
 
         LazyColumn(modifier = Modifier.fillMaxSize()) {
             items(users) { user ->
@@ -73,23 +98,24 @@ fun UserItem(user: User, navController: NavController, userApi: UserApiRest, use
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp),
-        elevation = CardDefaults.cardElevation(4.dp)
+        colors = CardDefaults.cardColors(containerColor = OrangePrimary) // Fondo marrón
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text(text = user.name, style = MaterialTheme.typography.titleMedium)
-            Text(text = user.email, style = MaterialTheme.typography.bodyMedium)
-            Text(text = "Teléfono: ${user.phoneNumber}", style = MaterialTheme.typography.bodyMedium)
-            Text(text = "Estado: ${if (user.isStatus) "Activo" else "Inactivo"}", style = MaterialTheme.typography.bodyMedium)
-            Text(text = "Rol: ${user.role}", style = MaterialTheme.typography.bodyMedium)
+            Text(text = user.name, fontSize = 18.sp, fontWeight = FontWeight.Bold, color = Color.White)
+            Text(text = user.email, fontSize = 14.sp, color = Color.White)
+            Text(text = "Teléfono: ${user.phoneNumber}", fontSize = 14.sp, color = Color.White)
+            Text(text = "Estado: ${if (user.isStatus) "Activo" else "Inactivo"}", fontSize = 14.sp, color = Color.White)
+            Text(text = "Rol: ${user.role}", fontSize = 14.sp, color = Color.White)
 
             Spacer(modifier = Modifier.height(8.dp))
 
             Row {
                 Button(
                     onClick = { navController.navigate("edit_user/${user.id}") },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
+                    colors = ButtonDefaults.buttonColors(containerColor = BrownTertiary) // Botón naranja
                 ) {
-                    Text("Editar")
+                    Text("Editar", color = Color.White)
                 }
 
                 Spacer(modifier = Modifier.width(8.dp))
@@ -99,8 +125,47 @@ fun UserItem(user: User, navController: NavController, userApi: UserApiRest, use
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
                 ) {
-                    Text("Eliminar")
+                    Text("Eliminar", color = Color.White)
                 }
+
+                Spacer(modifier = Modifier.width(8.dp))
+
+                Button(
+                    onClick = {
+                        coroutineScope.launch {
+                            try {
+                                val response = if (user.isStatus) userApi.desactivateUserStatus(user.id) else userApi.activateUserStatus(user.id)
+                                if (response.isSuccessful) {
+                                    println("Usuario activado")
+
+                                    // Buscar y actualizar el usuario en la lista
+                                    val index = users.indexOfFirst { it.id == user.id }
+                                    if (index != -1) {
+                                        users[index] = User(
+                                            users[index].id,
+                                            users[index].name,
+                                            users[index].email,
+                                            users[index].phoneNumber,
+                                            !users[index].isStatus,  // Invierte el estado
+                                            users[index].role
+                                        )
+
+                                    }
+                                } else {
+                                    println("Error al actualizar estado del usuario")
+                                }
+                            } catch (e: Exception) {
+                                println("Error: ${e.message}")
+                            }
+                        }
+                    },
+                    modifier = Modifier.weight(1f),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.White)
+                ) {
+                    Text(if (user.isStatus) "Desactivar" else "Activar", color = OrangePrimary)
+                }
+
+
             }
         }
     }
@@ -108,8 +173,8 @@ fun UserItem(user: User, navController: NavController, userApi: UserApiRest, use
     if (showDialog) {
         AlertDialog(
             onDismissRequest = { showDialog = false },
-            title = { Text("Confirmar eliminación") },
-            text = { Text("¿Seguro que quieres eliminar a ${user.name}? Esta acción no se puede deshacer.") },
+            title = { Text("Confirmar eliminación", fontWeight = FontWeight.Bold, color = BrownTertiary) },
+            text = { Text("¿Seguro que quieres eliminar a ${user.name}? Esta acción no se puede deshacer.", color = Color.Black) },
             confirmButton = {
                 Button(
                     onClick = {
@@ -129,12 +194,15 @@ fun UserItem(user: User, navController: NavController, userApi: UserApiRest, use
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
                 ) {
-                    Text("Eliminar")
+                    Text("Eliminar", color = Color.White)
                 }
             },
             dismissButton = {
-                Button(onClick = { showDialog = false }) {
-                    Text("Cancelar")
+                Button(
+                    onClick = { showDialog = false },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.LightGray)
+                ) {
+                    Text("Cancelar", color = Color.Black)
                 }
             }
         )

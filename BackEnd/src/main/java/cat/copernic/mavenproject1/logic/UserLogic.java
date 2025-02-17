@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.util.Optional;
 import org.springframework.web.multipart.MultipartFile;
 
 
@@ -72,6 +73,37 @@ public class UserLogic {
         
         userRepo.deleteById(id);
         
+    }
+    
+    public void activateUserById(Long id) {
+    // Buscar el usuario por ID
+    Optional<User> optionalUser = userRepo.findById(id);
+    
+    // Verificar si el usuario existe
+    if (optionalUser.isPresent()) {
+        User user = optionalUser.get(); // Obtener el usuario de Optional
+        user.setStatus(true); // Modificar el estado
+        userRepo.save(user); // Guardar los cambios en la base de datos
+    } else {
+        throw new RuntimeException("Usuario no encontrado con ID: " + id);
+    }
+}
+
+    
+    public void desactivateUserById(Long id){
+        
+        // Buscar el usuario por ID
+        Optional<User> optionalUser = userRepo.findById(id);
+
+        // Verificar si el usuario existe
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get(); // Obtener el usuario de Optional
+            user.setStatus(false); // Modificar el estado
+            userRepo.save(user); // Guardar los cambios en la base de datos
+        } else {
+            throw new RuntimeException("Usuario no encontrado con ID: " + id);
+        }
+
     }
     
     public boolean userIsUnique (User user){
