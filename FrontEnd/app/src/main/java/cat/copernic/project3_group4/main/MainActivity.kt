@@ -83,6 +83,9 @@ class MainActivity : ComponentActivity() {
                         }
                         composable("createAdScreen") { CreateAdScreen(navController, viewModel = categoryViewModel, userState) }
                         composable("recoverByToken") { RecoverByToken(navController) }
+                        composable("AdsScreen") {
+                            AdsScreen(adsViewModel, navController)
+                        }
 
                     }
                 }
