@@ -4,6 +4,7 @@ C:\Users\carlo\Documents\projects\proyect3_group4\BackEnd\src\main\java\cat\cope
 C:\Users\carlo\Documents\projects\proyect3_group4\BackEnd\src\main\java\cat\copernic\mavenproject1\apiControllers\CategoryApiController.java
 C:\Users\carlo\Documents\projects\proyect3_group4\BackEnd\src\main\java\cat\copernic\mavenproject1\apiControllers\UserApiController.java
 C:\Users\carlo\Documents\projects\proyect3_group4\BackEnd\src\main\java\cat\copernic\mavenproject1\configuration\Config.java
+C:\Users\carlo\Documents\projects\proyect3_group4\BackEnd\src\main\java\cat\copernic\mavenproject1\configuration\EmailConfig.java
 C:\Users\carlo\Documents\projects\proyect3_group4\BackEnd\src\main\java\cat\copernic\mavenproject1\Entity\Ad.java
 C:\Users\carlo\Documents\projects\proyect3_group4\BackEnd\src\main\java\cat\copernic\mavenproject1\Entity\Category.java
 C:\Users\carlo\Documents\projects\proyect3_group4\BackEnd\src\main\java\cat\copernic\mavenproject1\Entity\User.java
@@ -16,4 +17,3 @@ C:\Users\carlo\Documents\projects\proyect3_group4\BackEnd\src\main\java\cat\cope
 C:\Users\carlo\Documents\projects\proyect3_group4\BackEnd\src\main\java\cat\copernic\mavenproject1\repository\CategoryRepo.java
 C:\Users\carlo\Documents\projects\proyect3_group4\BackEnd\src\main\java\cat\copernic\mavenproject1\repository\UserRepo.java
 C:\Users\carlo\Documents\projects\proyect3_group4\BackEnd\src\main\java\cat\copernic\mavenproject1\webControllers\UserViewController.java
-C:\Users\carlo\Documents\projects\proyect3_group4\BackEnd\src\main\java\EmailConfig.java
