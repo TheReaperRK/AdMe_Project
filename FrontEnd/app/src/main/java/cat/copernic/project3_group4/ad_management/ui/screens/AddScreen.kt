@@ -15,21 +15,26 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
 import cat.copernic.project3_group4.ad_management.ui.viewmodels.AdsViewModel
 import cat.copernic.project3_group4.core.models.Ad
 import cat.copernic.project3_group4.main.screens.BottomNavigationBar
 import coil.compose.AsyncImage
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.style.TextOverflow
+import cat.copernic.project3_group4.main.screens.BottomNavigationBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AdsScreen(categoryId: Long?, adsViewModel: AdsViewModel, navController: NavController) {
     LaunchedEffect(categoryId) {
-        println("Cargando anuncios para la categoría: $categoryId") // Debug
+        println("Cargando anuncios para la categoría: $categoryId")
         if (categoryId == null) {
-            adsViewModel.fetchAds() // Obtener todos los anuncios
+            adsViewModel.fetchAds()
         } else {
-            adsViewModel.fetchAdsByCategory(categoryId) // Filtrar por categoría
+            adsViewModel.fetchAdsByCategory(categoryId)
         }
     }
 
@@ -59,7 +64,7 @@ fun AdsScreen(categoryId: Long?, adsViewModel: AdsViewModel, navController: NavC
             LazyColumn(modifier = Modifier.weight(1f)) {
                 items(ads) { ad ->
                     AdItem(ad) { clickedCategory ->
-                        adsViewModel.setSelectedCategory(clickedCategory) // Manejar clic en la categoría
+                        adsViewModel.setSelectedCategory(clickedCategory)
                     }
                 }
             }
@@ -69,67 +74,88 @@ fun AdsScreen(categoryId: Long?, adsViewModel: AdsViewModel, navController: NavC
     }
 }
 
-
 @Composable
-fun AdItem(ad: Ad, onCategoryClick: (Long) -> Unit) { // Ahora acepta Long
+fun AdItem(ad: Ad, onCategoryClick: (Long) -> Unit) {
+    var isExpanded by remember { mutableStateOf(false) }
+    val imageUrl = remember { base64ToByteArray(ad.data) }
 
-    Column(
+    Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
-            .background(Color(0xFFFFAA00), shape = RoundedCornerShape(8.dp))
+            .clickable {
+                isExpanded = true
+            },
+        shape = RoundedCornerShape(8.dp),
+        elevation = CardDefaults.cardElevation(4.dp)
     ) {
-        val imageUrl = remember { "data:image/png;base64,${ad.data}" }
-
-        AsyncImage(
-            model = imageUrl,
-            contentDescription = null,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(150.dp)
-        )
-
         Column(modifier = Modifier.padding(8.dp)) {
-            Text(
-                text = ad.title,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold
+            AsyncImage(
+                model = imageUrl,
+                contentDescription = null,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(150.dp),
+                contentScale = ContentScale.Crop
             )
 
-            Text(
-                text = ad.description,
-                fontSize = 14.sp,
-                color = Color.Black,
-                maxLines = 2
-            )
-
-            Text(
-                text = "${ad.price}€",
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.Black,
-                modifier = Modifier.padding(top = 4.dp)
-            )
-
-            // Categoría con clic para filtrar
+            Text(text = ad.title, fontSize = 18.sp, fontWeight = FontWeight.Bold)
+            Text(text = ad.description, fontSize = 14.sp, maxLines = 2, overflow = TextOverflow.Ellipsis)
+            Text(text = "${ad.price}€", fontSize = 16.sp, fontWeight = FontWeight.Bold, color = Color.Black)
             Text(
                 text = "Categoría: ${ad.category.name}",
                 fontSize = 14.sp,
                 color = Color.Blue,
-                modifier = Modifier
-                    .padding(top = 4.dp)
-                    .clickable { onCategoryClick(ad.category.id) } // Ahora pasa el ID
+                modifier = Modifier.clickable { onCategoryClick(ad.category.id) }
             )
+        }
+    }
 
+    if (isExpanded) {
+        Dialog(onDismissRequest = { isExpanded = false }) {
+            Card(
+                shape = RoundedCornerShape(12.dp),
+                elevation = CardDefaults.cardElevation(8.dp),
+                modifier = Modifier.padding(16.dp)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    AsyncImage(
+                        model = imageUrl,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(200.dp),
+                        contentScale = ContentScale.Fit
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(text = ad.title, fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                    Text(text = ad.description, fontSize = 16.sp)
+                    Text(text = "${ad.price}€", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                    Text(
+                        text = "Categoría: ${ad.category.name}",
+                        fontSize = 16.sp,
+                        color = Color.Blue,
+                        modifier = Modifier.clickable { onCategoryClick(ad.category.id) }
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Button(onClick = { isExpanded = false }) {
+                        Text("Cerrar")
+                    }
+                }
+            }
         }
     }
 }
 
-
-
-fun byteArrayToBase64(byteArray: ByteArray?): String {
-    return byteArray?.let {
-        "data:image/png;base64," + Base64.encodeToString(it, Base64.DEFAULT)
-    } ?: ""
+fun base64ToByteArray(base64String: String): ByteArray? {
+    return try {
+        Base64.decode(base64String, Base64.DEFAULT)
+    } catch (e: IllegalArgumentException) {
+        null
+    }
 }
-

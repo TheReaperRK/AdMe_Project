@@ -26,6 +26,7 @@ import cat.copernic.project3_group4.core.models.User
 import cat.copernic.project3_group4.user_management.ui.screens.ProfileScreen
 import cat.copernic.project3_group4.user_management.ui.screens.RegisterScreen
 import cat.copernic.project3_group4.user_management.ui.screens.UserListScreen
+
 import cat.copernic.project3_group4.ad_management.ui.screens.AdsScreen
 import cat.copernic.project3_group4.main.screens.CategoryScreen
 import cat.copernic.project3_group4.category_management.ui.viewmodels.CategoryViewModel
@@ -86,6 +87,9 @@ class MainActivity : ComponentActivity() {
                            }
                         composable("createAdScreen") { CreateAdScreen(navController, viewModel = categoryViewModel, userState) }
                         composable("recoverByToken") { RecoverByToken(navController) }
+                        composable("AdsScreen") {
+                            AdsScreen(adsViewModel, navController)
+                        }
 
                     }
                 }

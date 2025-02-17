@@ -23,9 +23,17 @@ import cat.copernic.project3_group4.core.models.Category
 @Composable
 fun CategoryScreen(viewModel: CategoryViewModel, navController: NavController) {
     val categories by viewModel.categories.observeAsState(emptyList())
+    var searchText by remember { mutableStateOf("") }
 
     LaunchedEffect(Unit) {
         viewModel.fetchCategories()
+    }
+
+    // Filtra las categorías en función del texto ingresado
+    val filteredCategories by remember(searchText, categories) {
+        derivedStateOf {
+            categories.filter { it.name.startsWith(searchText, ignoreCase = true) }
+        }
     }
 
     Column(
@@ -33,25 +41,36 @@ fun CategoryScreen(viewModel: CategoryViewModel, navController: NavController) {
             .fillMaxSize()
             .background(Color.White)
     ) {
-        TopBar()
-        FilterButtons(navController)
-        CategoryList(categories, navController, Modifier.weight(1f))
+        TopBar(searchText) { searchText = it }
+        FilterButtons()
+        CategoryList(filteredCategories, navController, Modifier.weight(1f))
         BottomNavigationBar(navController)
     }
 }
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopBar() {
-    TopAppBar(
-        title = { Text("Buscar", color = Color.White) },
-        colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFFFF6600))
-    )
+fun TopBar(searchText: String, onSearchTextChange: (String) -> Unit) {
+    Column {
+        TopAppBar(
+            title = { Text("Buscar", color = Color.White) },
+            colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFFFF6600))
+        )
+        TextField(
+            value = searchText,
+            onValueChange = onSearchTextChange,
+            placeholder = { Text("Buscar categoría...") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp),
+            singleLine = true
+        )
+    }
 }
 
+
 @Composable
-fun FilterButtons(navController: NavController) {
+fun FilterButtons() {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -66,7 +85,7 @@ fun FilterButtons(navController: NavController) {
         Button(onClick = {}, colors = buttonColor) {
             Text("Todos")
         }
-        Button(onClick = {navController.navigate("categoryFormScreen")}, colors = buttonColor) {
+        Button(onClick = {}, colors = buttonColor) {
             Text("Propuesta")
         }
     }
@@ -115,6 +134,12 @@ fun BottomNavigationBar(navController: NavController) {
             onClick = {navController.navigate("categoryScreen")  },
             icon = { /* Icono aquí si lo necesitas */ },
             label = { Text("Inicio") }
+        )
+        NavigationBarItem(
+            selected = currentRoute == "AdsScreen",
+            onClick = {navController.navigate("AdsScreen")},
+            icon = { /* Icono aquí si lo necesitas */ },
+            label = { Text("ads") }
         )
         NavigationBarItem(
             selected = currentRoute == "createAdScreen",
