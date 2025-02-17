@@ -20,7 +20,7 @@ public class Category {
     /**
      * Image URL or Base64 string.
      */
-    private String image;
+    private byte[] image;
 
     /**
      * Indicates whether the category is a proposal.
@@ -32,7 +32,7 @@ public class Category {
     }
 
     // Constructor completo
-    public Category(Long id, String name, String description, String image, boolean proposal) {
+    public Category(Long id, String name, String description, byte[] image, boolean proposal) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -65,11 +65,11 @@ public class Category {
         this.description = description;
     }
 
-    public String getImage() {
+    public byte[] getImage() {
         return image;
     }
 
-    public void setImage(String image) {
+    public void setImage(byte[] image) {
         this.image = image;
     }
 

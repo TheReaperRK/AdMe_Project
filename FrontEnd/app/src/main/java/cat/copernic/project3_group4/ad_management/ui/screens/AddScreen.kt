@@ -1,4 +1,4 @@
-package cat.copernic.project3_group4.main.screens
+package cat.copernic.project3_group4.ad_management.ui.screens
 
 import android.util.Base64
 import androidx.compose.foundation.background
@@ -18,6 +18,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavController
 import cat.copernic.project3_group4.ad_management.ui.viewmodels.AdsViewModel
 import cat.copernic.project3_group4.core.models.Ad
+import cat.copernic.project3_group4.main.screens.BottomNavigationBar
 import coil.compose.AsyncImage
 
 @OptIn(ExperimentalMaterial3Api::class)

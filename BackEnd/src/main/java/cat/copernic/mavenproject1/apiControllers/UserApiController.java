@@ -178,11 +178,11 @@ public class UserApiController {
     
     @PostMapping("/create")
     public ResponseEntity<Long> createUser(@RequestBody User user) throws IOException {
-       //ResponseEntity<Long> response;
+        //ResponseEntity<Long> response;
         
         
         // Ruta de la imagen en el sistema de archivos
-       Path projectPath = Paths.get("").toAbsolutePath();
+        Path projectPath = Paths.get("").toAbsolutePath();
 
         // Construir la ruta dinámica a la imagen
         Path imagePath = projectPath.resolve("src/main/java/cat/copernic/mavenproject1/tux.jpg");

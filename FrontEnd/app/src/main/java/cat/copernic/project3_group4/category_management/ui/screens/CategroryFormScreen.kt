@@ -1,8 +1,10 @@
 package cat.copernic.project3_group4.category_management.ui.screens
 
 import android.content.ContentResolver
+import android.content.ContentValues.TAG
 import android.graphics.BitmapFactory
 import android.net.Uri
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -63,10 +65,15 @@ import cat.copernic.project3_group4.core.utils.uriToMultipartBodyPart
 import cat.copernic.project3_group4.user_management.data.datasource.AuthRetrofitInstance
 import coil.compose.rememberAsyncImagePainter
 import kotlinx.coroutines.launch
+import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import retrofit2.create
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
+import java.sql.SQLException
 
 @Composable
 fun CategoryFormScreen(categoryViewModel: CategoryViewModel, userState: MutableState<User?>, navController: NavController ){
@@ -121,7 +128,7 @@ fun CategoryFormScreen(categoryViewModel: CategoryViewModel, userState: MutableS
                 )
                 imageSelected = true
             } ?: Image(
-                painter = painterResource(id = R.drawable.ic_logo),
+                painter = painterResource(id = R.drawable.no_image),
                 contentDescription = "Seleccionar imagen",
                 modifier = Modifier
                     .height(300.dp)
@@ -181,31 +188,47 @@ fun CategoryFormScreen(categoryViewModel: CategoryViewModel, userState: MutableS
                 }else{
                     proposal = false
                 }
-                if (name.isNotBlank() and description.isNotBlank()) {
-                    coroutineScope.launch {
+                try {
 
-                        /*val namePart = createPartFromString(name)
-                        val descriptionPart = createPartFromString(description)
-                        val proposalPart = createPartFromString(if (proposal) "true" else "false")
-                        */
-                        // Convertir la imagen en MultipartBody.Part
-                        //val imagePart = selectedImageUri?.let { uriToMultipartBodyPart(context, it) }
-                        val byteArray = selectedImageUri?.let { convertUriToByteArray(it, context.contentResolver) }
-                        val response = CategoryRetrofitInstance.retrofitInstance.create<CategoryApiRest>().createCategory(
-                            Category(null,name,description,byteArray.toString(),proposal)
-                        )
 
-                        if (response.isSuccessful) {
-                            Toast.makeText(context, "creacion exitosa", Toast.LENGTH_SHORT).show()
-                            navController.navigate("categoryScreen")
+                        if (name.isNotBlank() and description.isNotBlank()) {
+                            coroutineScope.launch {
+
+                                val namePart = createPartFromString(name)
+                                val descriptionPart = createPartFromString(description)
+                                val proposalPart = createPartFromString(if (proposal) "true" else "false")
+
+                                // Convertir la imagen en MultipartBody.Part
+                                //val imagePart = selectedImageUri?.let { uriToMultipartBodyPart(context, it) }
+                               // val byteArray = selectedImageUri?.let { convertUriToByteArray(it, context.contentResolver) }
+                                val imagePart = selectedImageUri?.let { uri ->
+                                    val byteArray = convertUriToByteArray(uri, context.contentResolver)
+                                    val requestBody = byteArray?.let { RequestBody.create("image/*".toMediaTypeOrNull(), it) }
+                                   requestBody?.let { MultipartBody.Part.createFormData("image", "category_image.jpg", it) }
+                                }
+
+                                /*val response = CategoryRetrofitInstance.retrofitInstance.create<CategoryApiRest>().createCategory(
+                                    Category(null,name,description,imagePart,proposal)
+                                ) */
+                                val response = CategoryRetrofitInstance.retrofitInstance.create<CategoryApiRest>().createCategory(
+                                                                namePart, descriptionPart, imagePart, proposalPart
+                                                            )
+                                if (response.isSuccessful) {
+                                    Toast.makeText(context, "creacion exitosa", Toast.LENGTH_SHORT).show()
+                                    navController.navigate("categoryScreen")
+                                } else {
+                                    Toast.makeText(context, "Error en la creacion", Toast.LENGTH_SHORT).show()
+                                    Log.e(TAG, "Error al crear categoria")
+                                }
+                            }
                         } else {
-                            Toast.makeText(context, "Error en la creacion", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, "Los campos estan incompletos", Toast.LENGTH_SHORT).show()
                         }
+                    }catch(e: Exception){
+                                Toast.makeText(context, "Error en la creacion", Toast.LENGTH_SHORT).show()
+                        Log.e(TAG, "Error al crear categoria: "+e.message)
                     }
-                } else {
-                    Toast.makeText(context, "Los campos estan incompletos", Toast.LENGTH_SHORT).show()
-                }
-            },
+            },          //admin@gmail.com
             shape = RoundedCornerShape(12.dp),
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(containerColor = Black)
