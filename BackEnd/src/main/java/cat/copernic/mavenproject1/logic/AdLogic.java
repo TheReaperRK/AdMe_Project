@@ -1,8 +1,10 @@
 package cat.copernic.mavenproject1.logic;
 
 import cat.copernic.mavenproject1.Entity.Ad;
+import cat.copernic.mavenproject1.Entity.Category;
 import cat.copernic.mavenproject1.Entity.User;
 import cat.copernic.mavenproject1.repository.AdRepo;
+import cat.copernic.mavenproject1.repository.CategoryRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +20,9 @@ public class AdLogic {
 
     @Autowired
     private AdRepo adRepo;
+    
+    @Autowired
+    private CategoryRepo categoryRepo;
 
 @Transactional
 public Ad getAdById(Long id) {
@@ -96,5 +101,19 @@ public Ad getAdById(Long id) {
     
     public List<Ad> findAdsByCategory(Long categoryId) {
         return adRepo.findByCategory_Id(categoryId); // 🔥 Método corregido
+    }
+    
+    public List<Ad> findAdsByPriceRange(double minPrice, double maxPrice) {
+        return adRepo.findByPriceBetween(minPrice, maxPrice);
+    }
+
+    // ✅ Nuevo método para filtrar por categoría y precio
+    public List<Ad> findAdsFiltered(Long categoryId, double minPrice, double maxPrice) {
+        return adRepo.findByCategory_IdAndPriceBetween(categoryId, minPrice, maxPrice);
+    }
+
+    // ✅ Nuevo método para obtener todas las categorías
+    public List<Category> getAllCategories() {
+        return categoryRepo.findAll();
     }
 }

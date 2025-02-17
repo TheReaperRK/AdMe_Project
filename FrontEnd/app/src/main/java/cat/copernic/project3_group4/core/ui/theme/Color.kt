@@ -11,4 +11,4 @@ val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 val OrangePrimary = Color(0xFFFFA500) // Código hexadecimal del naranja
 val BrownTertiary = Color(0xFF7B4328) // Código hexadecimal del marron
-
+val OrangeSecondary = Color(0xFFFF6600)

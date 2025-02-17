@@ -19,6 +19,8 @@ import cat.copernic.project3_group4.core.models.Category
 import coil.compose.AsyncImage
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import cat.copernic.project3_group4.main.screens.BottomNavigationBar
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -122,6 +124,7 @@ fun FilterSection(
 
 @Composable
 fun AdItem(ad: Ad) {
+    val imageUrl = remember { base64ToByteArray(ad.data) }
     Card(
         modifier = Modifier.fillMaxWidth().padding(8.dp),
         shape = RoundedCornerShape(8.dp),
@@ -129,9 +132,13 @@ fun AdItem(ad: Ad) {
     ) {
         Column {
             AsyncImage(
-                model = "data:image/png;base64,${ad.data}",
+                model = imageUrl,
                 contentDescription = null,
-                modifier = Modifier.fillMaxWidth().height(150.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(150.dp)
+                    .clip(RoundedCornerShape(12.dp)), // Bordes redondeados
+                contentScale = ContentScale.Crop
             )
             Column(modifier = Modifier.padding(8.dp)) {
                 Text(ad.title, fontSize = 16.sp, fontWeight = FontWeight.Bold)

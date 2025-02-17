@@ -126,4 +126,44 @@ public ResponseEntity<Long> createAd(@RequestBody Ad ad) {
         List<Ad> ads = adLogic.findAdsByCategory(categoryId);
         return new ResponseEntity<>(ads, HttpStatus.OK);
     }
+    
+    @GetMapping("/priceRange")
+    public ResponseEntity<List<Ad>> getAdsByPriceRange(
+            @RequestParam double minPrice,
+            @RequestParam double maxPrice) {
+        try {
+            List<Ad> ads = adLogic.findAdsByPriceRange(minPrice, maxPrice);
+            return new ResponseEntity<>(ads, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error("Error retrieving ads by price range", e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    // ✅ Nuevo método para filtrar anuncios por categoría y precio
+    @GetMapping("/filtered")
+    public ResponseEntity<List<Ad>> getAdsFiltered(
+            @RequestParam Long categoryId,
+            @RequestParam double minPrice,
+            @RequestParam double maxPrice) {
+        try {
+            List<Ad> ads = adLogic.findAdsFiltered(categoryId, minPrice, maxPrice);
+            return new ResponseEntity<>(ads, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error("Error retrieving filtered ads", e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    // ✅ Nuevo método para obtener todas las categorías
+    @GetMapping("/categories")
+    public ResponseEntity<List<Category>> getCategories() {
+        try {
+            List<Category> categories = adLogic.getAllCategories();
+            return new ResponseEntity<>(categories, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error("Error retrieving categories", e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
