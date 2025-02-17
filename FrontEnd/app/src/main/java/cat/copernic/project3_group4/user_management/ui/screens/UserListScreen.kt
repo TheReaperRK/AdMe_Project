@@ -1,4 +1,4 @@
-package cat.copernic.project3_group4.main.screens
+package cat.copernic.project3_group4.user_management.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*

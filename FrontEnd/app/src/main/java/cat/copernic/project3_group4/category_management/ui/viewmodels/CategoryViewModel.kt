@@ -1,4 +1,4 @@
-package cat.copernic.project3_group4.category_management.presentation
+package cat.copernic.project3_group4.category_management.ui.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -7,7 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.LiveData
 import cat.copernic.project3_group4.core.models.Category
 import cat.copernic.project3_group4.category_management.data.datasource.CategoryApiRest
-import cat.copernic.project3_group4.user_management.data.datasource.CategoryRetrofitInstance
+import cat.copernic.project3_group4.category_management.data.datasource.CategoryRetrofitInstance
 
 class CategoryViewModel : ViewModel() {
 
