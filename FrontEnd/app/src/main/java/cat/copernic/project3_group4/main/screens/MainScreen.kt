@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import cat.copernic.project3_group4.category_management.presentation.CategoryViewModel
+import cat.copernic.project3_group4.category_management.ui.viewmodels.CategoryViewModel
 import cat.copernic.project3_group4.core.models.Category
 
 @Composable

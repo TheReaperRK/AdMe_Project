@@ -1,4 +1,4 @@
-package cat.copernic.project3_group4.main.screens
+package cat.copernic.project3_group4.user_management.ui.screens
 
 import android.graphics.BitmapFactory
 import androidx.compose.foundation.Image
@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import cat.copernic.project3_group4.core.models.User
 import androidx.compose.ui.text.style.TextAlign
+import cat.copernic.project3_group4.main.screens.BottomNavigationBar
 
 @Composable
 fun ProfileScreen(userState: MutableState<User?>, navController: NavController) {

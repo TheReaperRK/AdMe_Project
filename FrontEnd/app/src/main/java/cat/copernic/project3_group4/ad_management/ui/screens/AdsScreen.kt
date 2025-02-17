@@ -1,4 +1,4 @@
-package cat.copernic.project3_group4.main.screens
+package cat.copernic.project3_group4.ad_management.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -13,13 +13,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import cat.copernic.project3_group4.ad_management.presentation.AdsViewModel
+import cat.copernic.project3_group4.ad_management.ui.viewmodels.AdsViewModel
 import cat.copernic.project3_group4.core.models.Ad
 import cat.copernic.project3_group4.core.models.Category
 import coil.compose.AsyncImage
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.Alignment
-import androidx.compose.foundation.layout.FlowRow
+import cat.copernic.project3_group4.main.screens.BottomNavigationBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

@@ -1,7 +1,6 @@
-package cat.copernic.project3_group4.main.screens
+package cat.copernic.project3_group4.ad_management.ui.screens
 
 import android.app.Activity
-import kotlinx.coroutines.withContext
 import android.net.Uri
 import android.util.Base64
 import android.widget.Toast
@@ -17,23 +16,21 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import cat.copernic.project3_group4.R
-import cat.copernic.project3_group4.category_management.presentation.CategoryViewModel
+import cat.copernic.project3_group4.category_management.ui.viewmodels.CategoryViewModel
 import cat.copernic.project3_group4.core.models.Ad
 import cat.copernic.project3_group4.core.models.Category
 import cat.copernic.project3_group4.core.models.User
 import cat.copernic.project3_group4.ad_management.data.datasource.AdApiRest
-import cat.copernic.project3_group4.user_management.data.datasource.AdRetrofitInstance
+import cat.copernic.project3_group4.ad_management.data.datasource.AdRetrofitInstance
+import cat.copernic.project3_group4.main.screens.BottomNavigationBar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

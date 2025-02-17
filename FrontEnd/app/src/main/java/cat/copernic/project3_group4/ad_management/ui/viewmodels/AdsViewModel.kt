@@ -1,4 +1,4 @@
-package cat.copernic.project3_group4.ad_management.presentation
+package cat.copernic.project3_group4.ad_management.ui.viewmodels
 
 
 import android.util.Log
@@ -10,7 +10,7 @@ import cat.copernic.project3_group4.ad_management.data.datasource.AdApiRest
 import cat.copernic.project3_group4.core.models.Ad
 import cat.copernic.project3_group4.core.models.Category
 
-import cat.copernic.project3_group4.user_management.data.datasource.AdRetrofitInstance
+import cat.copernic.project3_group4.ad_management.data.datasource.AdRetrofitInstance
 import kotlinx.coroutines.launch
 
 class AdsViewModel : ViewModel() {
