@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import cat.copernic.project3_group4.core.models.User
 import androidx.compose.ui.text.style.TextAlign
+import cat.copernic.project3_group4.main.screens.BottomNavigationBar
 import androidx.compose.ui.tooling.preview.Preview
 import cat.copernic.project3_group4.core.ui.theme.OrangePrimary
 import cat.copernic.project3_group4.core.ui.theme.Project3_Group4Theme
