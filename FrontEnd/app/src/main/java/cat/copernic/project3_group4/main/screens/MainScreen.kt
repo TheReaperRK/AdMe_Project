@@ -51,7 +51,7 @@ fun CategoryScreen(viewModel: CategoryViewModel, userState: MutableState<User?>,
             .background(Color.White)
     ) {
         TopBar(searchText) { searchText = it }
-        FilterButtons()
+        FilterButtons(navController, userState)
         CategoryList(filteredCategories, navController, Modifier.weight(1f))
         BottomNavigationBar(navController)
     }
