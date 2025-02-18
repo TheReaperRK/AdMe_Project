@@ -1,6 +1,7 @@
 package cat.copernic.project3_group4.main.screens
 
 
+import RegisterViewModel
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -18,12 +19,15 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import cat.copernic.project3_group4.R
+import cat.copernic.project3_group4.core.ui.theme.BrownTertiary
 import cat.copernic.project3_group4.core.ui.theme.OrangePrimary
 import cat.copernic.project3_group4.user_management.data.datasource.AuthRetrofitInstance
+import cat.copernic.project3_group4.user_management.ui.screens.InputField
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody
@@ -32,152 +36,128 @@ import org.json.JSONObject
 
 @Composable
 fun RecoverByToken(navController: NavController) {
-    var email by remember { mutableStateOf("")}
-    var token by remember { mutableStateOf("")}
-    var word by remember { mutableStateOf("")}
-    var wordRepeat by remember { mutableStateOf("")}
+    var email by remember { mutableStateOf("") }
+    var token by remember { mutableStateOf("") }
+    var word by remember { mutableStateOf("") }
+    var wordRepeat by remember { mutableStateOf("") }
 
+    var emailError by remember { mutableStateOf<String?>(null) }
+    var tokenError by remember { mutableStateOf<String?>(null) }
+    var passwordError by remember { mutableStateOf<String?>(null) }
+    var repeatPasswordError by remember { mutableStateOf<String?>(null) }
 
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
 
     Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(OrangePrimary),
+        modifier = Modifier.fillMaxSize().background(OrangePrimary),
         contentAlignment = Alignment.Center
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(32.dp)
-        ) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.padding(32.dp)) {
             // Botón de regreso
-            IconButton(
-                onClick = { navController.popBackStack() },
-                modifier = Modifier
-                    .padding(start = 16.dp, top = 16.dp)
-                    .align(Alignment.Start)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.ArrowBack,
-                    contentDescription = "Volver",
-                    tint = White
-                )
+            IconButton(onClick = { navController.popBackStack() }) {
+                Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Volver", tint = White)
             }
 
-            Image(
-                painter = painterResource(id = R.drawable.ic_logo),
-                contentDescription = "Logo",
-                modifier = Modifier.size(100.dp)
-            )
+            Image(painter = painterResource(id = R.drawable.ic_logo), contentDescription = "Logo", modifier = Modifier.size(100.dp))
             Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                text = "Recuperar Contraseña",
-                style = TextStyle(fontSize = 24.sp, fontWeight = FontWeight.Bold, color = White)
-            )
+            Text("Recuperar Contraseña", fontSize = 24.sp, fontWeight = FontWeight.Bold, color = White)
             Spacer(modifier = Modifier.height(16.dp))
 
             // Campo para el correo
-            OutlinedTextField(
+            InputField(
+                label = "Correo",
                 value = email,
                 onValueChange = { email = it },
-                label = { Text("Introduce tu correo:") },
-                shape = RoundedCornerShape(12.dp),
-                modifier = Modifier.fillMaxWidth()
+                error = emailError,
+                maxLength = 60
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Campo para el correo
-            OutlinedTextField(
+            // Campo para el token
+            InputField(
+                label = "Token",
                 value = token,
                 onValueChange = { token = it },
-                label = { Text("Introduce el token:") },
-                shape = RoundedCornerShape(12.dp),
-                modifier = Modifier.fillMaxWidth()
+                error = tokenError,
+                maxLength = 250
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Campo para el correo
-            OutlinedTextField(
+            // Campo para la contraseña
+            InputField(
+                label = "Nueva contraseña",
                 value = word,
                 onValueChange = { word = it },
-                label = { Text("Introduce la nueva contraseña:") },
-                shape = RoundedCornerShape(12.dp),
-                modifier = Modifier.fillMaxWidth()
+                error = passwordError,
+                maxLength = 60,
+                isPassword = true
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Campo para el correo
-            OutlinedTextField(
+            // Repetir contraseña
+            InputField(
+                label = "Repite la contraseña",
                 value = wordRepeat,
                 onValueChange = { wordRepeat = it },
-                label = { Text("repite la nueva contraseña:") },
-                shape = RoundedCornerShape(12.dp),
-                modifier = Modifier.fillMaxWidth()
+                error = repeatPasswordError,
+                maxLength = 60,
+                isPassword = true
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Botón para enviar la solicitud de recuperación
+            // Botón de recuperación
             Button(
                 onClick = {
-                    coroutineScope.launch {
-                        if (word == wordRepeat) {
+                    emailError = if (!isValidEmail(email)) "Correo inválido" else null
+                    tokenError = if (token.length > 250) "El token debe tener máximo 250 caracteres" else null
+                    passwordError = if (!isValidPassword(word)) "Contraseña insegura" else null
+                    repeatPasswordError = if (word != wordRepeat) "Las contraseñas no coinciden" else null
 
-                            val emailRequestBody: RequestBody =
-                                email.toRequestBody("text/plain".toMediaTypeOrNull())
-                            val tokenRequestBody: RequestBody =
-                                token.toRequestBody("text/plain".toMediaTypeOrNull())
-                            val wordRequestBody: RequestBody =
-                                word.toRequestBody("text/plain".toMediaTypeOrNull())
-
-
+                    if (emailError == null && tokenError == null && passwordError == null && repeatPasswordError == null) {
+                        coroutineScope.launch {
                             val response = AuthRetrofitInstance.authApi.resetPassword(
-                                emailRequestBody,
-                                tokenRequestBody,
-                                wordRequestBody
+                                email.toRequestBody("text/plain".toMediaTypeOrNull()),
+                                token.toRequestBody("text/plain".toMediaTypeOrNull()),
+                                word.toRequestBody("text/plain".toMediaTypeOrNull())
                             )
 
                             if (response.isSuccessful) {
-                                Toast.makeText(
-                                    context,
-                                    "Se ha restablecido la contraseña",
-                                    Toast.LENGTH_LONG
-                                ).show()
+                                Toast.makeText(context, "Se ha restablecido la contraseña", Toast.LENGTH_LONG).show()
                                 navController.navigate("login")
                             } else {
-                                val errorBody = response.errorBody()?.string() // Obtener el cuerpo de la respuesta de error
+                                val errorBody = response.errorBody()?.string()
                                 val errorMessage = try {
-                                    JSONObject(errorBody).getString("message") // Extraer el mensaje del JSON
+                                    JSONObject(errorBody).getString("message")
                                 } catch (e: Exception) {
-                                    "Error con los datos introducidos" // Mensaje por defecto en caso de fallo
+                                    "Error con los datos introducidos"
                                 }
-
-                                Toast.makeText(
-                                    context,
-                                    errorMessage,
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                                emailError = if (errorMessage.contains("correo")) errorMessage else null
+                                tokenError = if (errorMessage.contains("token")) errorMessage else null
+                                passwordError = if (errorMessage.contains("contraseña")) errorMessage else null
                             }
-
-                        } else {
-                            Toast.makeText(
-                                context,
-                                "Las contraseñas no coinciden",
-                                Toast.LENGTH_SHORT
-                            ).show()
                         }
                     }
                 },
+                colors = ButtonDefaults.buttonColors(containerColor = BrownTertiary),
                 shape = RoundedCornerShape(12.dp),
-                modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(containerColor = Black)
+                modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Restablecer Contraseña", color = White)
+                Text("Restablecer Contraseña")
             }
         }
     }
 }
+
+fun isValidEmail(email: String) = email.length <= 60 && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
+
+fun isValidPassword(password: String) =
+    password.length >= 8 &&
+            password.any { it.isUpperCase() } &&
+            password.any { it.isLowerCase() } &&
+            password.any { it.isDigit() } &&
+            password.any { !it.isLetterOrDigit() }

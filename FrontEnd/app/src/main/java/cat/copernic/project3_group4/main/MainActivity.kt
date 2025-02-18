@@ -1,5 +1,6 @@
 package cat.copernic.project3_group4.main
 
+import RegisterViewModel
 import cat.copernic.project3_group4.user_management.ui.screens.LoginScreen
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -44,6 +45,8 @@ class MainActivity : ComponentActivity() {
                 val navController: NavHostController = rememberNavController()
                 val categoryViewModel: CategoryViewModel = viewModel()
                 val adsViewModel: AdsViewModel = viewModel()
+                val registerViewModel: RegisterViewModel = viewModel()
+
                 // Aquí guardamos el usuario autenticado
                 val userState = rememberSaveable { mutableStateOf<User?>(null) }
 
@@ -56,7 +59,7 @@ class MainActivity : ComponentActivity() {
                         composable("login") { LoginScreen(navController, userState) }
                         composable("user_list") { UserListScreen(navController) }
                         composable("profile") { ProfileScreen(userState, navController) }
-                        composable("register") { RegisterScreen(navController) }
+                        composable("register") { RegisterScreen(registerViewModel, navController) }
                         composable("categoryScreen") {
                             CategoryScreen(
                                 viewModel = categoryViewModel,

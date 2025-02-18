@@ -22,7 +22,9 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import cat.copernic.project3_group4.R
 import cat.copernic.project3_group4.core.models.User
+import cat.copernic.project3_group4.core.ui.theme.BrownTertiary
 import cat.copernic.project3_group4.core.ui.theme.OrangePrimary
+import cat.copernic.project3_group4.core.ui.theme.OrangeSecondary
 import cat.copernic.project3_group4.user_management.data.datasource.AuthRetrofitInstance
 import kotlinx.coroutines.launch
 
@@ -101,7 +103,7 @@ fun LoginScreen(navController: NavController, userState: MutableState<User?>) {
                 },
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(containerColor = Black)
+                colors = ButtonDefaults.buttonColors(containerColor = OrangeSecondary)
             ) {
                 Text("Iniciar sesión", color = White)
             }
