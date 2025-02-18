@@ -134,12 +134,13 @@ admin@admin.com
                 .fillMaxSize()
                 .background(Color.White)
                 .paddingFromBaseline(0.dp,paddingValues.calculateBottomPadding())
-                .verticalScroll(rememberScrollState())
+
         ) {
             SmallTopAppBar(
                 title = { Text(title, color = Color.White) },
                 colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = Color(0xFFFF6600))
             )
+
             Column(modifier = Modifier.padding(16.dp)) {
                 Spacer(modifier = Modifier.height(12.dp))
 
@@ -173,7 +174,7 @@ admin@admin.com
                     )
                     imageSelected = false
                 }
-
+                Spacer(modifier = Modifier.height(12.dp))
 
 
                 Spacer(modifier = Modifier.height(12.dp))
@@ -205,6 +206,7 @@ admin@admin.com
                 Spacer(modifier = Modifier.height(12.dp))
 
                 // Mensaje informativo para usuarios
+                /*
                 if (user.role.name == "USER") {
                     Text(
                         "Tu propuesta será evaluada por nuestro equipo para su posterior implementación.",
@@ -213,6 +215,8 @@ admin@admin.com
                     )
                     Spacer(modifier = Modifier.height(12.dp))
                 }
+                Spacer(modifier = Modifier.height(12.dp))
+                */
 
                 // Botón para enviar el formulario
                 Button(
@@ -255,7 +259,7 @@ admin@admin.com
                     },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(bottom = 40.dp, top = 30.dp),
+                        .padding(vertical = 20.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFAA00)),
                     shape = RoundedCornerShape(10.dp)
                 ) {
@@ -264,8 +268,11 @@ admin@admin.com
 
                 }
 
+                Spacer(modifier = Modifier.height(12.dp))
+
 
             }
+
 
         }
 
