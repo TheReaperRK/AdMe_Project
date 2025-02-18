@@ -35,6 +35,7 @@ import cat.copernic.project3_group4.core.ui.theme.Project3_Group4Theme
 import cat.copernic.project3_group4.core.utils.enums.Roles
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(userState: MutableState<User?>, navController: NavController) {
     val user = userState.value
@@ -78,6 +79,7 @@ fun ProfileScreen(userState: MutableState<User?>, navController: NavController) 
             }
         }
     ) {
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -85,23 +87,22 @@ fun ProfileScreen(userState: MutableState<User?>, navController: NavController) 
                 .padding(0.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Box(
-                modifier = Modifier.fillMaxWidth(),
-                contentAlignment = Alignment.TopEnd
-            ) {
-                IconButton(
-                    onClick = { scope.launch { drawerState.open() } },
-                    modifier = Modifier
-                        .padding(start = 16.dp, top = 16.dp) // Espaciado desde los bordes
-                        .size(56.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Menu,
-                        contentDescription = "Menu",
-                        tint = OrangePrimary
-                    )
+            SmallTopAppBar(
+                title = { Text("Anuncios", color = Color.White) },
+                colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = Color(0xFFFF6600)),
+                navigationIcon = { // Aquí agregamos el icono dentro del TopAppBar
+                    IconButton(
+                        onClick = { scope.launch { drawerState.open() } }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Menu,
+                            contentDescription = "Menú",
+                            tint = Color.White // Cambiado a blanco para que contraste con el fondo naranja
+                        )
+                    }
                 }
-            }
+            )
+
 
             Spacer(modifier = Modifier.height(20.dp))
 

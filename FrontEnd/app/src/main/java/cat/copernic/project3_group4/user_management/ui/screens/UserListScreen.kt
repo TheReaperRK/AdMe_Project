@@ -63,7 +63,7 @@ fun UserListScreen(navController: NavController, modifier: Modifier = Modifier) 
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 IconButton(
-                    onClick = { navController.popBackStack() }
+                    onClick = { navController.navigate("profile") }
                 ) {
                     Icon(
                         imageVector = Icons.Default.KeyboardArrowLeft,
