@@ -35,6 +35,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -50,6 +51,9 @@ public class RestUsersTest {
     @Autowired
     private TestRestTemplate restTemplate;
     
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    
     @LocalServerPort
     private int port;
     
@@ -62,20 +66,24 @@ public class RestUsersTest {
     @BeforeEach
     public void setup() {
         
-        userRepo.deleteAll();
+       
         
         List<Ad> ads = new ArrayList<>(); // Lista vacía de anuncios
         if(userRepo.findByEmail("carlosmendoza2003@gmail.com") == null){
             userRepo.saveAndFlush(new User("carlos", "carlosmendoza2003@gmail.com", "653035737",  
-                     "adygyudgaufaiof", true, Roles.ADMIN, ads));
+                     passwordEncoder.encode("123456"), true, Roles.ADMIN, ads));
+        }else{
+            userRepo.delete(userRepo.findByEmail("carlosmendoza2003@gmail.com"));
+            userRepo.saveAndFlush(new User("carlos", "carlosmendoza2003@gmail.com", "653035737",  
+                     passwordEncoder.encode("123456"), true, Roles.ADMIN, ads));
         }
         if(userRepo.findByEmail("pepe@gmail.com") == null){
              userRepo.saveAndFlush(new User("pepe", "pepe@gmail.com", "64826429749", 
-                 "adygyudgaufaiof", false, Roles.USER, ads));
+                 passwordEncoder.encode("123456"), false, Roles.USER, ads));
         }
         if(userRepo.findByEmail( "joselito@gmail.com") != null){
              userRepo.saveAndFlush(new User("JOSE", "joselito@gmail.com", "580825285", 
-                     "adygyudgaufaiof", true, Roles.ADMIN, ads));
+                     passwordEncoder.encode("123456"), true, Roles.ADMIN, ads));
         }
         
 
@@ -101,6 +109,8 @@ public class RestUsersTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(totalUsers, receivedList.size());
         
+        userRepo.saveAndFlush(new User("admin", "admin@gmail.com", "580825285", 
+                     passwordEncoder.encode("123"), true, Roles.ADMIN, new ArrayList<Ad>()));
     }
     
     
@@ -314,12 +324,19 @@ public class RestUsersTest {
         
         User p = users.get(0);
        
-        User p2 = new User("carlos2", "carlosmendoza2003@gmail.com", "653035738", 
-                     "adygyudgaufaiof2", false, Roles.USER, ads);
+        User p2 = new User("carlos2", "carlosmendoza2003@gmail.com", "653035738", "123", false, Roles.ADMIN, ads);
+                     
         
         //userLogic.createUser(p2, imageFile);
 
-        p2.setId(p.getId());
+        p.setAds(p2.getAds());
+        p.setEmail(p2.getEmail());
+        p.setName(p2.getName());
+        p.setPhoneNumber(p2.getPhoneNumber());
+        p.setRole(p2.getRole());
+        p.setWord(p2.getWord());
+        
+        p.setImage(imageFile.getBytes());
         
          // URL completa con puerto dinámico
         String url = "http://localhost:" + port + "/rest/users/update";
@@ -332,21 +349,21 @@ public class RestUsersTest {
         ResponseEntity<Void> response = restTemplate.exchange(
             url,
             HttpMethod.PUT,
-            new HttpEntity<>(p2, headers),
+            new HttpEntity<>(p, headers),
             Void.class
         );
 
         // Verificamos la respuesta
         assertEquals(HttpStatus.OK, response.getStatusCode());
         
-        User res = userRepo.findById(p2.getId()).orElse(null);
+        User res = userRepo.findById(p.getId()).orElse(null);
         
-        assertEquals(p2.getId(),res.getId());
+        assertEquals(p.getId(),res.getId());
        
-        /*assertEquals(p2.getName(),res.getName());
-        assertEquals(p2.getPhoneNumber(),res.getPhoneNumber());
-        assertEquals(p2.getRole(),res.getRole());
-        assertEquals(p2.getWord(),res.getWord());*/
+        assertEquals(p.getName(),res.getName());
+        assertEquals(p.getPhoneNumber(),res.getPhoneNumber());
+        assertEquals(p.getRole(),res.getRole());
+        assertEquals(p.getAds(), res.getAds());
     }
     
     

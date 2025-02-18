@@ -1,5 +1,7 @@
 package cat.copernic.project3_group4.core.models;
 
+import android.util.Base64;
+
 public class Category {
 
     /**
@@ -79,5 +81,9 @@ public class Category {
 
     public void setProposal(boolean proposal) {
         this.proposal = proposal;
+    }
+
+    public byte[] getImageBytes() {
+        return image != null ? Base64.decode(image, Base64.DEFAULT) : null;
     }
 }
