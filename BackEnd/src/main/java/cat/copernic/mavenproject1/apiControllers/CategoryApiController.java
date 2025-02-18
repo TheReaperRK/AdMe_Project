@@ -1,13 +1,18 @@
 package cat.copernic.mavenproject1.apiControllers;
 
+import cat.copernic.mavenproject1.Entity.Ad;
 import cat.copernic.mavenproject1.Entity.Category;
 import cat.copernic.mavenproject1.logic.CategoryLogic;
+import java.nio.file.Files;
+import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/rest/categories")
@@ -35,8 +40,12 @@ public class CategoryApiController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Long> createCategory(@RequestBody Category category) {
-        Long categoryId = categoryLogic.saveCategory(category);
+    public ResponseEntity<Long> createCategory(@RequestParam String name, @RequestParam String description, @RequestParam boolean proposal, @RequestParam(value = "image", required = false) MultipartFile imageFile) {
+        
+        byte[] img = null;
+        Category category = new Category(name, description, img, proposal, new ArrayList<>());
+        
+        Long categoryId = categoryLogic.saveCategory(category, imageFile);
         return new ResponseEntity<>(categoryId, HttpStatus.CREATED);
     }
 
@@ -55,7 +64,7 @@ public class CategoryApiController {
         if (category.getId() == null || !categoryLogic.existsById(category.getId())) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        categoryLogic.saveCategory(category);
+        categoryLogic.updateCategory(category);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.transaction.annotation.Transactional;
 
 
 /**
@@ -44,7 +45,7 @@ public class UserApiController {
     
     Logger logger = LoggerFactory.getLogger(UserApiController.class);
     
-   
+  
     
     @Autowired
     private UserLogic userLogic;
@@ -129,7 +130,7 @@ public class UserApiController {
 
 
         } catch (Exception e) {
-
+            logger.info("/n ERROR UPDATE"+e.getMessage());
             return ResponseEntity.internalServerError().build();
         }
         
@@ -221,11 +222,11 @@ public class UserApiController {
     
     @PostMapping("/create")
     public ResponseEntity<Long> createUser(@RequestBody User user) throws IOException {
-       //ResponseEntity<Long> response;
+        //ResponseEntity<Long> response;
         
         
         // Ruta de la imagen en el sistema de archivos
-       Path projectPath = Paths.get("").toAbsolutePath();
+        Path projectPath = Paths.get("").toAbsolutePath();
 
         // Construir la ruta dinámica a la imagen
         Path imagePath = projectPath.resolve("src/main/java/cat/copernic/mavenproject1/tux.jpg");

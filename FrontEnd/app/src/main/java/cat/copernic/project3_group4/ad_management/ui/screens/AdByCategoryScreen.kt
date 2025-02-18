@@ -21,6 +21,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
 import cat.copernic.project3_group4.ad_management.ui.viewmodels.AdsViewModel
 import cat.copernic.project3_group4.core.models.Ad
+import cat.copernic.project3_group4.main.screens.BottomNavigationBar
 import coil.compose.AsyncImage
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip

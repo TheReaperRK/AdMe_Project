@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import cat.copernic.mavenproject1.logic.UserLogic;
 import cat.copernic.mavenproject1.Entity.User;
 import cat.copernic.mavenproject1.enums.Roles;
-import cat.copernic.mavenproject1.logic.EmailLogic;
 import cat.copernic.mavenproject1.repository.UserRepo;
 import java.util.UUID; // Asegúrate de importar esta línea
 import java.util.Collections;
@@ -32,8 +31,7 @@ public class AuthController {
     @Autowired
     private UserLogic userLogic;
     
-    @Autowired
-    private EmailLogic emailLogic;
+
     
     @Autowired
     private UserRepo userRepo;
@@ -87,8 +85,7 @@ public class AuthController {
         user.setResetToken(token);
         userRepo.save(user);
 
-        // Enviar el correo con el enlace de recuperación
-        emailLogic.sendPasswordResetEmail(user.getEmail(), token);
+        
 
         return ResponseEntity.ok(Collections.singletonMap("message", "Se ha enviado un correo con instrucciones para recuperar la contraseña"));
     }

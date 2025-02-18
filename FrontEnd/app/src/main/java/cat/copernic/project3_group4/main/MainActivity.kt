@@ -31,6 +31,7 @@ import cat.copernic.project3_group4.ad_management.ui.screens.AdsScreen
 import cat.copernic.project3_group4.main.screens.CategoryScreen
 import cat.copernic.project3_group4.category_management.ui.viewmodels.CategoryViewModel
 import cat.copernic.project3_group4.ad_management.ui.viewmodels.AdsViewModel
+import cat.copernic.project3_group4.category_management.ui.screens.CategoryFormScreen
 import cat.copernic.project3_group4.ad_management.ui.screens.CreateAdScreen
 import cat.copernic.project3_group4.main.screens.PasswordRecover
 import cat.copernic.project3_group4.main.screens.ProfileScreen
@@ -63,6 +64,7 @@ class MainActivity : ComponentActivity() {
                         composable("categoryScreen") {
                             CategoryScreen(
                                 viewModel = categoryViewModel,
+                                userState = userState,
                                 navController = navController
                             )
                         }
@@ -80,6 +82,13 @@ class MainActivity : ComponentActivity() {
                                 navController
                             ) // Se pasa como Long en lugar de String
                         }
+                        composable("categoryFormScreen"){
+                               CategoryFormScreen(
+                                   categoryViewModel = categoryViewModel,
+                                   userState = userState,
+                                   navController = navController
+                               )
+                           }
                         composable("createAdScreen") { CreateAdScreen(navController, viewModel = categoryViewModel, userState) }
                         composable("recoverByToken") { RecoverByToken(navController) }
                         composable("AdsScreen") {
@@ -99,8 +108,8 @@ fun PreviewMainScreen() {
     val navController = rememberNavController()
     val categoryViewModel: CategoryViewModel = viewModel()
     val adsViewModel: AdsViewModel = viewModel()
-
+    val userState = rememberSaveable { mutableStateOf<User?>(null) }
     Project3_Group4Theme {
-        CategoryScreen(viewModel = categoryViewModel, navController = navController)
+        CategoryScreen(viewModel = categoryViewModel,userState = userState, navController = navController)
     }
 }

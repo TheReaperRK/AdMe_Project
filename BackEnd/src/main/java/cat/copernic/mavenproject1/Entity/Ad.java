@@ -42,7 +42,7 @@ public class Ad {
      * Binary content of the advertisement image. Stored as a large object (LOB).
      */
     @Lob
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "LONGBLOB")
     private byte[] data;
     
     /**
