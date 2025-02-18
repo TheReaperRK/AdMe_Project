@@ -61,6 +61,7 @@ class MainActivity : ComponentActivity() {
                         composable("categoryScreen") {
                             CategoryScreen(
                                 viewModel = categoryViewModel,
+                                userState = userState,
                                 navController = navController
                             )
                         }
@@ -104,8 +105,8 @@ fun PreviewMainScreen() {
     val navController = rememberNavController()
     val categoryViewModel: CategoryViewModel = viewModel()
     val adsViewModel: AdsViewModel = viewModel()
-
+    val userState = rememberSaveable { mutableStateOf<User?>(null) }
     Project3_Group4Theme {
-        CategoryScreen(viewModel = categoryViewModel, navController = navController)
+        CategoryScreen(viewModel = categoryViewModel,userState = userState, navController = navController)
     }
 }

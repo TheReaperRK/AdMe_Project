@@ -10,6 +10,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -24,13 +26,14 @@ import androidx.navigation.compose.rememberNavController
 import cat.copernic.project3_group4.ad_management.ui.screens.base64ToByteArray
 import cat.copernic.project3_group4.category_management.ui.viewmodels.CategoryViewModel
 import cat.copernic.project3_group4.core.models.Category
+import cat.copernic.project3_group4.core.models.User
 import coil.compose.AsyncImage
 
 @Composable
-fun CategoryScreen(viewModel: CategoryViewModel, navController: NavController) {
+fun CategoryScreen(viewModel: CategoryViewModel, userState: MutableState<User?>, navController: NavController) {
     val categories by viewModel.categories.observeAsState(emptyList())
     var searchText by remember { mutableStateOf("") }
-
+    val user = userState.value
     LaunchedEffect(Unit) {
         viewModel.fetchCategories()
     }
@@ -48,7 +51,7 @@ fun CategoryScreen(viewModel: CategoryViewModel, navController: NavController) {
             .background(Color.White)
     ) {
         TopBar(searchText) { searchText = it }
-        FilterButtons(navController)
+        FilterButtons(navController, userState)
         CategoryList(filteredCategories, navController, Modifier.weight(1f))
         BottomNavigationBar(navController)
     }
@@ -76,7 +79,19 @@ fun TopBar(searchText: String, onSearchTextChange: (String) -> Unit) {
 
 
 @Composable
-fun FilterButtons(navController: NavController) {
+fun FilterButtons(navController: NavController, userState: MutableState<User?>) {
+    var buttonCategoryFormName: String;
+    val user = userState.value
+    if (user == null) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            Text("No hay usuario autenticado")
+        }
+        return
+    }
+    val title = if (user.role.name == "ADMIN") "Crear Categoria" else "Propuesta"
+
+
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -92,7 +107,7 @@ fun FilterButtons(navController: NavController) {
             Text("Todos")
         }
         Button(onClick = {navController.navigate("categoryFormScreen")}, colors = buttonColor, ) {
-            Text("Propuesta")
+            Text(title)
         }
     }
 }
@@ -171,5 +186,6 @@ fun BottomNavigationBar(navController: NavController) {
 fun PreviewCategoryScreen() {
     val viewModel: CategoryViewModel = viewModel()
     val navController = rememberNavController()
-    CategoryScreen(viewModel = viewModel, navController = navController)
+    val userState = rememberSaveable { mutableStateOf<User?>(null) }
+    CategoryScreen(viewModel = viewModel, userState = userState,  navController = navController)
 }
