@@ -115,4 +115,17 @@ class AdsViewModel : ViewModel() {
         _selectedCategory.value = categoryId.toString()
         fetchAdsByCategory(categoryId)
     }
+    fun fetchAdsByUser(userId: String) {
+        viewModelScope.launch {
+            try {
+                val response = adApi.getAdsByUser(userId)
+                if (response.isSuccessful) {
+                    _ads.postValue(response.body())
+                }
+            } catch (e: Exception) {
+                println("🚨 Error en fetchAdsByUser(): ${e.message}")
+            }
+        }
+    }
+
 }

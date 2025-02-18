@@ -17,6 +17,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
@@ -31,6 +32,7 @@ import cat.copernic.project3_group4.core.models.User
 import cat.copernic.project3_group4.ad_management.data.datasource.AdApiRest
 import cat.copernic.project3_group4.ad_management.data.datasource.AdRetrofitInstance
 import cat.copernic.project3_group4.main.screens.BottomNavigationBar
+import coil.compose.rememberAsyncImagePainter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -115,14 +117,26 @@ fun CreateAdScreen(navController: NavController, viewModel: CategoryViewModel, u
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    Image(
-                        imageVector = Icons.Default.Add,
-                        contentDescription = "Añadir imagen",
-                        modifier = Modifier
-                            .size(48.dp)
-                            .clickable { imagePickerLauncher.launch("image/*") }
-                    )
+                    if (imageUri != null) {
+                        Image(
+                            painter = rememberAsyncImagePainter(imageUri),
+                            contentDescription = "Imagen seleccionada",
+                            modifier = Modifier
+                                .size(150.dp)
+                                .clip(RoundedCornerShape(10.dp))
+                                .background(Color.LightGray)
+                        )
+                    } else {
+                        Image(
+                            imageVector = Icons.Default.Add,
+                            contentDescription = "Añadir imagen",
+                            modifier = Modifier
+                                .size(48.dp)
+                                .clickable { imagePickerLauncher.launch("image/*") }
+                        )
+                    }
                 }
+
 
                 Spacer(modifier = Modifier.height(12.dp))
                 Button(

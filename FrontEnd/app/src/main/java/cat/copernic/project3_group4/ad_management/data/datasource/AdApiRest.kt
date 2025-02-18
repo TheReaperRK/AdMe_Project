@@ -39,4 +39,7 @@ interface AdApiRest {
         @Query("minPrice") minPrice: Double,
         @Query("maxPrice") maxPrice: Double
     ): Response<List<Ad>>
+    @GET("byUser/{userId}")
+    suspend fun getAdsByUser(@Path("userId") userId: String): Response<List<Ad>>
+
 }
