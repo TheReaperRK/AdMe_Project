@@ -116,4 +116,8 @@ public Ad getAdById(Long id) {
     public List<Category> getAllCategories() {
         return categoryRepo.findAll();
     }
+    
+    public List<Ad> findAdsByUser(Long userId) {
+        return adRepo.findByAuthor_Id(userId);
+    }
 }

@@ -166,4 +166,15 @@ public ResponseEntity<Long> createAd(@RequestBody Ad ad) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    
+    @GetMapping("/byUser/{userId}")
+        public ResponseEntity<List<Ad>> getAdsByUser(@PathVariable Long userId) {
+            try {
+                List<Ad> ads = adLogic.findAdsByUser(userId);
+                return new ResponseEntity<>(ads, HttpStatus.OK);
+            } catch (Exception e) {
+                logger.error("Error retrieving ads for user ID: {}", userId, e);
+                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        }
 }

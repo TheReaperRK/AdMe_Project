@@ -17,4 +17,7 @@ public interface AdRepo extends JpaRepository<Ad, Long> {
     
     // ✅ Método para filtrar anuncios por categoría y rango de precios
     List<Ad> findByCategory_IdAndPriceBetween(Long categoryId, double minPrice, double maxPrice);
+    
+    List<Ad> findByAuthor_Id(Long userId);
+
 }
