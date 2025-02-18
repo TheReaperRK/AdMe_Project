@@ -1,6 +1,7 @@
 package cat.copernic.project3_group4.category_management.ui.screens
 
 import android.content.ContentResolver
+import android.content.ContentValues
 import android.content.ContentValues.TAG
 import android.graphics.BitmapFactory
 import android.net.Uri
@@ -11,25 +12,34 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.ui.Modifier.*
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SmallTopAppBar
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -50,7 +60,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
@@ -63,8 +75,11 @@ import cat.copernic.project3_group4.category_management.data.datasource.Category
 import cat.copernic.project3_group4.category_management.ui.viewmodels.CategoryViewModel
 import cat.copernic.project3_group4.core.models.Category
 import cat.copernic.project3_group4.core.models.User
+import cat.copernic.project3_group4.core.ui.theme.BrownTertiary
+import cat.copernic.project3_group4.core.ui.theme.OrangePrimary
 import cat.copernic.project3_group4.core.utils.createPartFromString
 import cat.copernic.project3_group4.core.utils.uriToMultipartBodyPart
+import cat.copernic.project3_group4.main.screens.BottomNavigationBar
 import cat.copernic.project3_group4.user_management.data.datasource.AuthRetrofitInstance
 import coil.compose.rememberAsyncImagePainter
 import kotlinx.coroutines.launch
@@ -80,202 +95,202 @@ import java.sql.SQLException
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CategoryFormScreen(categoryViewModel: CategoryViewModel, userState: MutableState<User?>, navController: NavController ){
+fun CategoryFormScreen(
+    categoryViewModel: CategoryViewModel,
+    userState: MutableState<User?>,
+    navController: NavController
+) {
     val user = userState.value
-
-    if(user == null){
-        Text("No hay usuario autenticado", textAlign = TextAlign.Center, modifier = Modifier.fillMaxSize())
+    if (user == null) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            Text("No hay usuario autenticado")
+        }
         return
     }
+    // Título según el rol del usuario
+    val title = if (user.role.name == "ADMIN") "Crear categoría" else "Proponer categoría"
 
-   // val categories = categoryViewModel.categories.observeAsState(initial = emptyList())
-    var name  by remember { mutableStateOf("") }
-    var description  by remember { mutableStateOf("") }
-    var proposal by remember { mutableStateOf<Boolean>(false) }
-
-    var selectedImageUri by remember { mutableStateOf<Uri?>(null) } // Guarda la imagen seleccionada
-    var imageSelected = false
+    var name by remember { mutableStateOf("") }
+    var description by remember { mutableStateOf("") }
+    var proposal by remember { mutableStateOf(false) }
+    var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
 
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
-    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
-        selectedImageUri = uri // Guardar la URI de la imagen seleccionada
+    var imageSelected by remember { mutableStateOf(false) }
+    // Launcher para seleccionar imagen
+    val imagePickerLauncher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+        selectedImageUri = uri
     }
+/*
+admin@admin.com
+ */
+    Scaffold(
+        bottomBar = { BottomNavigationBar(navController) }
+    ) { paddingValues ->
 
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White) // Fondo blanco
-            .padding(12.dp)
-            .verticalScroll(rememberScrollState()), // Agregamos verticalScroll
-        horizontalAlignment = Alignment.CenterHorizontally
-
-    ) {
-        Spacer(modifier = Modifier.height(20.dp))
-        Box(
-            modifier = Modifier.fillMaxWidth(),
-            contentAlignment = Alignment.Center
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.White)
+                .paddingFromBaseline(0.dp,paddingValues.calculateBottomPadding())
+                .verticalScroll(rememberScrollState())
         ) {
-            // Mostrar la imagen seleccionada o un ícono por defecto
-            selectedImageUri?.let {
-                Image(
-                    painter = rememberAsyncImagePainter(it),
-                    contentDescription = "Imagtge de categoria",
-                    modifier = Modifier
-                        .height(300.dp)
-                        .width(450.dp)
-                        .clip(RoundedCornerShape(50.dp))
-                        .background(White)
-                        .clickable { launcher.launch("image/*") }
-                )
-                imageSelected = true
-            } ?: Image(
-                painter = painterResource(id = R.drawable.add_image),
-                contentDescription = "Seleccionar imagen",
-                modifier = Modifier
-                    .height(300.dp)
-                    .width(450.dp)
-                    .clickable { launcher.launch("image/*") }
+            SmallTopAppBar(
+                title = { Text(title, color = Color.White) },
+                colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = Color(0xFFFF6600))
             )
-            imageSelected = false
-        }
-        Box(
-            modifier = Modifier.fillMaxWidth(),
-            contentAlignment = Alignment.Center
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.White) // Fondo blanco
-                    .padding(12.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Spacer(modifier = Modifier.height(40.dp))
-                Text(
-                    "Nombre de la categoria",
-                    color = Color.Black,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.W500,
-                    modifier = Modifier.padding(16.dp)
+            Column(modifier = Modifier.padding(16.dp)) {
+                Spacer(modifier = Modifier.height(12.dp))
+
+                // Selección de imagen
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    // Mostrar la imagen seleccionada o un ícono por defecto
+                    selectedImageUri?.let {
+                        Image(
+                            painter = rememberAsyncImagePainter(it),
+                            contentDescription = "Imagtge de categoria",
+                            modifier = Modifier
+                                .height(300.dp)
+                                .width(450.dp)
+                                .clip(RoundedCornerShape(50.dp))
+                                .background(White)
+                                .clickable { imagePickerLauncher.launch("image/*") }
+                        )
+                        imageSelected = true
+                    } ?: Image(
+                        painter = painterResource(id = R.drawable.add_image),
+                        contentDescription = "Seleccionar imagen",
+                        modifier = Modifier
+                            .height(300.dp)
+                            .width(450.dp)
+                            .clickable { imagePickerLauncher.launch("image/*") }
+                            .border(2.dp, color = BrownTertiary)
+
+                    )
+                    imageSelected = false
+                }
+
+
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                // Campo: Nombre de la categoría
+                Text("Nombre de la categoría", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                OutlinedTextField(
+                    value = name,
+                    onValueChange = { name = it },
+                    modifier = Modifier.fillMaxWidth(),
+                    textStyle = TextStyle(fontSize = 16.sp),
+                    placeholder = { Text("Introduce el nombre") }
                 )
 
-                TextField(value = name, onValueChange = { name = it }, label = { Text("Nombre") })
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(
-                    "Descripcion de la categoria",
-                    color = Color.Black,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.W500,
-                    modifier = Modifier.padding(16.dp).align(Alignment.CenterHorizontally)
-                )
+                Spacer(modifier = Modifier.height(12.dp))
 
-                TextField(
+                // Campo: Descripción de la categoría
+                Text("Descripción de la categoría", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                OutlinedTextField(
                     value = description,
                     onValueChange = { description = it },
-                    label = { Text("Descripcion") },
-                    modifier = Modifier.height(200.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(120.dp),
+                    textStyle = TextStyle(fontSize = 16.sp),
+                    placeholder = { Text("Introduce la descripción") }
                 )
-            }
-        }
-        Spacer(modifier = Modifier.height(16.dp))
-        if(user.role.name == "USER"){
-            Text("Tu propuesta sera avaluada por nuestro equipo para su posterior implementación.", color = Color.Black, fontSize = 17.sp)
-        }
 
-        Spacer(modifier = Modifier.height(16.dp))
-        Button(
-            onClick = {
-                if(user.role.name == "USER"){
-                    proposal = true
-                }else{
-                    proposal = false
+                Spacer(modifier = Modifier.height(12.dp))
+
+                // Mensaje informativo para usuarios
+                if (user.role.name == "USER") {
+                    Text(
+                        "Tu propuesta será evaluada por nuestro equipo para su posterior implementación.",
+                        fontSize = 16.sp,
+                        color = Color.Gray
+                    )
+                    Spacer(modifier = Modifier.height(12.dp))
                 }
-                try {
 
-
-                        if (name.isNotBlank() and description.isNotBlank()) {
+                // Botón para enviar el formulario
+                Button(
+                    onClick = {
+                        // Para usuarios, la categoría se propone; para admin, se crea directamente
+                        proposal = (user.role.name == "USER")
+                        if (name.isNotBlank() && description.isNotBlank()) {
                             coroutineScope.launch {
-
                                 val namePart = createPartFromString(name)
                                 val descriptionPart = createPartFromString(description)
                                 val proposalPart = createPartFromString(if (proposal) "true" else "false")
 
-                                // Convertir la imagen en MultipartBody.Part
-                                //val imagePart = selectedImageUri?.let { uriToMultipartBodyPart(context, it) }
-                               // val byteArray = selectedImageUri?.let { convertUriToByteArray(it, context.contentResolver) }
                                 val imagePart = selectedImageUri?.let { uri ->
                                     val byteArray = convertUriToByteArray(uri, context.contentResolver)
-                                    val requestBody = byteArray?.let { RequestBody.create("image/*".toMediaTypeOrNull(), it) }
-                                   requestBody?.let { MultipartBody.Part.createFormData("image", "category_image.jpg", it) }
+                                    byteArray?.let {
+                                        val requestBody = RequestBody.create("image/*".toMediaTypeOrNull(), it)
+                                        MultipartBody.Part.createFormData("image", "category_image.jpg", requestBody)
+                                    }
                                 }
 
-                                /*val response = CategoryRetrofitInstance.retrofitInstance.create<CategoryApiRest>().createCategory(
-                                    Category(null,name,description,imagePart,proposal)
-                                ) */
-                                val response = CategoryRetrofitInstance.retrofitInstance.create<CategoryApiRest>().createCategory(
-                                                                namePart, descriptionPart, imagePart, proposalPart
-                                                            )
-                                if (response.isSuccessful) {
-                                    Toast.makeText(context, "creacion exitosa", Toast.LENGTH_SHORT).show()
-                                    navController.navigate("categoryScreen")
-                                } else {
-                                    Toast.makeText(context, "Error en la creacion", Toast.LENGTH_SHORT).show()
-                                    Log.e(TAG, "Error al crear categoria")
+                                try {
+                                    val response = CategoryRetrofitInstance.retrofitInstance
+                                        .create<CategoryApiRest>()
+                                        .createCategory(namePart, descriptionPart, imagePart, proposalPart)
+                                    if (response.isSuccessful) {
+                                        Toast.makeText(context, "Creación exitosa", Toast.LENGTH_SHORT).show()
+                                        navController.navigate("categoryScreen")
+                                    } else {
+                                        Toast.makeText(context, "Error en la creación", Toast.LENGTH_SHORT).show()
+                                        Log.e(ContentValues.TAG, "Error al crear categoría")
+                                    }
+                                } catch (e: Exception) {
+                                    Toast.makeText(context, "Error en la creación", Toast.LENGTH_SHORT).show()
+                                    Log.e(ContentValues.TAG, "Error al crear categoría: ${e.message}")
                                 }
                             }
                         } else {
-                            Toast.makeText(context, "Los campos estan incompletos", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, "Completa todos los campos", Toast.LENGTH_SHORT).show()
                         }
-                    }catch(e: Exception){
-                                Toast.makeText(context, "Error en la creacion", Toast.LENGTH_SHORT).show()
-                        Log.e(TAG, "Error al crear categoria: "+e.message)
-                    }
-            },          //admin@gmail.com
-            shape = RoundedCornerShape(12.dp),
-            modifier = Modifier.fillMaxWidth(),
-            colors = ButtonDefaults.buttonColors(containerColor = Black)
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 40.dp, top = 30.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFAA00)),
+                    shape = RoundedCornerShape(10.dp)
+                ) {
+                    val buttonText = if (user.role.name == "ADMIN") "Crear categoría" else "Proponer categoría"
+                    Text(buttonText, color = Color.White, fontSize = 18.sp)
 
-            //colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFA500))
+                }
 
-        ){
-            if(user.role.name == "ADMIN"){
-                Text("Crear categoria", fontSize = 25.sp, fontWeight = FontWeight.W800, color = White)
-            }else{
-                Text("Proponer categoria", fontSize = 25.sp, fontWeight = FontWeight.W800, color = White)
+
             }
+
         }
 
-
     }
+
 }
+
+/**
+ * Función para convertir una Uri en un arreglo de bytes.
+ */
 fun convertUriToByteArray(uri: Uri, contentResolver: ContentResolver): ByteArray? {
     var byteArray: ByteArray? = null
     try {
-        // Abrir el flujo de entrada para leer el archivo de la imagen
-        val inputStream: InputStream? = contentResolver.openInputStream(uri)
-
-        // Verificar que el flujo no sea nulo
-        inputStream?.let {
-            // Crear un ByteArrayOutputStream para escribir los bytes
+        contentResolver.openInputStream(uri)?.use { inputStream ->
             val byteArrayOutputStream = ByteArrayOutputStream()
             val buffer = ByteArray(1024)
             var length: Int
-
-            // Leer los bytes en bloques del flujo de entrada
-            while (it.read(buffer).also { length = it } != -1) {
+            while (inputStream.read(buffer).also { length = it } != -1) {
                 byteArrayOutputStream.write(buffer, 0, length)
             }
-
-            // Convertir el contenido del ByteArrayOutputStream en un ByteArray
             byteArray = byteArrayOutputStream.toByteArray()
             byteArrayOutputStream.close()
         }
-
-        inputStream?.close()
     } catch (e: Exception) {
         e.printStackTrace()
     }
-
     return byteArray
 }
