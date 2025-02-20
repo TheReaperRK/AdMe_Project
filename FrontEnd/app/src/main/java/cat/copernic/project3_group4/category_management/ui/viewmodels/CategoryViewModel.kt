@@ -15,6 +15,8 @@ class CategoryViewModel : ViewModel() {
 
     private val _categories = MutableLiveData<List<Category>>()
     val categories: LiveData<List<Category>> = _categories
+    private val _category = MutableLiveData<Category>()
+    val category: LiveData<Category> get()= _category
 
     fun fetchCategories() {
         viewModelScope.launch {
@@ -28,4 +30,17 @@ class CategoryViewModel : ViewModel() {
             }
         }
     }
+    fun fetchCategoryById(categoryId: Long) {
+        viewModelScope.launch {
+            try {
+                val response = categoryApi.getCategoryById(categoryId)
+                if (response.isSuccessful) {
+                    _category.postValue(response.body())
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
 }
