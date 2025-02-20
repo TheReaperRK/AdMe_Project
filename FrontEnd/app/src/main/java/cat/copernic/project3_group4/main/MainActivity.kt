@@ -90,7 +90,7 @@ class MainActivity : ComponentActivity() {
                                 navController,
                                 categoryViewModel,
                                 userState
-                            ) // Se pasa como Long en lugar de String
+                            ) // Se pasa como Long en lugar de Strings
                         }
                         composable("categoryFormScreen"){
                                CategoryFormScreen(
