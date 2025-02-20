@@ -129,7 +129,8 @@ class AdsViewModel : ViewModel() {
             try {
                 val response = adApi.updateAd(ad)
                 if (response.isSuccessful) {
-                    fetchAds() // Actualiza la lista de anuncios tras la modificación
+                    fetchAds() // Actualiza la lista de anuncios
+                    fetchAdById(ad.id) // Actualiza el anuncio específico en el ViewModel
                     onSuccess()
                     Log.d("UpdateAd", "✅ Anuncio actualizado correctamente")
                 } else {
