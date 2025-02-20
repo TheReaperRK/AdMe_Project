@@ -36,6 +36,7 @@ import cat.copernic.project3_group4.category_management.ui.viewmodels.CategoryVi
 import cat.copernic.project3_group4.ad_management.ui.viewmodels.AdsViewModel
 import cat.copernic.project3_group4.category_management.ui.screens.CategoryFormScreen
 import cat.copernic.project3_group4.ad_management.ui.screens.CreateAdScreen
+import cat.copernic.project3_group4.category_management.ui.screens.EditCategoryScreen
 import cat.copernic.project3_group4.ad_management.ui.screens.UpdateAdScreen
 import cat.copernic.project3_group4.main.screens.PasswordRecover
 import cat.copernic.project3_group4.main.screens.ProfileScreen
@@ -48,6 +49,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             Project3_Group4Theme {
+
+
                 val navController: NavHostController = rememberNavController()
                 val categoryViewModel: CategoryViewModel = viewModel()
                 val adsViewModel: AdsViewModel = viewModel()
@@ -84,7 +87,9 @@ class MainActivity : ComponentActivity() {
                             AdsScreen(
                                 categoryId,
                                 adsViewModel,
-                                navController
+                                navController,
+                                categoryViewModel,
+                                userState
                             ) // Se pasa como Long en lugar de String
                         }
                         composable("categoryFormScreen"){
@@ -94,6 +99,13 @@ class MainActivity : ComponentActivity() {
                                    navController = navController
                                )
                            }
+                        composable("editCategoryScreen"){
+                            EditCategoryScreen(
+                                categoryViewModel = categoryViewModel,
+                                userState = userState,
+                                navController = navController
+                            )
+                        }
                         composable("createAdScreen") { CreateAdScreen(navController, viewModel = categoryViewModel, userState) }
                         composable("recoverByToken") { RecoverByToken(navController) }
                         composable("AdsScreen") {
@@ -145,3 +157,4 @@ fun PreviewMainScreen() {
         CategoryScreen(viewModel = categoryViewModel,userState = userState, navController = navController)
     }
 }
+
