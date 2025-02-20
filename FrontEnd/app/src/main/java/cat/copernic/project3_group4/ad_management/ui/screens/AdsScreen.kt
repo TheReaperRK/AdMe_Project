@@ -21,6 +21,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import cat.copernic.project3_group4.core.ui.theme.OrangePrimary
+import cat.copernic.project3_group4.core.ui.theme.OrangeSecondary
 import cat.copernic.project3_group4.main.screens.BottomNavigationBar
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -134,7 +136,7 @@ fun AdItem(ad: Ad) {
     Card(
         modifier = Modifier.fillMaxWidth().padding(8.dp),
         shape = RoundedCornerShape(8.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFFFDD80))
+        colors = CardDefaults.cardColors(containerColor = OrangePrimary)
     ) {
         Column {
             AsyncImage(
@@ -143,7 +145,7 @@ fun AdItem(ad: Ad) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(150.dp)
-                    .clip(RoundedCornerShape(12.dp)), // Bordes redondeados
+                    .clip(RoundedCornerShape(0.dp, 0.dp,24.dp, 24.dp)), // Bordes redondeados
                 contentScale = ContentScale.Crop
             )
             Column(modifier = Modifier.padding(8.dp)) {

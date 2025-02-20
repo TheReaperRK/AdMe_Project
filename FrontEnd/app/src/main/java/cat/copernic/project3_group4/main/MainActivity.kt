@@ -36,6 +36,7 @@ import cat.copernic.project3_group4.ad_management.ui.screens.CreateAdScreen
 import cat.copernic.project3_group4.main.screens.PasswordRecover
 import cat.copernic.project3_group4.main.screens.ProfileScreen
 import cat.copernic.project3_group4.main.screens.RecoverByToken
+import cat.copernic.project3_group4.user_management.ui.screens.EditUserScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -94,7 +95,9 @@ class MainActivity : ComponentActivity() {
                         composable("AdsScreen") {
                             AdsScreen(adsViewModel, navController)
                         }
-
+                        composable("EditUserScreen") {
+                            EditUserScreen(userState, navController)
+                        }
                     }
                 }
             }
