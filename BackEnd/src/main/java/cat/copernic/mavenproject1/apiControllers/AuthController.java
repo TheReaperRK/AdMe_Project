@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import cat.copernic.mavenproject1.logic.UserLogic;
 import cat.copernic.mavenproject1.Entity.User;
 import cat.copernic.mavenproject1.enums.Roles;
+import cat.copernic.mavenproject1.logic.EmailLogic;
 import cat.copernic.mavenproject1.repository.UserRepo;
 import java.util.UUID; // Asegúrate de importar esta línea
 import java.util.Collections;
@@ -31,13 +32,14 @@ public class AuthController {
     @Autowired
     private UserLogic userLogic;
     
-
-    
     @Autowired
     private UserRepo userRepo;
     
     @Autowired
     private PasswordEncoder passwordEncoder;
+    
+    @Autowired
+    private EmailLogic emailLogic;
     
         
     @PostMapping("/login")
@@ -73,19 +75,19 @@ public class AuthController {
     @PostMapping("/recover")
     public ResponseEntity<?> recoverPassword(@RequestParam String email) {
         User user = userLogic.findByEmail(email);
-
+        System.out.println(email);
         if (user == null) {
+            System.out.println("user not found");
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(Collections.singletonMap("message", "El correo no está registrado"));
         }
-
 
         // Generar un token único (por ejemplo, UUID)
         String token = UUID.randomUUID().toString();
         user.setResetToken(token);
         userRepo.save(user);
-
         
+        emailLogic.sendPasswordResetEmail(user.getEmail(), token);
 
         return ResponseEntity.ok(Collections.singletonMap("message", "Se ha enviado un correo con instrucciones para recuperar la contraseña"));
     }
