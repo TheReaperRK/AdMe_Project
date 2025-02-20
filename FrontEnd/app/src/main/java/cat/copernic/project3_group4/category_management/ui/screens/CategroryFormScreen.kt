@@ -34,15 +34,18 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SmallTopAppBar
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -136,9 +139,26 @@ admin@admin.com
                 .paddingFromBaseline(0.dp,paddingValues.calculateBottomPadding())
 
         ) {
-            SmallTopAppBar(
-                title = { Text(title, color = Color.White) },
-                colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = Color(0xFFFF6600))
+            TopAppBar(
+                navigationIcon = {
+
+                    IconButton(onClick = {navController.popBackStack()} ) {
+                        Icon(
+                            imageVector = Icons.Default.KeyboardArrowLeft,
+                            contentDescription = "Volver",
+                            tint = Color.White
+                        )
+                    }
+
+                },
+                title = {
+
+                    Text("Modificar categoría", color = Color.White)
+
+
+
+                },
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFFFF6600))
             )
 
             Column(modifier = Modifier.padding(16.dp)) {

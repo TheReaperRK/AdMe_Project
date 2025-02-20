@@ -542,3 +542,87 @@ Baixa asistencia a clase sobretot a primera hora lo que dificulta la coordinacio
 - *Accions concretes per aplicar millores en els següents sprints*
 
 Aumentar la asistencia a clase y a primera hora aixi com aumentar la coordinacio de tasques
+[sprint 2]]
+== *Sprint 2*
+
+[[planificacio-trello]]
+=== 1. Planificació Trello
+https://trello.com/invite/b/67a1d1bfc7a1b5638db61d1b/ATTI48ae2e1e265dfd7b635b86cb1f15b1a886A0CDBD/adme[Link Tauler trello]
+
+[[dialy-stand-up]]
+=== 2. Dialy stand up
+image::dialy16.png[]
+image::daily17.png[]
+image::daily18.png[]
+image::daily19.png[]
+
+
+[[analisi-individual]]
+=== 3. Anàlisi del treball individual.
+
+[[Carlos]]
+==== *Carlos*
+
+- *Hores dedicades:* 22h
+- *Tasques realitzades*
+** Crear ProfileScreen
+** Recuperar contraseña
+
+
+- *Aspectes positius del treball realitzat*
+
+Alt rendiment i Eficacía a l'hora de completar les tasques, rapida resolucio de problemes.
+
+- *Problemes trobats durant l’sprint*
+
+No s'han produit errors destacables
+
+- *Accions concretes per aplicar millores en els següents sprints*
+
+seguir aplicant els coneixements adquirits en el sprint per a solucionar futurs problemes de planificació.
+
+[[Toni]]
+==== *Toni*
+
+- *Hores dedicades:* 17h
+- *Tasques realitzades* 
+** Barra navegacio inferior
+** Modificar Ads
+** Crear Ads
+
+
+- *Aspectes positius del treball realitzat*
+
+Eficaç i efectiu a l'hora de treballar en grup
+
+- *Problemes trobats durant l’sprint*
+
+No hi ha agut porblemes destacables
+
+- *Accions concretes per aplicar millores en els següents sprints*
+
+seguir Asegurantse de que les seves resolucions de bugs del codi no afectin a altres parts d'aquest
+
+
+[[David]]
+==== *David*
+
+- *Hores dedicades:* 19h
+- *Tasques realitzades*
+
+** Crear Categories
+** Crear Propostes
+
+
+- *Aspectes positius del treball realitzat*
+
+Eficacia a l'hora de resoldre errors del codi
+i puliment del codi
+
+- *Problemes trobats durant l’sprint*
+
+No s'han produit problemes destacables
+
+- *Accions concretes per aplicar millores en els següents sprints*
+
+Seguir asistint a clase com ha fet l'ultima setmana y amb el nivell de treball
