@@ -63,33 +63,42 @@ public class AdApiController {
         }
     }
 
-@PostMapping("/create")
-public ResponseEntity<Long> createAd(@RequestBody Ad ad) {
-    try {
-        
-        logger.info("Intentando crear un anuncio: {}", ad);
-        
-        if (ad == null) {
-            logger.error("El objeto Ad recibido es nulo");
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    @PostMapping("/create")
+    public ResponseEntity<Long> createAd(@RequestBody Ad ad) {
+        try {
+
+            logger.info("Intentando crear un anuncio: {}", ad);
+
+            if (ad == null) {
+                logger.error("El objeto Ad recibido es nulo");
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+
+            Long adId = adLogic.saveAd(ad);
+
+            logger.info("Anuncio creado con ID: {}", adId);
+            return new ResponseEntity<>(adId, HttpStatus.CREATED);
+        } catch (Exception e) {
+            logger.error("Error creando el anuncio: ", e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-        Long adId = adLogic.saveAd(ad);
-
-        logger.info("Anuncio creado con ID: {}", adId);
-        return new ResponseEntity<>(adId, HttpStatus.CREATED);
-    } catch (Exception e) {
-        logger.error("Error creando el anuncio: ", e);
-        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
-}
 
 
     @DeleteMapping("/delete/{adId}")
-    public ResponseEntity<Void> deleteAd(@PathVariable Long adId) {
+    public ResponseEntity<Void> deleteAd(@PathVariable String adId) {
         try {
-            if (adLogic.existsById(adId)) {
-                adLogic.deleteAdById(adId);
+            Long adIdLong = null;
+            try {
+                adIdLong = Long.parseLong(adId);
+            } catch (NumberFormatException e) {
+                logger.error("Invalid ad ID format: {}", adId, e);
+                return ResponseEntity.badRequest().build();
+            }
+            
+            if (adLogic.existsById(adIdLong)) {
+                System.out.println("Exists Ad en api");
+                adLogic.deleteAdById(adIdLong);
                 return ResponseEntity.noContent().build();
             } else {
                 return ResponseEntity.notFound().build();
@@ -100,70 +109,93 @@ public ResponseEntity<Long> createAd(@RequestBody Ad ad) {
         }
     }
 
+
     @PutMapping("/update")
     public ResponseEntity<Void> updateAd(@RequestBody Ad ad) {
         try {
-            if (adLogic.existsById(ad.getId())) {
-                
-                
-                if (ad.getAuthor() == null || ad.getAuthor().getId() == null) {
-                    Ad existingAd = adLogic.getAdById(ad.getId());
-                    ad.setAuthor(existingAd.getAuthor());
-                }
-                adLogic.updateAd(ad);
-                return ResponseEntity.ok().build();
-            } else {
+            if (ad == null || ad.getId() == null) {
+                return ResponseEntity.badRequest().build();
+            }
+
+            Optional<Ad> existingAdOpt = Optional.ofNullable(adLogic.getAdById(ad.getId()));
+
+            if (existingAdOpt.isEmpty()) {
                 return ResponseEntity.notFound().build();
             }
+
+            // Obtener el anuncio existente
+            Ad existingAd = existingAdOpt.get();
+
+            // Mantener el mismo autor si no se especifica uno en la solicitud
+            if (ad.getAuthor() == null || ad.getAuthor().getId() == null) {
+                ad.setAuthor(existingAd.getAuthor());
+            }
+
+            // Realizar la actualización
+            adLogic.updateAd(ad);
+            return ResponseEntity.ok().build();
+
         } catch (Exception e) {
             logger.error("Error updating ad", e);
             return ResponseEntity.internalServerError().build();
         }
     }
-    
     @GetMapping("/byCategory/{categoryId}")
-    public ResponseEntity<List<Ad>> getAdsByCategory(@PathVariable Long categoryId) {
-        List<Ad> ads = adLogic.findAdsByCategory(categoryId);
-        return new ResponseEntity<>(ads, HttpStatus.OK);
-    }
-    
-    @GetMapping("/priceRange")
-    public ResponseEntity<List<Ad>> getAdsByPriceRange(
-            @RequestParam double minPrice,
-            @RequestParam double maxPrice) {
+        public ResponseEntity<List<Ad>> getAdsByCategory(@PathVariable Long categoryId) {
+            List<Ad> ads = adLogic.findAdsByCategory(categoryId);
+            return new ResponseEntity<>(ads, HttpStatus.OK);
+        }
+
+        @GetMapping("/priceRange")
+        public ResponseEntity<List<Ad>> getAdsByPriceRange(
+                @RequestParam double minPrice,
+                @RequestParam double maxPrice) {
+            try {
+                List<Ad> ads = adLogic.findAdsByPriceRange(minPrice, maxPrice);
+                return new ResponseEntity<>(ads, HttpStatus.OK);
+            } catch (Exception e) {
+                logger.error("Error retrieving ads by price range", e);
+                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        }
+
+        // ✅ Nuevo método para filtrar anuncios por categoría y precio
+        @GetMapping("/filtered")
+        public ResponseEntity<List<Ad>> getAdsFiltered(
+                @RequestParam Long categoryId,
+                @RequestParam double minPrice,
+                @RequestParam double maxPrice) {
+            try {
+                List<Ad> ads = adLogic.findAdsFiltered(categoryId, minPrice, maxPrice);
+                return new ResponseEntity<>(ads, HttpStatus.OK);
+            } catch (Exception e) {
+                logger.error("Error retrieving filtered ads", e);
+                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        }
+
+        // ✅ Nuevo método para obtener todas las categorías
+        @GetMapping("/categories")
+        public ResponseEntity<List<Category>> getCategories() {
+            try {
+                List<Category> categories = adLogic.getAllCategories();
+                return new ResponseEntity<>(categories, HttpStatus.OK);
+            } catch (Exception e) {
+                logger.error("Error retrieving categories", e);
+                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        }
+        @GetMapping("/byUser/{userId}")
+    public ResponseEntity<List<Ad>> getAdsByUser(@PathVariable Long userId) {
         try {
-            List<Ad> ads = adLogic.findAdsByPriceRange(minPrice, maxPrice);
+            List<Ad> ads = adLogic.findAdsByUser(userId);
             return new ResponseEntity<>(ads, HttpStatus.OK);
         } catch (Exception e) {
-            logger.error("Error retrieving ads by price range", e);
+            logger.error("Error retrieving ads for user ID: {}", userId, e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    // ✅ Nuevo método para filtrar anuncios por categoría y precio
-    @GetMapping("/filtered")
-    public ResponseEntity<List<Ad>> getAdsFiltered(
-            @RequestParam Long categoryId,
-            @RequestParam double minPrice,
-            @RequestParam double maxPrice) {
-        try {
-            List<Ad> ads = adLogic.findAdsFiltered(categoryId, minPrice, maxPrice);
-            return new ResponseEntity<>(ads, HttpStatus.OK);
-        } catch (Exception e) {
-            logger.error("Error retrieving filtered ads", e);
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    // ✅ Nuevo método para obtener todas las categorías
-    @GetMapping("/categories")
-    public ResponseEntity<List<Category>> getCategories() {
-        try {
-            List<Category> categories = adLogic.getAllCategories();
-            return new ResponseEntity<>(categories, HttpStatus.OK);
-        } catch (Exception e) {
-            logger.error("Error retrieving categories", e);
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
 }
+
+

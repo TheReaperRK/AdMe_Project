@@ -14,6 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,8 +66,6 @@ public class UserApiController {
         //los datos a devolver (payload)
         List<User> llista;
         
-        
-        
         //la cabecera del transporte
         HttpHeaders headers = new HttpHeaders();
         headers.add("Cache-Control", "no-store"); //no usar caché
@@ -113,29 +112,40 @@ public class UserApiController {
      * @param user
      * @return 
      */
-    @PutMapping("/update")
-    public ResponseEntity<Void> update(@RequestBody User user){
-        
-        
-        
-        try {
-            if (userLogic.existsById(user.getId()))
-            {
-                userLogic.updateUser(user);
-                
-                return ResponseEntity.ok().build();
-            }
-            else
-                return ResponseEntity.notFound().build();
+    @PutMapping("/update/{userId}")
+    public ResponseEntity<User> update(@PathVariable Long userId, @RequestBody User updatedUser) {
+        ResponseEntity<User> response;
 
+        
+        logger.info("User ID from URL: " + userId);
+        logger.info("Updated User Object: " + updatedUser);
+
+        try {
+            Optional<User> existingUserOptional = userRepo.findById(userId);
+
+            if (existingUserOptional.isPresent()) {
+                User existingUser = existingUserOptional.get();
+
+                // Actualizar solo los campos necesarios
+                existingUser.setName(updatedUser.getName());
+                existingUser.setEmail(updatedUser.getEmail());
+                existingUser.setPhoneNumber(updatedUser.getPhoneNumber());
+                existingUser.setImage(updatedUser.getImage());
+                existingUser.setStatus(updatedUser.isStatus());
+                existingUser.setRole(updatedUser.getRole());
+
+                userRepo.save(existingUser);
+                return new ResponseEntity<>(existingUser, HttpStatus.OK);
+            }
+
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
         } catch (Exception e) {
-            logger.info("/n ERROR UPDATE"+e.getMessage());
+            logger.error("ERROR UPDATE: " + e.getMessage());
             return ResponseEntity.internalServerError().build();
         }
-        
-        
     }
+
     
     @PutMapping("/activate/{userId}")
     public ResponseEntity<Void> activate(@PathVariable Long userId){
