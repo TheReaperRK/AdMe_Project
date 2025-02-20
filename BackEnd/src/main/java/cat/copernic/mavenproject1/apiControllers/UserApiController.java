@@ -66,8 +66,6 @@ public class UserApiController {
         //los datos a devolver (payload)
         List<User> llista;
         
-        
-        
         //la cabecera del transporte
         HttpHeaders headers = new HttpHeaders();
         headers.add("Cache-Control", "no-store"); //no usar caché
