@@ -112,7 +112,7 @@ fun AdsScreen(categoryId: Long?, adsViewModel: AdsViewModel, navController: NavC
 
                 if(user.role.name == "ADMIN"){
                     Button(
-                        onClick = {navController.navigate("editCategoryScreen")},
+                        onClick = {navController.navigate("editCategoryScreen/${category.id}")},
                         shape = CircleShape,
                         colors =ButtonDefaults.buttonColors(containerColor = Color(0xFFFFAA00))
                     ) {

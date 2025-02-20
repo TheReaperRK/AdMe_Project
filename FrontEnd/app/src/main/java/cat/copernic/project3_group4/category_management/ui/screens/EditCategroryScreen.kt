@@ -49,6 +49,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -101,10 +102,21 @@ import java.sql.SQLException
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditCategoryScreen(
+    categoryId: Long?,
     categoryViewModel: CategoryViewModel,
     userState: MutableState<User?>,
     navController: NavController
 ) {
+
+    LaunchedEffect(categoryId) {
+        println("Cargando la categoría: $categoryId")
+        if (categoryId == null) {
+            return@LaunchedEffect
+        } else {
+            categoryViewModel.fetchCategoryById(categoryId)
+
+        }
+    }
     val user = userState.value
     if (user == null) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -128,6 +140,8 @@ fun EditCategoryScreen(
     val imagePickerLauncher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         selectedImageUri = uri
     }
+
+
 
 /*
 admin@admin.com
@@ -160,7 +174,7 @@ admin@admin.com
                 },
                 title = {
 
-                    Text("Modificar categoría", color = Color.White)
+                    Text("Modificar categoría ${categoryId}", color = Color.White)
 
 
 

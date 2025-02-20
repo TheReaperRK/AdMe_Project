@@ -94,13 +94,23 @@ class MainActivity : ComponentActivity() {
                                    navController = navController
                                )
                            }
-                        composable("editCategoryScreen"){
+
+                        composable(
+                            route = "editCategoryScreen/{categoryId}",
+                            arguments = listOf(navArgument("categoryId") {
+                                type = NavType.LongType
+                            })
+                            ) { backStackEntry ->
+                            val categoryId = backStackEntry.arguments?.getLong("categoryId") ?: 0L
                             EditCategoryScreen(
+                                categoryId,
                                 categoryViewModel = categoryViewModel,
                                 userState = userState,
                                 navController = navController
                             )
                         }
+
+
                         composable("createAdScreen") { CreateAdScreen(navController, viewModel = categoryViewModel, userState) }
                         composable("recoverByToken") { RecoverByToken(navController) }
                         composable("AdsScreen") {

@@ -153,7 +153,7 @@ admin@admin.com
                 },
                 title = {
 
-                    Text("Modificar categoría", color = Color.White)
+                    Text(title, color = Color.White)
 
 
 
