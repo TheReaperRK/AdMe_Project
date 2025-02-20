@@ -90,6 +90,7 @@ fun PasswordRecover(navController: NavController) {
 
                         if (response.isSuccessful) {
                             Toast.makeText(context, "Correo de recuperación enviado", Toast.LENGTH_LONG).show()
+                            println("correo de recuperacion enviado: " + email)
                             navController.navigate("recoverByToken")
                         } else {
                             Toast.makeText(context, "Error al enviar la solicitud", Toast.LENGTH_SHORT).show()

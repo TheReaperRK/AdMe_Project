@@ -86,27 +86,28 @@ public class AdApiController {
 
 
     @DeleteMapping("/delete/{adId}")
-        public ResponseEntity<Void> deleteAd(@PathVariable String adId) {
+    public ResponseEntity<Void> deleteAd(@PathVariable String adId) {
+        try {
+            Long adIdLong = null;
             try {
-                Long adIdLong = null;
-                try {
-                    adIdLong = Long.parseLong(adId);
-                } catch (NumberFormatException e) {
-                    logger.error("Invalid ad ID format: {}", adId, e);
-                    return ResponseEntity.badRequest().build();
-                }
-
-                if (adLogic.existsById(adIdLong)) {
-                    adLogic.deleteAdById(adIdLong);
-                    return ResponseEntity.noContent().build();
-                } else {
-                    return ResponseEntity.notFound().build();
-                }
-            } catch (Exception e) {
-                logger.error("Error deleting ad with ID: {}", adId, e);
-                return ResponseEntity.internalServerError().build();
+                adIdLong = Long.parseLong(adId);
+            } catch (NumberFormatException e) {
+                logger.error("Invalid ad ID format: {}", adId, e);
+                return ResponseEntity.badRequest().build();
             }
+            
+            if (adLogic.existsById(adIdLong)) {
+                System.out.println("Exists Ad en api");
+                adLogic.deleteAdById(adIdLong);
+                return ResponseEntity.noContent().build();
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            logger.error("Error deleting ad with ID: {}", adId, e);
+            return ResponseEntity.internalServerError().build();
         }
+    }
 
 
     @PutMapping("/update")

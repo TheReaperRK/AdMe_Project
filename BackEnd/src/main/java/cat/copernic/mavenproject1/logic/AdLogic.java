@@ -74,6 +74,8 @@ public class AdLogic {
         }
 
         public void deleteAdById(Long id) {
+            
+            System.out.println("Se esta borrando ad by id " + id);
             adRepo.deleteById(id);
         }
 
