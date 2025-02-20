@@ -19,5 +19,7 @@ public interface AdRepo extends JpaRepository<Ad, Long> {
     List<Ad> findByCategory_IdAndPriceBetween(Long categoryId, double minPrice, double maxPrice);
     
     List<Ad> findByAuthor_Id(Long userId);
+    
+    boolean existsById(Long id);
 
 }

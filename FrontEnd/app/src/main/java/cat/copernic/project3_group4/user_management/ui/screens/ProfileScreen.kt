@@ -3,6 +3,7 @@ package cat.copernic.project3_group4.main.screens
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Base64
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -34,11 +35,13 @@ import androidx.navigation.NavController
 import cat.copernic.project3_group4.core.models.User
 import cat.copernic.project3_group4.ad_management.ui.viewmodels.AdsViewModel
 import cat.copernic.project3_group4.core.models.Ad
+import cat.copernic.project3_group4.core.ui.theme.BrownTertiary
 import cat.copernic.project3_group4.core.ui.theme.OrangePrimary
 import cat.copernic.project3_group4.core.ui.theme.OrangeSecondary
 import coil.compose.AsyncImage
 import kotlinx.coroutines.launch
 import cat.copernic.project3_group4.main.screens.BottomNavigationBar
+import com.google.android.gms.common.api.Response
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -128,7 +131,8 @@ fun ProfileScreen(userState: MutableState<User?>, navController: NavController, 
                 if (ads.isEmpty()) {
                     Text("No tienes anuncios aún.", fontSize = 14.sp, color = Color.Gray)
                 } else {
-                    AdsSection(ads)
+                    AdsSection(ads, adsViewModel, navController) // ✅ Pasamos adsViewModel correctamente
+
                 }
             }
         }
@@ -136,23 +140,27 @@ fun ProfileScreen(userState: MutableState<User?>, navController: NavController, 
 }
 
 @Composable
-fun AdsSection(ads: List<Ad>) {
+fun AdsSection(ads: List<Ad>, adsViewModel: AdsViewModel, navController: NavController) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(8.dp)
     ) {
         items(ads) { ad ->
-            AdCard(ad)
+            AdCard(ad, adsViewModel, navController) // ✅ Pasamos navController a cada AdCard
         }
     }
 }
 
+
+
 @Composable
-fun AdCard(ad: Ad) {
+fun AdCard(ad: Ad, adsViewModel: AdsViewModel, navController: NavController) {
+    val context = LocalContext.current
     val isBase64 = ad.data?.matches(Regex("^[A-Za-z0-9+/=]+$")) ?: false
     val decodedBitmap = if (isBase64) base64ToBitmap(ad.data) else null
     var showMenu by remember { mutableStateOf(false) }
+    var showDialog by remember { mutableStateOf(false) }
 
     Box {
         Card(
@@ -168,22 +176,34 @@ fun AdCard(ad: Ad) {
                     Image(
                         bitmap = decodedBitmap.asImageBitmap(),
                         contentDescription = "Ad Image",
-                        modifier = Modifier.fillMaxWidth().height(120.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(120.dp),
                         contentScale = ContentScale.Crop
                     )
                 } else {
                     AsyncImage(
                         model = "https://via.placeholder.com/150",
                         contentDescription = "Ad Image",
-                        modifier = Modifier.fillMaxWidth().height(120.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(120.dp),
                         contentScale = ContentScale.Fit
                     )
                 }
                 Box(
-                    modifier = Modifier.fillMaxWidth().background(OrangePrimary).padding(4.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(OrangePrimary)
+                        .padding(4.dp),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text("${ad.price}€", fontSize = 16.sp, fontWeight = FontWeight.Bold, color = Color.White)
+                    Text(
+                        text = "${ad.price}€",
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
+                    )
                 }
             }
         }
@@ -196,19 +216,56 @@ fun AdCard(ad: Ad) {
                 text = { Text("Editar") },
                 onClick = {
                     showMenu = false
-                    // Acción para editar el anuncio
+                    navController.navigate("UpdateAdScreen/${ad.id}") // Navegar a la pantalla de edición
                 }
             )
             DropdownMenuItem(
                 text = { Text("Eliminar") },
                 onClick = {
                     showMenu = false
-                    // Acción para eliminar el anuncio
+                    showDialog = true
+                }
+            )
+        }
+
+        if (showDialog) {
+            AlertDialog(
+                onDismissRequest = { showDialog = false },
+                title = { Text("Confirmar eliminación", fontWeight = FontWeight.Bold, color = BrownTertiary) },
+                text = { Text("¿Seguro que quieres eliminar este anuncio? Esta acción no se puede deshacer.", color = Color.Black) },
+                confirmButton = {
+                    Button(
+                        onClick = {
+                            adsViewModel.deleteAd(ad.id.toString(),
+                                onSuccess = {
+                                    Toast.makeText(context, "Anuncio eliminado", Toast.LENGTH_SHORT).show()
+                                },
+                                onError = { errorMessage ->
+                                    Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
+                                }
+                            )
+                            showDialog = false
+                        },
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
+                    ) {
+                        Text("Eliminar", color = Color.White)
+                    }
+                },
+                dismissButton = {
+                    Button(
+                        onClick = { showDialog = false },
+                        colors = ButtonDefaults.buttonColors(containerColor = Color.LightGray)
+                    ) {
+                        Text("Cancelar", color = Color.Black)
+                    }
                 }
             )
         }
     }
 }
+
+
+
 fun base64ToBitmap(base64Str: String?): Bitmap? {
     return try {
         if (base64Str.isNullOrEmpty()) return null
@@ -231,7 +288,3 @@ fun DrawerButton(text: String, onClick: () -> Unit) {
         Text(text, color = Color.White)
     }
 }
-
-
-
-

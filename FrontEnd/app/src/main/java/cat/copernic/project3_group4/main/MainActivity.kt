@@ -13,6 +13,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -33,6 +36,7 @@ import cat.copernic.project3_group4.category_management.ui.viewmodels.CategoryVi
 import cat.copernic.project3_group4.ad_management.ui.viewmodels.AdsViewModel
 import cat.copernic.project3_group4.category_management.ui.screens.CategoryFormScreen
 import cat.copernic.project3_group4.ad_management.ui.screens.CreateAdScreen
+import cat.copernic.project3_group4.ad_management.ui.screens.UpdateAdScreen
 import cat.copernic.project3_group4.main.screens.PasswordRecover
 import cat.copernic.project3_group4.main.screens.ProfileScreen
 import cat.copernic.project3_group4.main.screens.RecoverByToken
@@ -98,6 +102,31 @@ class MainActivity : ComponentActivity() {
                         composable("EditUserScreen") {
                             EditUserScreen(userState, navController)
                         }
+                        composable("UpdateAdScreen/{adId}") { backStackEntry ->
+                            val adId = backStackEntry.arguments?.getString("adId")?.toLongOrNull()
+
+                            if (adId != null) {
+                                LaunchedEffect(adId) {
+                                    adsViewModel.fetchAdById(adId)
+                                }
+
+                                val ad by adsViewModel.ad.observeAsState()
+
+                                ad?.let {
+                                    UpdateAdScreen(
+                                        navController = navController,
+                                        adsViewModel = adsViewModel,
+                                        viewModel = categoryViewModel,
+                                        ad = it,
+                                        userState = userState
+                                    )
+                                }
+                            }
+                        }
+
+
+
+
                     }
                 }
             }
