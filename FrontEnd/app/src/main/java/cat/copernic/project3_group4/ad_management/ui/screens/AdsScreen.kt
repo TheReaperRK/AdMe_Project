@@ -21,6 +21,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import cat.copernic.project3_group4.core.ui.theme.OrangePrimary
+import cat.copernic.project3_group4.core.ui.theme.OrangeSecondary
 import cat.copernic.project3_group4.main.screens.BottomNavigationBar
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -44,7 +46,11 @@ fun AdsScreen(adsViewModel: AdsViewModel, navController: NavController) {
     }
 
 
-    Column(modifier = Modifier.fillMaxSize().background(Color.White)) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White)
+    ) {
         SmallTopAppBar(
             title = { Text("Anuncios", color = Color.White) },
             colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = Color(0xFFFF6600))
@@ -58,18 +64,19 @@ fun AdsScreen(adsViewModel: AdsViewModel, navController: NavController) {
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        if (ads.isEmpty()) {
-            Text(
-                "No hay anuncios disponibles", fontSize = 16.sp,
-                color = Color.Gray, modifier = Modifier.padding(16.dp)
-            )
-        } else {
-            LazyColumn(modifier = Modifier.weight(1f).padding(horizontal = 8.dp)) {
+        // Aquí envolvemos la lista en un Box con weight(1f)
+        Box(modifier = Modifier.weight(1f)) {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
                 items(ads) { ad -> AdItem(ad) }
             }
         }
 
-        Spacer(modifier = Modifier.weight(1f)) // Empuja el contenido hacia arriba para que el BottomNavigationBar esté siempre abajo
+        // La barra de navegación siempre quedará en la parte inferior
         BottomNavigationBar(navController)
     }
 }
@@ -129,7 +136,7 @@ fun AdItem(ad: Ad) {
     Card(
         modifier = Modifier.fillMaxWidth().padding(8.dp),
         shape = RoundedCornerShape(8.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFFFDD80))
+        colors = CardDefaults.cardColors(containerColor = OrangePrimary)
     ) {
         Column {
             AsyncImage(
@@ -138,7 +145,7 @@ fun AdItem(ad: Ad) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(150.dp)
-                    .clip(RoundedCornerShape(12.dp)), // Bordes redondeados
+                    .clip(RoundedCornerShape(0.dp, 0.dp,24.dp, 24.dp)), // Bordes redondeados
                 contentScale = ContentScale.Crop
             )
             Column(modifier = Modifier.padding(8.dp)) {

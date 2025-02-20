@@ -14,18 +14,11 @@ interface UserApiRest {
     @GET("all")
     suspend fun getAllUsers(): Response<List<User>>
 
-
     @GET("byId/{userId}")
     suspend fun getUserById(@Path("userId") userId: Long): Response<User>
-
-
+ 
     @POST("create")
     suspend fun createUser(@Body user: User): Response<Long>
-
-
-    @PUT("update")
-    suspend fun updateUser(@Body product: User): Response<Void>
-
 
     @DELETE("delete/{userId}")
     suspend fun deleteUser(@Path("userId") userId: Long): Response<Void>
@@ -35,4 +28,7 @@ interface UserApiRest {
 
     @PUT("desactivate/{userId}")
     suspend fun desactivateUserStatus(@Path("userId") userId: Long): Response<Void>
+
+    @PUT("update/{userId}")
+    suspend fun updateUser(@Path("userId") userId: Long, @Body updatedUser: User): Response<User>
 }

@@ -110,24 +110,21 @@ fun CategoryFormScreen(
         }
         return
     }
-    // Título según el rol del usuario
+
     val title = if (user.role.name == "ADMIN") "Crear categoría" else "Proponer categoría"
 
     var name by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
     var proposal by remember { mutableStateOf(false) }
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
-
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     var imageSelected by remember { mutableStateOf(false) }
-    // Launcher para seleccionar imagen
+
     val imagePickerLauncher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         selectedImageUri = uri
     }
-/*
-admin@admin.com
- */
+
     Scaffold(
         bottomBar = { BottomNavigationBar(navController) }
     ) { paddingValues ->
@@ -136,8 +133,7 @@ admin@admin.com
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color.White)
-                .paddingFromBaseline(0.dp,paddingValues.calculateBottomPadding())
-
+                .padding(bottom = paddingValues.calculateBottomPadding())
         ) {
             TopAppBar(
                 navigationIcon = {
@@ -161,7 +157,11 @@ admin@admin.com
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFFFF6600))
             )
 
-            Column(modifier = Modifier.padding(16.dp)) {
+            Column(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .verticalScroll(rememberScrollState()) // Habilitar scroll
+            ) {
                 Spacer(modifier = Modifier.height(12.dp))
 
                 // Selección de imagen
@@ -169,14 +169,13 @@ admin@admin.com
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    // Mostrar la imagen seleccionada o un ícono por defecto
                     selectedImageUri?.let {
                         Image(
                             painter = rememberAsyncImagePainter(it),
-                            contentDescription = "Imagtge de categoria",
+                            contentDescription = "Imagen de categoría",
                             modifier = Modifier
-                                .height(300.dp)
-                                .width(450.dp)
+                                .height(250.dp)
+                                .width(350.dp)
                                 .clip(RoundedCornerShape(50.dp))
                                 .background(White)
                                 .clickable { imagePickerLauncher.launch("image/*") }
@@ -186,20 +185,15 @@ admin@admin.com
                         painter = painterResource(id = R.drawable.add_image),
                         contentDescription = "Seleccionar imagen",
                         modifier = Modifier
-                            .height(300.dp)
-                            .width(450.dp)
+                            .height(250.dp)
+                            .width(350.dp)
                             .clickable { imagePickerLauncher.launch("image/*") }
-                            .border(2.dp, color = BrownTertiary)
-
                     )
                     imageSelected = false
                 }
-                Spacer(modifier = Modifier.height(12.dp))
-
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                // Campo: Nombre de la categoría
                 Text("Nombre de la categoría", fontSize = 18.sp, fontWeight = FontWeight.Bold)
                 OutlinedTextField(
                     value = name,
@@ -211,7 +205,6 @@ admin@admin.com
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                // Campo: Descripción de la categoría
                 Text("Descripción de la categoría", fontSize = 18.sp, fontWeight = FontWeight.Bold)
                 OutlinedTextField(
                     value = description,
@@ -225,8 +218,6 @@ admin@admin.com
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                // Mensaje informativo para usuarios
-                /*
                 if (user.role.name == "USER") {
                     Text(
                         "Tu propuesta será evaluada por nuestro equipo para su posterior implementación.",
@@ -235,13 +226,12 @@ admin@admin.com
                     )
                     Spacer(modifier = Modifier.height(12.dp))
                 }
+
                 Spacer(modifier = Modifier.height(12.dp))
-                */
 
                 // Botón para enviar el formulario
                 Button(
                     onClick = {
-                        // Para usuarios, la categoría se propone; para admin, se crea directamente
                         proposal = (user.role.name == "USER")
                         if (name.isNotBlank() && description.isNotBlank()) {
                             coroutineScope.launch {
@@ -285,20 +275,14 @@ admin@admin.com
                 ) {
                     val buttonText = if (user.role.name == "ADMIN") "Crear categoría" else "Proponer categoría"
                     Text(buttonText, color = Color.White, fontSize = 18.sp)
-
                 }
 
                 Spacer(modifier = Modifier.height(12.dp))
-
-
             }
-
-
         }
-
     }
-
 }
+
 
 /**
  * Función para convertir una Uri en un arreglo de bytes.
