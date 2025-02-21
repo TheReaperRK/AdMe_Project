@@ -59,6 +59,7 @@ public class CategoryLogic {
         oldCategory.setImage(img);
         oldCategory.setName(category.getName());
         oldCategory.setProposal(category.isProposal());
+         
         
         categoryRepo.save(oldCategory);
         
