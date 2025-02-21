@@ -60,7 +60,6 @@ public class CategoryLogic {
         oldCategory.setName(category.getName());
         oldCategory.setProposal(category.isProposal());
         
-        
         categoryRepo.save(oldCategory);
         
         Category cat = getCategoryById(oldCategory.getId());
