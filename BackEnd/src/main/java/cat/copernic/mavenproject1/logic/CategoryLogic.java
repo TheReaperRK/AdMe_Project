@@ -51,22 +51,30 @@ public class CategoryLogic {
         }
     }
     
-    public Long updateCategory(Category category) {
+    public Long updateCategory(Category category, MultipartFile imageFile) {
         try{
         Category oldCategory = getCategoryById(category.getId());
-        
-        oldCategory.setAds(category.getAds());
+        byte[] img = convertImageToBlob(imageFile);
         oldCategory.setDescription(category.getDescription());
-        oldCategory.setImage(category.getImage());
+        oldCategory.setImage(img);
         oldCategory.setName(category.getName());
         oldCategory.setProposal(category.isProposal());
+        
+        
         categoryRepo.save(oldCategory);
+        
+        Category cat = getCategoryById(oldCategory.getId());
+            System.out.println(" id: "+cat.getId() +" name: "+cat.getName()+ " descr: "+cat.getDescription());
         return oldCategory.getId();
         }catch(Exception e){
             return null;
         }
     }
-    public byte[] convertImageToBlob(MultipartFile file) throws IOException {
+    public byte[] convertImageToBlob(MultipartFile file)  {
+        try{
         return file.getBytes();
+        }catch(IOException e){
+            return null;
+        }
     }
 }
