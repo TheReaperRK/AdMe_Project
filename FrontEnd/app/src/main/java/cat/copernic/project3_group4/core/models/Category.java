@@ -34,8 +34,7 @@ public class Category {
     }
 
     // Constructor completo
-    public Category(Long id, String name, String description, String image, boolean proposal) {
-        this.id = id;
+    public Category(String name, String description, String image, boolean proposal) {
         this.name = name;
         this.description = description;
         this.image = image;

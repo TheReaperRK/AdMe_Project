@@ -60,11 +60,14 @@ public class CategoryApiController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity<Void> updateCategory(@RequestBody Category category) {
+    public ResponseEntity<Void> updateCategory(@RequestParam Long id, @RequestParam String name, @RequestParam String description, @RequestParam boolean proposal, @RequestParam(value = "image", required = false) MultipartFile imageFile) {
+        
+        byte[] img = null;
+        Category category = new Category(id, name, description, img, proposal, new ArrayList<>());
         if (category.getId() == null || !categoryLogic.existsById(category.getId())) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        categoryLogic.updateCategory(category);
+        categoryLogic.updateCategory(category,imageFile);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

@@ -76,7 +76,9 @@ fun AdsScreen(categoryId: Long?, adsViewModel: AdsViewModel, navController: NavC
         ) {
             Row(
 
-                modifier = Modifier.fillMaxSize().padding(top = 20.dp, start = 0.dp, end = 18.dp), // Hace que el Row ocupe todo el espacio del Box
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(top = 20.dp, start = 0.dp, end = 18.dp), // Hace que el Row ocupe todo el espacio del Box
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
