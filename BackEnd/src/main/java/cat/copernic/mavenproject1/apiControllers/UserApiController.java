@@ -6,6 +6,7 @@ package cat.copernic.mavenproject1.apiControllers;
 
 import cat.copernic.mavenproject1.Entity.User;
 import cat.copernic.mavenproject1.enums.Roles;
+import cat.copernic.mavenproject1.logic.EmailLogic;
 import cat.copernic.mavenproject1.logic.UserLogic;
 import cat.copernic.mavenproject1.repository.UserRepo;
 import jakarta.annotation.PostConstruct;
@@ -46,7 +47,8 @@ public class UserApiController {
     
     Logger logger = LoggerFactory.getLogger(UserApiController.class);
     
-  
+    @Autowired
+    private EmailLogic emailLogic;
     
     @Autowired
     private UserLogic userLogic;
@@ -142,6 +144,35 @@ public class UserApiController {
 
         } catch (Exception e) {
             logger.error("ERROR UPDATE: " + e.getMessage());
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+    
+    @PutMapping("/expireWord/{userId}")
+    public ResponseEntity<User> expireWord(@PathVariable Long userId) {
+        ResponseEntity<User> response;
+
+        
+        logger.info("User ID from URL: " + userId);
+
+        try {
+            Optional<User> existingUserOptional = userRepo.findById(userId);
+
+            if (existingUserOptional.isPresent()) {
+                User existingUser = existingUserOptional.get();
+
+                existingUser.setWord("1");//valor que nunca coincidira con el hash, por lo cual sera imposible iniciar sesion, obligatorio reestablecer contraseña
+
+                userRepo.save(existingUser);
+                emailLogic.sendExpirationMessage(existingUser.getEmail()); 
+                
+                return new ResponseEntity<>(existingUser, HttpStatus.OK);
+            }
+
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        } catch (Exception e) {
+            logger.error("ERROR EXPIRE: " + e.getMessage());
             return ResponseEntity.internalServerError().build();
         }
     }

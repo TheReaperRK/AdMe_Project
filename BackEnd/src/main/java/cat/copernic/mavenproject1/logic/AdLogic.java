@@ -11,14 +11,17 @@ import org.springframework.transaction.annotation.Transactional;
 import org.hibernate.Hibernate;
 import java.util.ArrayList;
 import java.util.List;
-import static org.hibernate.internal.CoreLogging.logger;
-import static org.hibernate.internal.HEMLogging.logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * Lógica de negocio para la entidad Ad
  */
 @Service
 public class AdLogic {
+    
+    private static final Logger logger = LoggerFactory.getLogger(AdLogic.class);
 
     @Autowired
     private AdRepo adRepo;
@@ -73,10 +76,18 @@ public class AdLogic {
             return adRepo.existsById(id);
         }
 
+       @Transactional
         public void deleteAdById(Long id) {
-            
-            System.out.println("Se esta borrando ad by id " + id);
-            adRepo.deleteById(id);
+            logger.info("Iniciando eliminación del anuncio con id: {}", id);
+            try {
+                adRepo.deleteById(id);
+                // Opcional: forzar flush para confirmar la eliminación en la DB
+                adRepo.flush();
+                logger.info("Eliminación completada para anuncio con id: {}", id);
+            } catch(Exception e) {
+                logger.error("Error durante la eliminación en el repositorio para id: {}", id, e);
+                throw e; // para que la transacción se deshaga si falla
+            }
         }
 
         public Long saveAd(Ad ad) {

@@ -178,9 +178,9 @@ class AdsViewModel : ViewModel() {
                 if (response.isSuccessful) {
                     _ads.value = _ads.value?.filter { it.id != adIdLong }
                     onSuccess()
-                    Log.d("DeleteAd", "✅ Anuncio eliminado correctamente")
+                    Log.d("DeleteAd", "✅ Anuncio eliminado correctamente, código: ${response.code()}")
                 } else {
-                    val errorMessage = "❌ Error al eliminar el anuncio"
+                    val errorMessage = "❌ Error al eliminar el anuncio, código: ${response.code()}"
                     Log.e("DeleteAd", errorMessage)
                     onError(errorMessage)
                 }

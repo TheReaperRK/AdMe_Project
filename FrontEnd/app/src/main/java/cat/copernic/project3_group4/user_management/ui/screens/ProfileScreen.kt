@@ -222,8 +222,14 @@ fun AdCard(ad: Ad, adsViewModel: AdsViewModel, navController: NavController) {
             DropdownMenuItem(
                 text = { Text("Eliminar") },
                 onClick = {
-                    showMenu = false
-                    showDialog = true
+                    adsViewModel.deleteAd(ad.id.toString(),
+                        onSuccess = {
+                            Toast.makeText(context, "Anuncio eliminado", Toast.LENGTH_SHORT).show()
+                        },
+                        onError = { errorMessage ->
+                            Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
+                        }
+                    )
                 }
             )
         }

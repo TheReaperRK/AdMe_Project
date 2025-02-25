@@ -1,8 +1,8 @@
 -------------------------------------------------------------------------------
 Test set: project3group4.test.RestCategoryTest
 -------------------------------------------------------------------------------
-Tests run: 11, Failures: 0, Errors: 11, Skipped: 0, Time elapsed: 0.304 s <<< FAILURE! -- in project3group4.test.RestCategoryTest
-project3group4.test.RestCategoryTest.testCreateErrorMalformedObject -- Time elapsed: 0.064 s <<< ERROR!
+Tests run: 11, Failures: 0, Errors: 11, Skipped: 0, Time elapsed: 0.376 s <<< FAILURE! -- in project3group4.test.RestCategoryTest
+project3group4.test.RestCategoryTest.testCreateErrorMalformedObject -- Time elapsed: 0.065 s <<< ERROR!
 org.springframework.dao.InvalidDataAccessApiUsageException: detached entity passed to persist: cat.copernic.mavenproject1.Entity.Ad
 	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.convertHibernateAccessException(HibernateJpaDialect.java:310)
 	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.translateExceptionIfPossible(HibernateJpaDialect.java:244)
@@ -20,7 +20,7 @@ org.springframework.dao.InvalidDataAccessApiUsageException: detached entity pass
 	at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:97)
 	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
 	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:223)
-	at jdk.proxy2/jdk.proxy2.$Proxy143.saveAndFlush(Unknown Source)
+	at jdk.proxy2/jdk.proxy2.$Proxy142.saveAndFlush(Unknown Source)
 	at project3group4.test.RestCategoryTest.setup(RestCategoryTest.java:49)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
@@ -57,7 +57,7 @@ Caused by: org.hibernate.PersistentObjectException: detached entity passed to pe
 	at org.springframework.orm.jpa.JpaTransactionManager.doCommit(JpaTransactionManager.java:562)
 	... 18 more
 
-project3group4.test.RestCategoryTest.testGetAllCategoriesOk -- Time elapsed: 0.021 s <<< ERROR!
+project3group4.test.RestCategoryTest.testGetAllCategoriesOk -- Time elapsed: 0.029 s <<< ERROR!
 org.springframework.dao.InvalidDataAccessApiUsageException: detached entity passed to persist: cat.copernic.mavenproject1.Entity.Ad
 	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.convertHibernateAccessException(HibernateJpaDialect.java:310)
 	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.translateExceptionIfPossible(HibernateJpaDialect.java:244)
@@ -75,7 +75,7 @@ org.springframework.dao.InvalidDataAccessApiUsageException: detached entity pass
 	at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:97)
 	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
 	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:223)
-	at jdk.proxy2/jdk.proxy2.$Proxy143.saveAndFlush(Unknown Source)
+	at jdk.proxy2/jdk.proxy2.$Proxy142.saveAndFlush(Unknown Source)
 	at project3group4.test.RestCategoryTest.setup(RestCategoryTest.java:49)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
@@ -112,7 +112,7 @@ Caused by: org.hibernate.PersistentObjectException: detached entity passed to pe
 	at org.springframework.orm.jpa.JpaTransactionManager.doCommit(JpaTransactionManager.java:562)
 	... 18 more
 
-project3group4.test.RestCategoryTest.testCreateOk -- Time elapsed: 0.021 s <<< ERROR!
+project3group4.test.RestCategoryTest.testCreateOk -- Time elapsed: 0.026 s <<< ERROR!
 org.springframework.dao.InvalidDataAccessApiUsageException: detached entity passed to persist: cat.copernic.mavenproject1.Entity.Ad
 	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.convertHibernateAccessException(HibernateJpaDialect.java:310)
 	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.translateExceptionIfPossible(HibernateJpaDialect.java:244)
@@ -130,7 +130,7 @@ org.springframework.dao.InvalidDataAccessApiUsageException: detached entity pass
 	at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:97)
 	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
 	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:223)
-	at jdk.proxy2/jdk.proxy2.$Proxy143.saveAndFlush(Unknown Source)
+	at jdk.proxy2/jdk.proxy2.$Proxy142.saveAndFlush(Unknown Source)
 	at project3group4.test.RestCategoryTest.setup(RestCategoryTest.java:49)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
@@ -167,7 +167,7 @@ Caused by: org.hibernate.PersistentObjectException: detached entity passed to pe
 	at org.springframework.orm.jpa.JpaTransactionManager.doCommit(JpaTransactionManager.java:562)
 	... 18 more
 
-project3group4.test.RestCategoryTest.testGetByIdNotFound -- Time elapsed: 0.026 s <<< ERROR!
+project3group4.test.RestCategoryTest.testGetByIdNotFound -- Time elapsed: 0.036 s <<< ERROR!
 org.springframework.dao.InvalidDataAccessApiUsageException: detached entity passed to persist: cat.copernic.mavenproject1.Entity.Ad
 	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.convertHibernateAccessException(HibernateJpaDialect.java:310)
 	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.translateExceptionIfPossible(HibernateJpaDialect.java:244)
@@ -185,7 +185,7 @@ org.springframework.dao.InvalidDataAccessApiUsageException: detached entity pass
 	at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:97)
 	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
 	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:223)
-	at jdk.proxy2/jdk.proxy2.$Proxy143.saveAndFlush(Unknown Source)
+	at jdk.proxy2/jdk.proxy2.$Proxy142.saveAndFlush(Unknown Source)
 	at project3group4.test.RestCategoryTest.setup(RestCategoryTest.java:49)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
@@ -222,7 +222,7 @@ Caused by: org.hibernate.PersistentObjectException: detached entity passed to pe
 	at org.springframework.orm.jpa.JpaTransactionManager.doCommit(JpaTransactionManager.java:562)
 	... 18 more
 
-project3group4.test.RestCategoryTest.testDeleteCategoryByIdOk -- Time elapsed: 0.020 s <<< ERROR!
+project3group4.test.RestCategoryTest.testDeleteCategoryByIdOk -- Time elapsed: 0.029 s <<< ERROR!
 org.springframework.dao.InvalidDataAccessApiUsageException: detached entity passed to persist: cat.copernic.mavenproject1.Entity.Ad
 	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.convertHibernateAccessException(HibernateJpaDialect.java:310)
 	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.translateExceptionIfPossible(HibernateJpaDialect.java:244)
@@ -240,7 +240,7 @@ org.springframework.dao.InvalidDataAccessApiUsageException: detached entity pass
 	at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:97)
 	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
 	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:223)
-	at jdk.proxy2/jdk.proxy2.$Proxy143.saveAndFlush(Unknown Source)
+	at jdk.proxy2/jdk.proxy2.$Proxy142.saveAndFlush(Unknown Source)
 	at project3group4.test.RestCategoryTest.setup(RestCategoryTest.java:49)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
@@ -277,7 +277,7 @@ Caused by: org.hibernate.PersistentObjectException: detached entity passed to pe
 	at org.springframework.orm.jpa.JpaTransactionManager.doCommit(JpaTransactionManager.java:562)
 	... 18 more
 
-project3group4.test.RestCategoryTest.testDeleteErrorBadId -- Time elapsed: 0.030 s <<< ERROR!
+project3group4.test.RestCategoryTest.testDeleteErrorBadId -- Time elapsed: 0.029 s <<< ERROR!
 org.springframework.dao.InvalidDataAccessApiUsageException: detached entity passed to persist: cat.copernic.mavenproject1.Entity.Ad
 	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.convertHibernateAccessException(HibernateJpaDialect.java:310)
 	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.translateExceptionIfPossible(HibernateJpaDialect.java:244)
@@ -295,7 +295,7 @@ org.springframework.dao.InvalidDataAccessApiUsageException: detached entity pass
 	at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:97)
 	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
 	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:223)
-	at jdk.proxy2/jdk.proxy2.$Proxy143.saveAndFlush(Unknown Source)
+	at jdk.proxy2/jdk.proxy2.$Proxy142.saveAndFlush(Unknown Source)
 	at project3group4.test.RestCategoryTest.setup(RestCategoryTest.java:49)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
@@ -332,7 +332,7 @@ Caused by: org.hibernate.PersistentObjectException: detached entity passed to pe
 	at org.springframework.orm.jpa.JpaTransactionManager.doCommit(JpaTransactionManager.java:562)
 	... 18 more
 
-project3group4.test.RestCategoryTest.testGetByIdErrorBadId -- Time elapsed: 0.024 s <<< ERROR!
+project3group4.test.RestCategoryTest.testGetByIdErrorBadId -- Time elapsed: 0.028 s <<< ERROR!
 org.springframework.dao.InvalidDataAccessApiUsageException: detached entity passed to persist: cat.copernic.mavenproject1.Entity.Ad
 	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.convertHibernateAccessException(HibernateJpaDialect.java:310)
 	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.translateExceptionIfPossible(HibernateJpaDialect.java:244)
@@ -350,7 +350,7 @@ org.springframework.dao.InvalidDataAccessApiUsageException: detached entity pass
 	at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:97)
 	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
 	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:223)
-	at jdk.proxy2/jdk.proxy2.$Proxy143.saveAndFlush(Unknown Source)
+	at jdk.proxy2/jdk.proxy2.$Proxy142.saveAndFlush(Unknown Source)
 	at project3group4.test.RestCategoryTest.setup(RestCategoryTest.java:49)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
@@ -387,7 +387,7 @@ Caused by: org.hibernate.PersistentObjectException: detached entity passed to pe
 	at org.springframework.orm.jpa.JpaTransactionManager.doCommit(JpaTransactionManager.java:562)
 	... 18 more
 
-project3group4.test.RestCategoryTest.testUpdateIdNotExist -- Time elapsed: 0.026 s <<< ERROR!
+project3group4.test.RestCategoryTest.testUpdateIdNotExist -- Time elapsed: 0.036 s <<< ERROR!
 org.springframework.dao.InvalidDataAccessApiUsageException: detached entity passed to persist: cat.copernic.mavenproject1.Entity.Ad
 	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.convertHibernateAccessException(HibernateJpaDialect.java:310)
 	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.translateExceptionIfPossible(HibernateJpaDialect.java:244)
@@ -405,7 +405,7 @@ org.springframework.dao.InvalidDataAccessApiUsageException: detached entity pass
 	at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:97)
 	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
 	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:223)
-	at jdk.proxy2/jdk.proxy2.$Proxy143.saveAndFlush(Unknown Source)
+	at jdk.proxy2/jdk.proxy2.$Proxy142.saveAndFlush(Unknown Source)
 	at project3group4.test.RestCategoryTest.setup(RestCategoryTest.java:49)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
@@ -442,7 +442,7 @@ Caused by: org.hibernate.PersistentObjectException: detached entity passed to pe
 	at org.springframework.orm.jpa.JpaTransactionManager.doCommit(JpaTransactionManager.java:562)
 	... 18 more
 
-project3group4.test.RestCategoryTest.testDeleteByIdErrorNotExist -- Time elapsed: 0.021 s <<< ERROR!
+project3group4.test.RestCategoryTest.testDeleteByIdErrorNotExist -- Time elapsed: 0.029 s <<< ERROR!
 org.springframework.dao.InvalidDataAccessApiUsageException: detached entity passed to persist: cat.copernic.mavenproject1.Entity.Ad
 	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.convertHibernateAccessException(HibernateJpaDialect.java:310)
 	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.translateExceptionIfPossible(HibernateJpaDialect.java:244)
@@ -460,7 +460,7 @@ org.springframework.dao.InvalidDataAccessApiUsageException: detached entity pass
 	at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:97)
 	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
 	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:223)
-	at jdk.proxy2/jdk.proxy2.$Proxy143.saveAndFlush(Unknown Source)
+	at jdk.proxy2/jdk.proxy2.$Proxy142.saveAndFlush(Unknown Source)
 	at project3group4.test.RestCategoryTest.setup(RestCategoryTest.java:49)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
@@ -497,7 +497,7 @@ Caused by: org.hibernate.PersistentObjectException: detached entity passed to pe
 	at org.springframework.orm.jpa.JpaTransactionManager.doCommit(JpaTransactionManager.java:562)
 	... 18 more
 
-project3group4.test.RestCategoryTest.testGetByIdOk -- Time elapsed: 0.019 s <<< ERROR!
+project3group4.test.RestCategoryTest.testGetByIdOk -- Time elapsed: 0.025 s <<< ERROR!
 org.springframework.dao.InvalidDataAccessApiUsageException: detached entity passed to persist: cat.copernic.mavenproject1.Entity.Ad
 	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.convertHibernateAccessException(HibernateJpaDialect.java:310)
 	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.translateExceptionIfPossible(HibernateJpaDialect.java:244)
@@ -515,7 +515,7 @@ org.springframework.dao.InvalidDataAccessApiUsageException: detached entity pass
 	at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:97)
 	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
 	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:223)
-	at jdk.proxy2/jdk.proxy2.$Proxy143.saveAndFlush(Unknown Source)
+	at jdk.proxy2/jdk.proxy2.$Proxy142.saveAndFlush(Unknown Source)
 	at project3group4.test.RestCategoryTest.setup(RestCategoryTest.java:49)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
@@ -552,7 +552,7 @@ Caused by: org.hibernate.PersistentObjectException: detached entity passed to pe
 	at org.springframework.orm.jpa.JpaTransactionManager.doCommit(JpaTransactionManager.java:562)
 	... 18 more
 
-project3group4.test.RestCategoryTest.testUpdateOk -- Time elapsed: 0.016 s <<< ERROR!
+project3group4.test.RestCategoryTest.testUpdateOk -- Time elapsed: 0.024 s <<< ERROR!
 org.springframework.dao.InvalidDataAccessApiUsageException: detached entity passed to persist: cat.copernic.mavenproject1.Entity.Ad
 	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.convertHibernateAccessException(HibernateJpaDialect.java:310)
 	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.translateExceptionIfPossible(HibernateJpaDialect.java:244)
@@ -570,7 +570,7 @@ org.springframework.dao.InvalidDataAccessApiUsageException: detached entity pass
 	at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:97)
 	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
 	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:223)
-	at jdk.proxy2/jdk.proxy2.$Proxy143.saveAndFlush(Unknown Source)
+	at jdk.proxy2/jdk.proxy2.$Proxy142.saveAndFlush(Unknown Source)
 	at project3group4.test.RestCategoryTest.setup(RestCategoryTest.java:49)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)

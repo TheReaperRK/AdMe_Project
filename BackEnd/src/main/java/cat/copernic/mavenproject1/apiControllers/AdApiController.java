@@ -84,30 +84,33 @@ public class AdApiController {
         }
     }
 
-
     @DeleteMapping("/delete/{adId}")
     public ResponseEntity<Void> deleteAd(@PathVariable String adId) {
+        logger.info("Recibiendo petición de eliminación para adId: {}", adId);
         try {
             Long adIdLong = null;
             try {
                 adIdLong = Long.parseLong(adId);
             } catch (NumberFormatException e) {
-                logger.error("Invalid ad ID format: {}", adId, e);
+                logger.error("Formato de ID inválido: {}", adId, e);
                 return ResponseEntity.badRequest().build();
             }
-            
+
             if (adLogic.existsById(adIdLong)) {
-                System.out.println("Exists Ad en api");
+                logger.info("Anuncio {} existe. Procediendo a borrarlo.", adIdLong);
                 adLogic.deleteAdById(adIdLong);
+                logger.info("Eliminación invocada para anuncio {}", adIdLong);
                 return ResponseEntity.noContent().build();
             } else {
+                logger.warn("No se encontró el anuncio con ID: {}", adIdLong);
                 return ResponseEntity.notFound().build();
             }
         } catch (Exception e) {
-            logger.error("Error deleting ad with ID: {}", adId, e);
+            logger.error("Error eliminando anuncio con ID: {}", adId, e);
             return ResponseEntity.internalServerError().build();
         }
     }
+
 
 
     @PutMapping("/update")
