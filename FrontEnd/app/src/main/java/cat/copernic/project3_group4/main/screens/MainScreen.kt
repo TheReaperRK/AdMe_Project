@@ -32,7 +32,7 @@ import coil.compose.AsyncImage
 
 @Composable
 fun CategoryScreen(viewModel: CategoryViewModel, userState: MutableState<User?>, navController: NavController) {
-    val categories by viewModel.categories.observeAsState(emptyList())
+    val categories by viewModel.categories.collectAsState()
     var searchText by remember { mutableStateOf("") }
     val user = userState.value
     LaunchedEffect(Unit) {
@@ -45,6 +45,7 @@ fun CategoryScreen(viewModel: CategoryViewModel, userState: MutableState<User?>,
             categories.filter { it.name.startsWith(searchText, ignoreCase = true) }
         }
     }
+
 
     Column(
         modifier = Modifier
@@ -117,7 +118,10 @@ fun FilterButtons(navController: NavController, userState: MutableState<User?>) 
 fun CategoryList(categories: List<Category>, navController: NavController, modifier: Modifier = Modifier) {
     LazyColumn(modifier = modifier.fillMaxWidth()) {
         items(categories) { category ->
-            CategoryItem(category, navController)
+            if(!category.isProposal){
+                CategoryItem(category, navController)
+            }
+
         }
     }
 }

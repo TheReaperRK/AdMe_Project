@@ -60,7 +60,7 @@ fun AdsScreen(categoryId: Long?, adsViewModel: AdsViewModel, navController: NavC
         return
     }
     val ads by adsViewModel.ads.observeAsState(initial = emptyList())
-    val category by categoryViewModel.category.observeAsState(initial =Category())
+    val category by categoryViewModel.category.collectAsState(initial =Category())
     Column(
         modifier = Modifier
             .fillMaxSize()

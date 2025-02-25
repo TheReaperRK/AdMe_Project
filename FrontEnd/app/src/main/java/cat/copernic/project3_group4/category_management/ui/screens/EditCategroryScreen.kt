@@ -5,11 +5,15 @@ import android.content.ContentValues
 import android.content.ContentValues.TAG
 import android.graphics.BitmapFactory
 import android.net.Uri
+import android.os.Handler
+import android.os.Looper
 import android.util.Base64
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
@@ -52,6 +56,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -113,6 +118,7 @@ fun EditCategoryScreen(
     userState: MutableState<User?>,
     navController: NavController
 ) {
+
     var name by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
     var proposal by remember { mutableStateOf(false) }
@@ -120,10 +126,14 @@ fun EditCategoryScreen(
     var imageBitmap by remember { mutableStateOf<ImageBitmap?>(null) }
     var byteArray by remember { mutableStateOf<ByteArray?>(null)}
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
-    val category by categoryViewModel.category.observeAsState(initial =Category())
-    LaunchedEffect(Unit) {
+    LaunchedEffect(categoryId) {
         require(categoryId != null) { "ID de categoría inválido" }
         categoryViewModel.fetchCategoryById(categoryId)
+    }
+
+    val category by categoryViewModel.category.collectAsState(initial =Category())
+    LaunchedEffect(Unit) {
+
 
         name = category.name
         description = category.description
@@ -134,6 +144,7 @@ fun EditCategoryScreen(
             imageBitmap = byteArrayToImageBitmap(byteArray)
         }
     }
+
 
 
 
@@ -290,11 +301,36 @@ admin@admin.com
 
                 Spacer(modifier = Modifier.height(12.dp))
 
+                    Row(modifier = Modifier.fillMaxWidth().wrapContentHeight()) {
+
+                        val thumbOffset by animateDpAsState(
+                            targetValue = if (proposal) 20.dp else 0.dp,
+                            animationSpec = tween(durationMillis = 150), // Animación rápida y sutil
+                            label = "Thumb Offset Animation"
+                        )
+                        Text("Proposta: ", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                        Box(
+                            modifier = Modifier
+                                .width(50.dp)
+                                .height(30.dp)
+                                .clip(RoundedCornerShape(15.dp))
+                                .background(if (proposal) Color.Green else Color.Gray)
+                                .clickable { proposal = !proposal }
+                                .padding(4.dp)
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .size(22.dp)
+                                    .offset(x = thumbOffset)
+                                    .background(Color.White, CircleShape)
+                            )
+                        }
+                    }
+
                 // Botón para enviar el formulario
                 Button(
                     onClick = {
-                        // Para usuarios, la categoría se propone; para admin, se crea directamente
-                        proposal = (user.role.name == "USER")
+
                         if (name.isNotBlank() && description.isNotBlank()) {
 
                                 val namePart = createPartFromString(name)
@@ -310,23 +346,51 @@ admin@admin.com
                                     val response = categoryViewModel.updateCategory(
                                         idPart, namePart, descriptionPart, imagePart, proposalPart,
                                         onSuccess = {
-                                            Toast.makeText(context, "Categoria actualizada", Toast.LENGTH_SHORT).show()
-                                            navController.popBackStack()
+                                            Handler(Looper.getMainLooper()).post {
+                                                Toast.makeText(
+                                                    context,
+                                                    "Categoria actualizada",
+                                                    Toast.LENGTH_SHORT
+                                                ).show()
+                                                navController.popBackStack()
+                                            }
                                         },
+
                                         onError = { errorMessage ->
-                                            Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
+                                            Handler(Looper.getMainLooper()).post {
+                                                Toast.makeText(
+                                                    context,
+                                                    errorMessage,
+                                                    Toast.LENGTH_SHORT
+                                                ).show()
+                                            }
                                         }
 
                                     )
 
                                 } catch (e: Exception) {
-                                    Toast.makeText(context, "Error en la modificaciom", Toast.LENGTH_SHORT).show()
-                                    Log.e(ContentValues.TAG, "Error al modificar la categoría: ${e.message}")
+                                    Handler(Looper.getMainLooper()).post {
+                                        Toast.makeText(
+                                            context,
+                                            "Error en la modificaciom",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                        Log.e(
+                                            ContentValues.TAG,
+                                            "Error al modificar la categoría: ${e.message}"
+                                        )
+                                    }
                                 }
                             }
                         } else {
-                            Toast.makeText(context, "Completa todos los campos", Toast.LENGTH_SHORT).show()
-                        }
+                            Handler(Looper.getMainLooper()).post {
+                                Toast.makeText(
+                                    context,
+                                    "Completa todos los campos",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                            }
                     },
                     modifier = Modifier
                         .fillMaxWidth()

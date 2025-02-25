@@ -38,6 +38,7 @@ import cat.copernic.project3_group4.category_management.ui.screens.CategoryFormS
 import cat.copernic.project3_group4.ad_management.ui.screens.CreateAdScreen
 import cat.copernic.project3_group4.category_management.ui.screens.EditCategoryScreen
 import cat.copernic.project3_group4.ad_management.ui.screens.UpdateAdScreen
+import cat.copernic.project3_group4.category_management.ui.screens.ProposalsScreen
 import cat.copernic.project3_group4.main.screens.PasswordRecover
 import cat.copernic.project3_group4.main.screens.ProfileScreen
 import cat.copernic.project3_group4.main.screens.RecoverByToken
@@ -144,6 +145,13 @@ class MainActivity : ComponentActivity() {
                                     )
                                 }
                             }
+                        }
+                        composable("proposal_list") {
+                            ProposalsScreen(
+                                categoryViewModel = categoryViewModel,
+                                userState = userState,
+                                navController = navController
+                            )
                         }
 
 

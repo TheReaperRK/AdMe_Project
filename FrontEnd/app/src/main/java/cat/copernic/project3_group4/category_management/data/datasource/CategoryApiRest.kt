@@ -12,6 +12,9 @@ interface CategoryApiRest {
     @GET("all")
     suspend fun getAllCategories(): Response<List<Category>>
 
+    @GET("proposals")
+    suspend fun getAllProposals(): Response<List<Category>>
+
     @GET("byId/{categoryId}")
     suspend fun getCategoryById(@Path("categoryId") categoryId: Long): Response<Category>
 
@@ -36,4 +39,11 @@ interface CategoryApiRest {
 
     @DELETE("delete/{categoryId}")
     suspend fun deleteCategory(@Path("categoryId") categoryId: Long): Response<Void>
+
+    @PUT("acceptProposal/{categoryId}")
+    suspend fun acceptProposal(@Path("categoryId") categoryId: Long): Response<Void>
+
+
+
+
 }

@@ -15,11 +15,31 @@ public class CategoryLogic {
     private CategoryRepo categoryRepo;
     
     public List<Category> findAllCategories() {
-        return categoryRepo.findAll();
+        List<Category> categories = null;
+        try{
+            categories = categoryRepo.findAll();
+            return categories;
+        }catch(Exception e){
+            throw new RuntimeException("Error al obtenir les categories", e);
+        }
+        
     }
     
     public Category getCategoryById(Long id) {
         return categoryRepo.findById(id).orElse(null);
+    }
+     
+    public List<Category> findAllProposals() {
+        List<Category> propostes = null;
+        try{
+        propostes = categoryRepo.findByProposalTrue();
+        return propostes;
+        }catch(Exception e){
+            
+            throw new RuntimeException("Error al obtenir les propostes de categories", e);
+            
+        }
+        
     }
     
     public Category getCategoryByName(String name) {
@@ -39,13 +59,22 @@ public class CategoryLogic {
         categoryRepo.deleteById(id);
     }
     
+    public void acceptProposal(Long id) {
+        Category proposta = getCategoryById(id);
+        proposta.setProposal(false);
+        categoryRepo.save(proposta);
+        
+        
+    }
+    
     public Long saveCategory(Category category, MultipartFile imageFile) {
         try{
             if (imageFile != null && !imageFile.isEmpty()) {
                 category.setImage(convertImageToBlob(imageFile));
             }
-           Long idCat =  categoryRepo.save(category).getId();
-        return idCat;
+           Category c =  categoryRepo.save(category);
+           
+        return c.getId();
         }catch(Exception e){
             return null;
         }

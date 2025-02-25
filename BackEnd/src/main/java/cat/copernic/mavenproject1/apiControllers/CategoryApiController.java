@@ -26,7 +26,8 @@ public class CategoryApiController {
         List<Category> categories = categoryLogic.findAllCategories();
         HttpHeaders headers = new HttpHeaders();
         headers.add("Cache-Control", "no-store");
-        return new ResponseEntity<>(categories, headers, HttpStatus.OK);
+            return new ResponseEntity<>(categories, headers, HttpStatus.OK);
+        
     }
 
     @GetMapping("/byId/{categoryId}")
@@ -38,7 +39,20 @@ public class CategoryApiController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-
+    
+    @GetMapping("/proposals")
+    public ResponseEntity<List<Category>> getAllProposals() {
+        List<Category> proposals = categoryLogic.findAllProposals();
+        if (proposals != null) {
+            return new ResponseEntity<>(proposals, HttpStatus.OK);
+        }else if (proposals.isEmpty()){
+            
+             return new ResponseEntity<>(proposals, HttpStatus.NO_CONTENT);
+            
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
     @PostMapping("/create")
     public ResponseEntity<Long> createCategory(@RequestParam String name, @RequestParam String description, @RequestParam boolean proposal, @RequestParam(value = "image", required = false) MultipartFile imageFile) {
         
@@ -48,7 +62,28 @@ public class CategoryApiController {
         Long categoryId = categoryLogic.saveCategory(category, imageFile);
         return new ResponseEntity<>(categoryId, HttpStatus.CREATED);
     }
+    
+    @PutMapping("/acceptProposal/{categoryId}")
+    public ResponseEntity<Void> acceptProposal(@PathVariable Long categoryId){
+                
+        ResponseEntity<Void> response;
+        
+        try {
+            if (categoryLogic.existsById(categoryId))
+            {
+                categoryLogic.acceptProposal(categoryId);
+                response = ResponseEntity.noContent().build();
+            }
+            else
+                response = ResponseEntity.notFound().build();
 
+        } catch (Exception e) {
+
+            return ResponseEntity.internalServerError().build();
+        }
+        return response;
+    }
+    
     @DeleteMapping("/delete/{categoryId}")
     public ResponseEntity<Void> deleteCategoryById(@PathVariable Long categoryId) {
         if (categoryLogic.existsById(categoryId)) {
