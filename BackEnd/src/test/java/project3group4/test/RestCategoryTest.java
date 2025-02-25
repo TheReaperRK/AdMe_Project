@@ -6,6 +6,7 @@ import cat.copernic.mavenproject1.Entity.Category;
 import cat.copernic.mavenproject1.repository.CategoryRepo;
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.jupiter.api.AfterAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
@@ -51,10 +52,45 @@ public class RestCategoryTest {
         if(categoryRepo.findByName("VehiclesTest") ==null){
             categoryRepo.saveAndFlush(new Category(1L, "VehiclesTest", "Devices and gadgets", new byte[]{1, 2, 3}, false, List.of()));
         }
+        
+        // Propostes
+        if(categoryRepo.findByName("PropuestaTest1") ==null){
+            categoryRepo.saveAndFlush(new Category("PropuestaTest1", "Descripcion PropuestaTest1", new byte[]{22, 23, 24}, true, List.of()));
+        }
+        if(categoryRepo.findByName("PropuestaTest2") ==null){
+            categoryRepo.saveAndFlush(new Category("PropuestaTest2", "Descripcion PropuestaTest2", new byte[]{12, 22, 34}, true, List.of()));
+        }
+        if(categoryRepo.findByName("PropuestaTest3") ==null){
+            categoryRepo.saveAndFlush(new Category("PropuestaTest3", "Descripcion PropuestaTest3", new byte[]{32, 12, 31}, true, List.of()));
+        }
 
-
+     
         
     }
+    @AfterAll
+    public void endingSetup() {
+        if(categoryRepo.findByName("ElectronicsTest") != null){
+            categoryRepo.deleteById(categoryRepo.findByName("ElectronicsTest").getId());
+        }
+        if(categoryRepo.findByName("FurnitureTest") !=null){
+            categoryRepo.deleteById(categoryRepo.findByName("FurnitureTest").getId());
+        }
+        if(categoryRepo.findByName("VehiclesTest") !=null){
+           categoryRepo.deleteById(categoryRepo.findByName("VehiclesTest").getId());
+        }
+        
+        // Propostes
+        if(categoryRepo.findByName("PropuestaTest1") !=null){
+            categoryRepo.deleteById(categoryRepo.findByName("PropuestaTest1").getId());
+        }
+        if(categoryRepo.findByName("PropuestaTest2") !=null){
+            categoryRepo.deleteById(categoryRepo.findByName("PropuestaTest2").getId());
+        }
+        if(categoryRepo.findByName("PropuestaTest3") !=null){
+            categoryRepo.deleteById(categoryRepo.findByName("PropuestaTest3").getId());
+        }
+      }
+    
 
     @Test
     public void testGetAllCategoriesOk() {
@@ -68,7 +104,9 @@ public class RestCategoryTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(totalCategories, receivedList.size());
     }
+    
 
+    
     @Test
     public void testDeleteCategoryByIdOk() {
         Category c = new Category(null, "Sports", "Outdoor and indoor sports", new byte[]{10, 11, 12}, true, List.of());
@@ -126,6 +164,7 @@ public class RestCategoryTest {
         headers.set("Content-Type", "application/json");
         
         ResponseEntity<Long> response = restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(c, headers), Long.class);
+        
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         
         categoryRepo.delete(c);
@@ -167,4 +206,27 @@ public class RestCategoryTest {
         ResponseEntity<Void> response = restTemplate.exchange(url, HttpMethod.PUT, new HttpEntity<>(updatedCategory, headers), Void.class);
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
+    
+    @Test
+    public void testGetProposalsOkOrNoContent() {
+        int totalPropostes = categoryRepo.findByProposalTrue().size();
+        String url = "http://localhost:" + port + "/rest/categories/proposals";
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Content-Type", "application/json");
+        ResponseEntity<List<Category>> response = restTemplate.exchange(
+                url, HttpMethod.GET, new HttpEntity<>(headers), new ParameterizedTypeReference<List<Category>>() {
+        }
+        );
+        
+        List<Category> recivedPropostes = response.getBody();
+               
+        assertTrue(
+            ((response.getStatusCode() == HttpStatus.OK)&& !recivedPropostes.isEmpty()) || ((response.getStatusCode() == HttpStatus.NO_CONTENT) && recivedPropostes.isEmpty())
+        );
+        
+        assertEquals(recivedPropostes, totalPropostes);
+        
+    }
+    
+    
 }
