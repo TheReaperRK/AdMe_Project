@@ -5,10 +5,14 @@ import android.content.ContentValues
 import android.content.ContentValues.TAG
 import android.graphics.BitmapFactory
 import android.net.Uri
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
@@ -112,10 +116,10 @@ fun CategoryFormScreen(
     }
 
     val title = if (user.role.name == "ADMIN") "Crear categoría" else "Proponer categoría"
-
+    val proponer = if(user.role.name == "ADMIN") true else false
     var name by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
-    var proposal by remember { mutableStateOf(false) }
+    var proposal by remember { mutableStateOf(proponer) }
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
@@ -134,6 +138,8 @@ fun CategoryFormScreen(
                 .fillMaxSize()
                 .background(Color.White)
                 .padding(bottom = paddingValues.calculateBottomPadding())
+
+
         ) {
             TopAppBar(
                 navigationIcon = {
@@ -149,7 +155,7 @@ fun CategoryFormScreen(
                 },
                 title = {
 
-                    Text("Modificar categoría", color = Color.White)
+                    Text(title, color = Color.White)
 
 
 
@@ -161,6 +167,7 @@ fun CategoryFormScreen(
                 modifier = Modifier
                     .padding(16.dp)
                     .verticalScroll(rememberScrollState()) // Habilitar scroll
+
             ) {
                 Spacer(modifier = Modifier.height(12.dp))
 
@@ -217,6 +224,36 @@ fun CategoryFormScreen(
                 )
 
                 Spacer(modifier = Modifier.height(12.dp))
+                if(user.role.name == "ADMIN") {
+                    Row(modifier = Modifier.fillMaxWidth().wrapContentHeight()) {
+
+                        val thumbOffset by animateDpAsState(
+                            targetValue = if (proposal) 20.dp else 0.dp,
+                            animationSpec = tween(durationMillis = 150), // Animación rápida y sutil
+                            label = "Thumb Offset Animation"
+                        )
+                        Text("Proposta: ", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                        Box(
+                            modifier = Modifier
+                                .width(50.dp)
+                                .height(30.dp)
+                                .clip(RoundedCornerShape(15.dp))
+                                .background(if (proposal) Color.Green else Color.Gray)
+                                .clickable { proposal = !proposal }
+                                .padding(4.dp)
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .size(22.dp)
+                                    .offset(x = thumbOffset)
+                                    .background(Color.White, CircleShape)
+                            )
+                        }
+                    }
+                }else{
+                    proposal = true
+
+                }
 
                 if (user.role.name == "USER") {
                     Text(
@@ -232,9 +269,10 @@ fun CategoryFormScreen(
                 // Botón para enviar el formulario
                 Button(
                     onClick = {
-                        proposal = (user.role.name == "USER")
+
                         if (name.isNotBlank() && description.isNotBlank()) {
                             coroutineScope.launch {
+
                                 val namePart = createPartFromString(name)
                                 val descriptionPart = createPartFromString(description)
                                 val proposalPart = createPartFromString(if (proposal) "true" else "false")
@@ -251,20 +289,46 @@ fun CategoryFormScreen(
                                     val response = CategoryRetrofitInstance.retrofitInstance
                                         .create<CategoryApiRest>()
                                         .createCategory(namePart, descriptionPart, imagePart, proposalPart)
-                                    if (response.isSuccessful) {
-                                        Toast.makeText(context, "Creación exitosa", Toast.LENGTH_SHORT).show()
-                                        navController.navigate("categoryScreen")
-                                    } else {
-                                        Toast.makeText(context, "Error en la creación", Toast.LENGTH_SHORT).show()
-                                        Log.e(ContentValues.TAG, "Error al crear categoría")
+                                    Handler(Looper.getMainLooper()).post {
+                                        if (response.isSuccessful) {
+
+                                            Toast.makeText(
+                                                context,
+                                                "Creación exitosa",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                            navController.navigate("categoryScreen")
+                                        } else {
+                                            Toast.makeText(
+                                                context,
+                                                "Error en la creación",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                            Log.e(ContentValues.TAG, "Error al crear categoría")
+                                        }
                                     }
                                 } catch (e: Exception) {
-                                    Toast.makeText(context, "Error en la creación", Toast.LENGTH_SHORT).show()
-                                    Log.e(ContentValues.TAG, "Error al crear categoría: ${e.message}")
+                                    Handler(Looper.getMainLooper()).post {
+                                        Toast.makeText(
+                                            context,
+                                            "Error en la creación",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                        Log.e(
+                                            ContentValues.TAG,
+                                            "Error al crear categoría: ${e.message}"
+                                        )
+                                    }
                                 }
                             }
                         } else {
-                            Toast.makeText(context, "Completa todos los campos", Toast.LENGTH_SHORT).show()
+                            Handler(Looper.getMainLooper()).post {
+                                Toast.makeText(
+                                    context,
+                                    "Completa todos los campos",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
                         }
                     },
                     modifier = Modifier

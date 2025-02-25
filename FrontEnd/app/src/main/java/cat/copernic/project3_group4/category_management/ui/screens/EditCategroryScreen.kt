@@ -5,10 +5,15 @@ import android.content.ContentValues
 import android.content.ContentValues.TAG
 import android.graphics.BitmapFactory
 import android.net.Uri
+import android.os.Handler
+import android.os.Looper
+import android.util.Base64
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
@@ -49,7 +54,9 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -63,6 +70,8 @@ import androidx.compose.ui.geometry.RoundRect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.Color.Companion.White
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -75,9 +84,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import cat.copernic.project3_group4.R
+import cat.copernic.project3_group4.ad_management.ui.screens.base64ToByteArray
 import cat.copernic.project3_group4.category_management.data.datasource.CategoryApiRest
 import cat.copernic.project3_group4.category_management.data.datasource.CategoryRetrofitInstance
 import cat.copernic.project3_group4.category_management.ui.viewmodels.CategoryViewModel
+import cat.copernic.project3_group4.core.models.Ad
 import cat.copernic.project3_group4.core.models.Category
 import cat.copernic.project3_group4.core.models.User
 import cat.copernic.project3_group4.core.ui.theme.BrownTertiary
@@ -87,6 +98,7 @@ import cat.copernic.project3_group4.core.utils.uriToMultipartBodyPart
 import cat.copernic.project3_group4.main.screens.BottomNavigationBar
 import cat.copernic.project3_group4.user_management.data.datasource.AuthRetrofitInstance
 import coil.compose.rememberAsyncImagePainter
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -101,10 +113,46 @@ import java.sql.SQLException
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditCategoryScreen(
+    categoryId: Long?,
     categoryViewModel: CategoryViewModel,
     userState: MutableState<User?>,
     navController: NavController
 ) {
+
+    var name by remember { mutableStateOf("") }
+    var description by remember { mutableStateOf("") }
+    var proposal by remember { mutableStateOf(false) }
+
+    var imageBitmap by remember { mutableStateOf<ImageBitmap?>(null) }
+    var byteArray by remember { mutableStateOf<ByteArray?>(null)}
+    var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
+    LaunchedEffect(categoryId) {
+        require(categoryId != null) { "ID de categoría inválido" }
+        categoryViewModel.fetchCategoryById(categoryId)
+    }
+
+    val category by categoryViewModel.category.collectAsState(initial =Category())
+    LaunchedEffect(Unit) {
+
+
+        name = category.name
+        description = category.description
+        proposal = category.isProposal
+
+        category.image?.let { base64String ->
+            byteArray = base64ToByteArray(base64String)
+            imageBitmap = byteArrayToImageBitmap(byteArray)
+        }
+    }
+
+
+
+
+
+
+
+
+
     val user = userState.value
     if (user == null) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -112,24 +160,29 @@ fun EditCategoryScreen(
         }
         return
     }
-    // Título según el rol del usuario
-    //categoryViewModel.fetchCategoryById(categoryId)
-    val category by categoryViewModel.category.observeAsState(initial =Category())
 
-    var name by remember { mutableStateOf("") }
-    var description by remember { mutableStateOf("") }
-    var proposal by remember { mutableStateOf(false) }
-    var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
+
+
+
+
 
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     var imageSelected by remember { mutableStateOf(false) }
-    // Launcher para seleccionar imagen
+
+    // Launcher per a seleccionar la imatge
     val imagePickerLauncher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         selectedImageUri = uri
+        uri?.let {
+            byteArray = convertUriToByteArray(it, context.contentResolver)
+            byteArray?.let { bytes ->
+                imageBitmap = byteArrayToImageBitmap(bytes)
+            }
+        }
     }
 
-/*
+
+    /*
 admin@admin.com
  */
     Scaffold(
@@ -140,7 +193,7 @@ admin@admin.com
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color.White)
-                .paddingFromBaseline(0.dp,paddingValues.calculateBottomPadding()),
+                .paddingFromBaseline(0.dp, paddingValues.calculateBottomPadding()),
             horizontalAlignment = Alignment.Start,
 
 
@@ -160,7 +213,7 @@ admin@admin.com
                 },
                 title = {
 
-                    Text("Modificar categoría", color = Color.White)
+                    Text("Modificar categoría ${categoryId}", color = Color.White)
 
 
 
@@ -173,36 +226,50 @@ admin@admin.com
             ) {
                 //Spacer(modifier = Modifier.height(12.dp))
 
+
                 // Selección de imagen
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    // Mostrar la imagen seleccionada o un ícono por defecto
-                    selectedImageUri?.let {
-                        Image(
-                            painter = rememberAsyncImagePainter(it),
-                            contentDescription = "Imagtge de categoria",
-                            modifier = Modifier
-                                .height(300.dp)
-                                .width(450.dp)
-                                .clip(RoundedCornerShape(50.dp))
-                                .background(White)
-                                .clickable { imagePickerLauncher.launch("image/*") }
-                        )
-                        imageSelected = true
-                    } ?: Image(
-                        painter = painterResource(id = R.drawable.add_image),
-                        contentDescription = "Seleccionar imagen",
-                        modifier = Modifier
-                            .height(300.dp)
-                            .width(450.dp)
-                            .clickable { imagePickerLauncher.launch("image/*") }
-                            .border(2.dp, color = BrownTertiary)
+                   if(selectedImageUri != null){
+                       Image(
+                           painter = rememberAsyncImagePainter(selectedImageUri),
+                           contentDescription = "Imagen de categoría",
+                           modifier = Modifier
+                               .height(250.dp)
+                               .width(350.dp)
+                               .clip(RoundedCornerShape(50.dp))
+                               .background(White)
+                               .clickable { imagePickerLauncher.launch("image/*") }
 
-                    )
-                    imageSelected = false
+                       )
+                       imageSelected = true
+                   }else if (byteArray != null && imageBitmap != null){
+                       imageBitmap?.let {
+                           Image(
+                               bitmap = it,
+                               contentDescription = "Seleccionar imagen",
+                               modifier = Modifier
+                                   .height(250.dp)
+                                   .width(350.dp)
+                                   .clickable { imagePickerLauncher.launch("image/*") }
+                           )
+                       }
+                       imageSelected = true
+                   }else{
+                       Image(
+                           painter = painterResource(id = R.drawable.add_image),
+                           contentDescription = "Seleccionar imagen",
+                           modifier = Modifier
+                               .height(250.dp)
+                               .width(350.dp)
+                               .clickable { imagePickerLauncher.launch("image/*") }
+                       )
+                       imageSelected = false
+                   }
                 }
+
                 Spacer(modifier = Modifier.height(12.dp))
 
 
@@ -234,44 +301,96 @@ admin@admin.com
 
                 Spacer(modifier = Modifier.height(12.dp))
 
+                    Row(modifier = Modifier.fillMaxWidth().wrapContentHeight()) {
+
+                        val thumbOffset by animateDpAsState(
+                            targetValue = if (proposal) 20.dp else 0.dp,
+                            animationSpec = tween(durationMillis = 150), // Animación rápida y sutil
+                            label = "Thumb Offset Animation"
+                        )
+                        Text("Proposta: ", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                        Box(
+                            modifier = Modifier
+                                .width(50.dp)
+                                .height(30.dp)
+                                .clip(RoundedCornerShape(15.dp))
+                                .background(if (proposal) Color.Green else Color.Gray)
+                                .clickable { proposal = !proposal }
+                                .padding(4.dp)
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .size(22.dp)
+                                    .offset(x = thumbOffset)
+                                    .background(Color.White, CircleShape)
+                            )
+                        }
+                    }
+
                 // Botón para enviar el formulario
                 Button(
                     onClick = {
-                        // Para usuarios, la categoría se propone; para admin, se crea directamente
-                        proposal = (user.role.name == "USER")
+
                         if (name.isNotBlank() && description.isNotBlank()) {
-                            coroutineScope.launch {
+
                                 val namePart = createPartFromString(name)
                                 val descriptionPart = createPartFromString(description)
                                 val proposalPart = createPartFromString(if (proposal) "true" else "false")
-
-                                val imagePart = selectedImageUri?.let { uri ->
-                                    val byteArray = convertUriToByteArray(uri, context.contentResolver)
-                                    byteArray?.let {
+                                val idPart = createPartFromString(categoryId.toString())
+                                val imagePart = byteArray?.let {
                                         val requestBody = RequestBody.create("image/*".toMediaTypeOrNull(), it)
                                         MultipartBody.Part.createFormData("image", "category_image.jpg", requestBody)
-                                    }
-                                }
+                                    } //admin@admin.com
+                            coroutineScope.launch {
+                                try{
+                                    val response = categoryViewModel.updateCategory(
+                                        idPart, namePart, descriptionPart, imagePart, proposalPart,
+                                        onSuccess = {
+                                            Handler(Looper.getMainLooper()).post {
+                                                Toast.makeText(
+                                                    context,
+                                                    "Categoria actualizada",
+                                                    Toast.LENGTH_SHORT
+                                                ).show()
+                                                navController.popBackStack()
+                                            }
+                                        },
 
-                                try {
-                                    val response = CategoryRetrofitInstance.retrofitInstance
-                                        .create<CategoryApiRest>()
-                                        .createCategory(namePart, descriptionPart, imagePart, proposalPart)
-                                    if (response.isSuccessful) {
-                                        Toast.makeText(context, "Creación exitosa", Toast.LENGTH_SHORT).show()
-                                        navController.navigate("categoryScreen")
-                                    } else {
-                                        Toast.makeText(context, "Error en la creación", Toast.LENGTH_SHORT).show()
-                                        Log.e(ContentValues.TAG, "Error al crear categoría")
-                                    }
+                                        onError = { errorMessage ->
+                                            Handler(Looper.getMainLooper()).post {
+                                                Toast.makeText(
+                                                    context,
+                                                    errorMessage,
+                                                    Toast.LENGTH_SHORT
+                                                ).show()
+                                            }
+                                        }
+
+                                    )
+
                                 } catch (e: Exception) {
-                                    Toast.makeText(context, "Error en la creación", Toast.LENGTH_SHORT).show()
-                                    Log.e(ContentValues.TAG, "Error al crear categoría: ${e.message}")
+                                    Handler(Looper.getMainLooper()).post {
+                                        Toast.makeText(
+                                            context,
+                                            "Error en la modificaciom",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                        Log.e(
+                                            ContentValues.TAG,
+                                            "Error al modificar la categoría: ${e.message}"
+                                        )
+                                    }
                                 }
                             }
                         } else {
-                            Toast.makeText(context, "Completa todos los campos", Toast.LENGTH_SHORT).show()
-                        }
+                            Handler(Looper.getMainLooper()).post {
+                                Toast.makeText(
+                                    context,
+                                    "Completa todos los campos",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                            }
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -279,8 +398,8 @@ admin@admin.com
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFAA00)),
                     shape = RoundedCornerShape(10.dp)
                 ) {
-                    val buttonText = if (user.role.name == "ADMIN") "Crear categoría" else "Proponer categoría"
-                    Text(buttonText, color = Color.White, fontSize = 18.sp)
+
+                    Text("Modificar categoria", color = Color.White, fontSize = 18.sp)
 
                 }
 
@@ -292,9 +411,26 @@ admin@admin.com
 
         }
 
+
     }
 
 }
+fun encodeImage(inputStream: InputStream?): String {
+    return inputStream?.use {
+        val bytes = it.readBytes()
+        Base64.encodeToString(bytes, Base64.DEFAULT)
+    } ?: ""
+}
+fun byteArrayToImageBitmap(byteArray: ByteArray?): ImageBitmap {
+    if(byteArray!=null) {
+        return try {
 
-
-
+            val bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
+            return bitmap.asImageBitmap()
+        } catch (e: IllegalArgumentException){
+            throw  e
+        }
+    }else{
+        throw IllegalArgumentException("El ByteArray es null")
+    }
+}
