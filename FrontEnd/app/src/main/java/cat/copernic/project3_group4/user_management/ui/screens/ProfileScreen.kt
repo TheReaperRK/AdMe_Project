@@ -222,32 +222,43 @@ fun AdCard(ad: Ad, adsViewModel: AdsViewModel, navController: NavController) {
             DropdownMenuItem(
                 text = { Text("Eliminar") },
                 onClick = {
-                    adsViewModel.deleteAd(ad.id.toString(),
-                        onSuccess = {
-                            Toast.makeText(context, "Anuncio eliminado", Toast.LENGTH_SHORT).show()
-                        },
-                        onError = { errorMessage ->
-                            Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
-                        }
-                    )
+                    showMenu = false
+                    showDialog = true // Mostrar diálogo
                 }
             )
         }
 
+        // Mover el AlertDialog fuera del DropdownMenu pero dentro del Box
         if (showDialog) {
             AlertDialog(
                 onDismissRequest = { showDialog = false },
-                title = { Text("Confirmar eliminación", fontWeight = FontWeight.Bold, color = BrownTertiary) },
-                text = { Text("¿Seguro que quieres eliminar este anuncio? Esta acción no se puede deshacer.", color = Color.Black) },
+                title = {
+                    Text(
+                        "Confirmar eliminación",
+                        fontWeight = FontWeight.Bold,
+                        color = BrownTertiary
+                    )
+                },
+                text = {
+                    Text(
+                        "¿Seguro que quieres eliminar este anuncio? Esta acción no se puede deshacer.",
+                        color = Color.Black
+                    )
+                },
                 confirmButton = {
                     Button(
                         onClick = {
-                            adsViewModel.deleteAd(ad.id.toString(),
+                            adsViewModel.deleteAd(ad.id,
                                 onSuccess = {
-                                    Toast.makeText(context, "Anuncio eliminado", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(
+                                        context,
+                                        "✅ Anuncio eliminado",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
                                 },
                                 onError = { errorMessage ->
-                                    Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT)
+                                        .show()
                                 }
                             )
                             showDialog = false

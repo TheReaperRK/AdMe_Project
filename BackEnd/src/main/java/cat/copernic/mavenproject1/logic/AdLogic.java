@@ -11,23 +11,25 @@ import org.springframework.transaction.annotation.Transactional;
 import org.hibernate.Hibernate;
 import java.util.ArrayList;
 import java.util.List;
+import static org.hibernate.internal.CoreLogging.logger;
+import static org.hibernate.internal.HEMLogging.logger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import org.springframework.transaction.annotation.Propagation;
 
 /**
  * Lógica de negocio para la entidad Ad
  */
 @Service
 public class AdLogic {
-    
-    private static final Logger logger = LoggerFactory.getLogger(AdLogic.class);
 
     @Autowired
     private AdRepo adRepo;
     
     @Autowired
     private CategoryRepo categoryRepo;
+
+    private static final Logger logger = LoggerFactory.getLogger(AdLogic.class);
 
     @Transactional
     public Ad getAdById(Long id) {
@@ -40,26 +42,26 @@ public class AdLogic {
 
             // 💡 Evitar problema creando un nuevo objeto con una lista vacía de ads
             User authorClean = new User(
-                ad.getAuthor().getName(),
-                ad.getAuthor().getEmail(),
-                ad.getAuthor().getPhoneNumber(),
-                ad.getAuthor().getWord(),
-                ad.getAuthor().isStatus(),
-                ad.getAuthor().getRole()
+                    ad.getAuthor().getName(),
+                    ad.getAuthor().getEmail(),
+                    ad.getAuthor().getPhoneNumber(),
+                    ad.getAuthor().getWord(),
+                    ad.getAuthor().isStatus(),
+                    ad.getAuthor().getRole()
             );
 
             // 💡 Asegurar que ads esté inicializado en authorClean
-            authorClean.setAds(new ArrayList<>()); 
+            authorClean.setAds(new ArrayList<>());
 
             Ad adClean = new Ad(
-                ad.getId(),
-                ad.getTitle(),
-                ad.getDescription(),
-                ad.getData(),
-                ad.getPrice(),
-                ad.getCreationDate(),
-                authorClean,
-                ad.getCategory()
+                    ad.getId(),
+                    ad.getTitle(),
+                    ad.getDescription(),
+                    ad.getData(),
+                    ad.getPrice(),
+                    ad.getCreationDate(),
+                    authorClean,
+                    ad.getCategory()
             );
 
             return adClean;
@@ -67,34 +69,41 @@ public class AdLogic {
         return null;
     }
 
+    public List<Ad> findAllAds() {
+        return adRepo.findAll();
+    }
 
-        public List<Ad> findAllAds() {
-            return adRepo.findAll();
-        }
+    public boolean existsById(Long id) {
+        return adRepo.existsById(id);
+    }
 
-        public boolean existsById(Long id) {
-            return adRepo.existsById(id);
-        }
+@Transactional
+public void deleteAdById(Long adId) {
+    logger.info("🗑️ Attempting to delete ad with ID: {}", adId);
 
-       @Transactional
-        public void deleteAdById(Long id) {
-            logger.info("Iniciando eliminación del anuncio con id: {}", id);
-            try {
-                adRepo.deleteById(id);
-                // Opcional: forzar flush para confirmar la eliminación en la DB
-                adRepo.flush();
-                logger.info("Eliminación completada para anuncio con id: {}", id);
-            } catch(Exception e) {
-                logger.error("Error durante la eliminación en el repositorio para id: {}", id, e);
-                throw e; // para que la transacción se deshaga si falla
-            }
-        }
+    if (!adRepo.existsById(adId)) {
+        logger.warn("⚠️ Ad with ID {} not found", adId);
+        return;
+    }
 
-        public Long saveAd(Ad ad) {
+    adRepo.deleteById(adId); // ✅ No es necesario flush()
 
-            Ad savedAd = adRepo.save(ad);
-            return savedAd.getId();
-        }
+    if (adRepo.existsById(adId)) {
+        logger.error("❌ Error: Ad with ID {} still exists after deletion", adId);
+    } else {
+        logger.info("✅ Ad with ID {} successfully deleted", adId);
+    }
+}
+
+
+
+
+    public Long saveAd(Ad ad) {
+
+        Ad savedAd = adRepo.save(ad);
+        return savedAd.getId();
+    }
+
     public Long updateAd(Ad ad) {
         try {
             Ad oldAd = getAdById(ad.getId());
@@ -120,26 +129,25 @@ public class AdLogic {
         }
     }
 
+    public List<Ad> findAdsByCategory(Long categoryId) {
+        return adRepo.findByCategory_Id(categoryId); // 🔥 Método corregido
+    }
 
+    public List<Ad> findAdsByPriceRange(double minPrice, double maxPrice) {
+        return adRepo.findByPriceBetween(minPrice, maxPrice);
+    }
 
-        public List<Ad> findAdsByCategory(Long categoryId) {
-            return adRepo.findByCategory_Id(categoryId); // 🔥 Método corregido
-        }
+    // ✅ Nuevo método para filtrar por categoría y precio
+    public List<Ad> findAdsFiltered(Long categoryId, double minPrice, double maxPrice) {
+        return adRepo.findByCategory_IdAndPriceBetween(categoryId, minPrice, maxPrice);
+    }
 
-        public List<Ad> findAdsByPriceRange(double minPrice, double maxPrice) {
-            return adRepo.findByPriceBetween(minPrice, maxPrice);
-        }
+    // ✅ Nuevo método para obtener todas las categorías
+    public List<Category> getAllCategories() {
+        return categoryRepo.findAll();
+    }
 
-        // ✅ Nuevo método para filtrar por categoría y precio
-        public List<Ad> findAdsFiltered(Long categoryId, double minPrice, double maxPrice) {
-            return adRepo.findByCategory_IdAndPriceBetween(categoryId, minPrice, maxPrice);
-        }
-
-        // ✅ Nuevo método para obtener todas las categorías
-        public List<Category> getAllCategories() {
-            return categoryRepo.findAll();
-        }
-        public List<Ad> findAdsByUser(Long userId) {
+    public List<Ad> findAdsByUser(Long userId) {
         return adRepo.findByAuthor_Id(userId);
     }
 
