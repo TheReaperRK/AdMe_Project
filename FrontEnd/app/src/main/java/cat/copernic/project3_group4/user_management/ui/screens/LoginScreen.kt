@@ -27,6 +27,8 @@ import cat.copernic.project3_group4.core.ui.theme.OrangePrimary
 import cat.copernic.project3_group4.core.ui.theme.OrangeSecondary
 import cat.copernic.project3_group4.user_management.data.datasource.AuthRetrofitInstance
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
+import java.io.IOException
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -58,9 +60,9 @@ fun LoginScreen(navController: NavController, userState: MutableState<User?>) {
             )
             Spacer(modifier = Modifier.height(16.dp))
 
-            OutlinedTextField(value = email,
-                onValueChange =
-                { email = it },
+            OutlinedTextField(
+                value = email,
+                onValueChange = { email = it },
                 label = { Text("Introduce el correo:") },
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier.fillMaxWidth()
@@ -88,16 +90,23 @@ fun LoginScreen(navController: NavController, userState: MutableState<User?>) {
             Button(
                 onClick = {
                     coroutineScope.launch {
-                        val response = AuthRetrofitInstance.authApi.login(email, password)
-                        if (response.isSuccessful) {
-                            val authenticatedUser = response.body()
-                            if (authenticatedUser != null) {
-                                userState.value = authenticatedUser
-                                navController.navigate("categoryScreen")
+                        try {
+                            val response = AuthRetrofitInstance.authApi.login(email, password)
+                            if (response.isSuccessful) {
+                                val authenticatedUser = response.body()
+                                if (authenticatedUser != null) {
+                                    userState.value = authenticatedUser
+                                    navController.navigate("categoryScreen")
+                                }
+                            } else {
+                                Toast.makeText(context, "Credenciales incorrectas", Toast.LENGTH_SHORT).show()
                             }
-                        } else {
-                            Toast.makeText(context, "Credenciales incorrectas", Toast.LENGTH_SHORT)
-                                .show()
+                        } catch (e: IOException) {
+                            // 🔴 Error de conexión (Servidor caído, sin Internet, etc.)
+                            Toast.makeText(context, "⚠️ Error de conexión con el servidor", Toast.LENGTH_SHORT).show()
+                        } catch (e: HttpException) {
+                            // 🔴 Error HTTP (500, 404, etc.)
+                            Toast.makeText(context, "⚠️ Error en el servidor: ${e.code()}", Toast.LENGTH_SHORT).show()
                         }
                     }
                 },
@@ -111,7 +120,7 @@ fun LoginScreen(navController: NavController, userState: MutableState<User?>) {
             OutlinedButton(
                 onClick = {
                     navController.navigate("register")
-              },
+                },
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(containerColor = White)
@@ -121,4 +130,3 @@ fun LoginScreen(navController: NavController, userState: MutableState<User?>) {
         }
     }
 }
-

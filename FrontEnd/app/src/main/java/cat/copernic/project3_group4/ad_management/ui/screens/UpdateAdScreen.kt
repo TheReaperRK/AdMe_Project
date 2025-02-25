@@ -36,6 +36,8 @@ import cat.copernic.project3_group4.main.screens.BottomNavigationBar
 import kotlinx.coroutines.launch
 import java.io.InputStream
 
+
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UpdateAdScreen(
@@ -81,11 +83,16 @@ fun UpdateAdScreen(
                 Text("Título", fontSize = 18.sp, fontWeight = FontWeight.Bold)
                 OutlinedTextField(
                     value = title,
-                    onValueChange = { title = it },
+                    onValueChange = { if (it.length in 0..15) title = it },
                     modifier = Modifier.fillMaxWidth(),
                     textStyle = TextStyle(fontSize = 16.sp),
-                    placeholder = { Text("Introduce el título") }
+                    placeholder = { Text("Introduce entre 4 y 15 caracteres") },
+                    isError = title.length in 1..3
                 )
+
+                if (title.length in 1..3) {
+                    Text("El título debe tener entre 4 y 15 caracteres", color = Color.Red, fontSize = 12.sp)
+                }
 
                 Spacer(modifier = Modifier.height(12.dp))
                 Text("Categoría", fontSize = 18.sp, fontWeight = FontWeight.Bold)
@@ -95,23 +102,31 @@ fun UpdateAdScreen(
                 Text("Descripción", fontSize = 18.sp, fontWeight = FontWeight.Bold)
                 OutlinedTextField(
                     value = description,
-                    onValueChange = { description = it },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(100.dp),
+                    onValueChange = { if (it.length in 0..100) description = it },
+                    modifier = Modifier.fillMaxWidth().height(100.dp),
                     textStyle = TextStyle(fontSize = 16.sp),
-                    placeholder = { Text("Introduce la descripción") }
+                    placeholder = { Text("Introduce entre 20 y 100 caracteres") },
+                    isError = description.length in 1..19
                 )
+
+                if (description.length in 1..19) {
+                    Text("La descripción debe tener al menos 20 caracteres", color = Color.Red, fontSize = 12.sp)
+                }
 
                 Spacer(modifier = Modifier.height(12.dp))
                 Text("Precio", fontSize = 18.sp, fontWeight = FontWeight.Bold)
                 OutlinedTextField(
                     value = price,
-                    onValueChange = { price = it },
+                    onValueChange = { if (it.all { char -> char.isDigit() || char == '.' }) price = it },
                     modifier = Modifier.fillMaxWidth(),
                     textStyle = TextStyle(fontSize = 16.sp),
-                    placeholder = { Text("Introduce el precio") }
+                    placeholder = { Text("Introduce el precio") },
+                    isError = price.isNotEmpty() && !isValidPrice(price)
                 )
+
+                if (price.isNotEmpty() && !isValidPrice(price)) {
+                    Text("Introduce un precio válido", color = Color.Red, fontSize = 12.sp)
+                }
 
                 Spacer(modifier = Modifier.height(12.dp))
                 Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
@@ -129,30 +144,35 @@ fun UpdateAdScreen(
                 Spacer(modifier = Modifier.height(12.dp))
                 Button(
                     onClick = {
-                        if (title.isNotBlank() && description.isNotBlank() && price.isNotBlank() && selectedCategory != null) {
-                            val updatedAd = Ad(
-                                title,
-                                description,
-                                encodedImage,
-                                price.toDoubleOrNull() ?: ad.price,
-                                ad.creationDate,
-                                user,
-                                selectedCategory!!
-                            ).apply { setId(ad.id) }
+                        when {
+                            title.length < 4 || title.length > 15 -> Toast.makeText(context, "El título debe tener entre 4 y 15 caracteres", Toast.LENGTH_SHORT).show()
+                            description.length < 20 -> Toast.makeText(context, "La descripción debe tener al menos 20 caracteres", Toast.LENGTH_SHORT).show()
+                            price.isEmpty() || !isValidPrice(price) -> Toast.makeText(context, "Introduce un precio válido", Toast.LENGTH_SHORT).show()
+                            selectedCategory == null -> Toast.makeText(context, "Selecciona una categoría", Toast.LENGTH_SHORT).show()
+                            encodedImage.isEmpty() -> Toast.makeText(context, "Debes seleccionar una imagen", Toast.LENGTH_SHORT).show()
+                            else -> {
+                                val updatedAd = Ad(
+                                    title,
+                                    description,
+                                    encodedImage,
+                                    price.toDouble(),
+                                    ad.creationDate,
+                                    user,
+                                    selectedCategory!!
+                                ).apply { setId(ad.id) }
 
-                            coroutineScope.launch {
-                                adsViewModel.updateAd(updatedAd,
-                                    onSuccess = {
-                                        Toast.makeText(context, "Anuncio actualizado", Toast.LENGTH_SHORT).show()
-                                        navController.popBackStack()
-                                    },
-                                    onError = { errorMessage ->
-                                        Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
-                                    }
-                                )
+                                coroutineScope.launch {
+                                    adsViewModel.updateAd(updatedAd,
+                                        onSuccess = {
+                                            Toast.makeText(context, "Anuncio actualizado", Toast.LENGTH_SHORT).show()
+                                            navController.popBackStack()
+                                        },
+                                        onError = { errorMessage ->
+                                            Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
+                                        }
+                                    )
+                                }
                             }
-                        } else {
-                            Toast.makeText(context, "Completa todos los campos", Toast.LENGTH_SHORT).show()
                         }
                     },
                     modifier = Modifier
@@ -167,6 +187,7 @@ fun UpdateAdScreen(
         }
     }
 }
+
 
 fun encodeImage(inputStream: InputStream?): String {
     return inputStream?.use {
