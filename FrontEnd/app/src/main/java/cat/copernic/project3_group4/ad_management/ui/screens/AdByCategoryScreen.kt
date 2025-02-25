@@ -60,7 +60,7 @@ fun AdsScreen(categoryId: Long?, adsViewModel: AdsViewModel, navController: NavC
         return
     }
     val ads by adsViewModel.ads.observeAsState(initial = emptyList())
-    val category by categoryViewModel.category.observeAsState(initial =Category())
+    val category by categoryViewModel.category.collectAsState(initial =Category())
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -76,7 +76,9 @@ fun AdsScreen(categoryId: Long?, adsViewModel: AdsViewModel, navController: NavC
         ) {
             Row(
 
-                modifier = Modifier.fillMaxSize().padding(top = 20.dp, start = 0.dp, end = 18.dp), // Hace que el Row ocupe todo el espacio del Box
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(top = 20.dp, start = 0.dp, end = 18.dp), // Hace que el Row ocupe todo el espacio del Box
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -112,7 +114,7 @@ fun AdsScreen(categoryId: Long?, adsViewModel: AdsViewModel, navController: NavC
 
                 if(user.role.name == "ADMIN"){
                     Button(
-                        onClick = {navController.navigate("editCategoryScreen")},
+                        onClick = {navController.navigate("editCategoryScreen/${category.id}")},
                         shape = CircleShape,
                         colors =ButtonDefaults.buttonColors(containerColor = Color(0xFFFFAA00))
                     ) {
