@@ -91,7 +91,7 @@ class MainActivity : ComponentActivity() {
                                 navController,
                                 categoryViewModel,
                                 userState
-                            ) // Se pasa como Long en lugar de Strings
+                            ) // Se pasa como Long en lugar de Strings1
                         }
                         composable("categoryFormScreen"){
                                CategoryFormScreen(
@@ -122,8 +122,13 @@ class MainActivity : ComponentActivity() {
                         composable("AdsScreen") {
                             AdsScreen(adsViewModel, navController)
                         }
-                        composable("EditUserScreen") {
-                            EditUserScreen(userState, navController)
+                        composable("EditUserScreen/{userId}") { backStackEntry ->
+                            val userId = backStackEntry.arguments?.getString("userId")?.toLongOrNull()
+                            if (userId != null) {
+                                EditUserScreen(userId, navController)
+                            } else {
+                                // Manejar caso donde no hay un ID válido
+                            }
                         }
                         composable("UpdateAdScreen/{adId}") { backStackEntry ->
                             val adId = backStackEntry.arguments?.getString("adId")?.toLongOrNull()

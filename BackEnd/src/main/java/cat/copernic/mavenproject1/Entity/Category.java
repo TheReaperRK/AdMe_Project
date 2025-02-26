@@ -56,7 +56,7 @@ public class Category {
      * List of advertisements associated with this category.
      * This is a one-to-many relationship with Ad entities.
      */
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "category", cascade = CascadeType.REMOVE, orphanRemoval = true)
     @JsonIgnore
     private List<Ad> ads = new ArrayList<>();
     

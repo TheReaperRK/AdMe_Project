@@ -165,30 +165,22 @@ class AdsViewModel : ViewModel() {
         }
     }
 
-    fun deleteAd(adId: String, onSuccess: () -> Unit, onError: (String) -> Unit) {
+    fun deleteAd(adId: Long, onSuccess: () -> Unit, onError: (String) -> Unit) {
         viewModelScope.launch {
             try {
-                val adIdLong = adId.toLongOrNull()
-                if (adIdLong == null) {
-                    onError("❌ ID de anuncio inválido")
-                    return@launch
-                }
-
-                val response = adApi.deleteAd(adIdLong)
+                val response = adApi.deleteAd(adId) // Aquí ya pasa un Long directamente
                 if (response.isSuccessful) {
-                    _ads.value = _ads.value?.filter { it.id != adIdLong }
+                    fetchAds() // Actualiza la lista desde el servidor
                     onSuccess()
-                    Log.d("DeleteAd", "✅ Anuncio eliminado correctamente")
                 } else {
-                    val errorMessage = "❌ Error al eliminar el anuncio"
-                    Log.e("DeleteAd", errorMessage)
-                    onError(errorMessage)
+                    onError("❌ Error al eliminar el anuncio: ${response.code()}")
                 }
             } catch (e: Exception) {
-                val exceptionMessage = "🚨 Error en deleteAd(): ${e.message}"
-                Log.e("DeleteAd", exceptionMessage)
-                onError(exceptionMessage)
+                onError("🚨 Error en deleteAd(): ${e.message}")
+                println("${e.message}")
             }
         }
     }
+
+
 }

@@ -24,9 +24,8 @@ import cat.copernic.project3_group4.user_management.data.datasource.UserRetrofit
 import kotlinx.coroutines.launch
 
 @Composable
-fun EditUserScreen(userState: MutableState<User?>, navController: NavController) {
+fun EditUserScreen(userId: Long, navController: NavController) {
 
-    val user = userState.value
     val retrofit = UserRetrofitInstance.retrofitInstance
     val userApi = retrofit.create(UserApiRest::class.java)
     val context = LocalContext.current
@@ -35,21 +34,15 @@ fun EditUserScreen(userState: MutableState<User?>, navController: NavController)
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var phoneNumber by remember { mutableStateOf("") }
-    var word by remember { mutableStateOf("") }
     var isStatus by remember { mutableStateOf(true) }
     var selectedRole by remember { mutableStateOf(Roles.USER) }
 
-    if (user == null) {
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Text("No hay usuario autenticado", textAlign = TextAlign.Center)
-        }
-        return
-    }
 
-    LaunchedEffect(user.id) {
+
+    LaunchedEffect(userId) {
         coroutineScope.launch {
             try {
-                val response = userApi.getUserById(user.id)
+                val response = userApi.getUserById(userId)
 
                 if (response.isSuccessful) {
                     response.body()?.let {
@@ -124,12 +117,27 @@ fun EditUserScreen(userState: MutableState<User?>, navController: NavController)
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            OutlinedTextField(
-                value = word,
-                onValueChange = { word = it },
-                label = { Text("Contraseña") },
-                modifier = Modifier.fillMaxWidth()
-            )
+            Button(
+                onClick = {
+                    coroutineScope.launch {
+                        try {
+                            val response = userApi.expireWord(userId)
+                            if (response.isSuccessful) {
+                                Toast.makeText(context, "Contraseña caducada", Toast.LENGTH_SHORT).show()
+                                navController.popBackStack()
+                            } else {
+                                Toast.makeText(context, "Error al caducar la contraseña", Toast.LENGTH_SHORT).show()
+                            }
+                        } catch (e: Exception) {
+                            Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                },
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(containerColor = OrangePrimary)
+            ) {
+                Text("Caducar contraseña", color = Color.White)
+            }
 
             Spacer(modifier = Modifier.height(12.dp))
 
@@ -163,9 +171,9 @@ fun EditUserScreen(userState: MutableState<User?>, navController: NavController)
             Button(
                 onClick = {
                     coroutineScope.launch {
-                        val updatedUser = User(name, email, phoneNumber, word, isStatus, selectedRole)
+                        val updatedUser = User(userId ,name, email, phoneNumber, isStatus, selectedRole)
                         try {
-                            val response = userApi.updateUser(user.id, updatedUser)
+                            val response = userApi.updateUser(userId, updatedUser)
                             if (response.isSuccessful) {
                                 Toast.makeText(context, "Usuario actualizado", Toast.LENGTH_SHORT).show()
                                 navController.popBackStack()
