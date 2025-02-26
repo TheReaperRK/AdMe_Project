@@ -110,9 +110,9 @@ fun UserItem(user: User, navController: NavController, userApi: UserApiRest, use
 
             Row {
                 Button(
-                    onClick = { navController.navigate("EditUserScreen") },
+                    onClick = { navController.navigate("EditUserScreen/${user.id}") }, // Pasar el ID del usuario
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(containerColor = BrownTertiary) // Botón naranja
+                    colors = ButtonDefaults.buttonColors(containerColor = BrownTertiary)
                 ) {
                     Text("Editar", color = Color.White)
                 }

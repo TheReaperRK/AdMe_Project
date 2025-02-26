@@ -81,7 +81,7 @@ public class User {
      * List of advertisements associated with this user. This is a one-to-many
      * relationship with Ad entities.
      */
-    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "author", cascade = CascadeType.REMOVE, orphanRemoval = true,fetch = FetchType.EAGER)
     @JsonIgnore
     private List<Ad> ads = new ArrayList<>();
 
