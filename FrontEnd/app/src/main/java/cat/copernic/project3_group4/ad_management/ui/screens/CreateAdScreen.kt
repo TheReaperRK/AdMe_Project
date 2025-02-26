@@ -66,6 +66,9 @@ fun CreateAdScreen(navController: NavController, viewModel: CategoryViewModel, u
             encodedImage = encodedImage(context.contentResolver.openInputStream(selectedUri))
         }
     }
+    LaunchedEffect(categories) {
+        viewModel.fetchCategories()
+    }
 
     Column(modifier = Modifier.fillMaxSize().background(Color.White)) {
         SmallTopAppBar(
@@ -204,13 +207,16 @@ fun CategoriDropdownMenu(
         }
         DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
             categories.forEach { category ->
-                DropdownMenuItem(
-                    text = { Text(category.name) },
-                    onClick = {
-                        onCategorySelected(category)
-                        expanded = false
-                    }
-                )
+                if(!category.isProposal){
+                    DropdownMenuItem(
+                        text = { Text(category.name) },
+                        onClick = {
+                            onCategorySelected(category)
+                            expanded = false
+                        }
+                    )
+                }
+
             }
         }
     }
