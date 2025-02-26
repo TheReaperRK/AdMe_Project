@@ -62,6 +62,10 @@ fun CreateAdScreen(navController: NavController, viewModel: CategoryViewModel, u
         }
     }
 
+    LaunchedEffect(categories) {
+        viewModel.fetchCategories()
+    }
+
 
         Column(
             modifier = Modifier
@@ -213,13 +217,16 @@ fun CategoriDropdownMenu(
         }
         DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
             categories.forEach { category ->
-                DropdownMenuItem(
-                    text = { Text(category.name) },
-                    onClick = {
-                        onCategorySelected(category)
-                        expanded = false
-                    }
-                )
+                if(!category.isProposal){
+                    DropdownMenuItem(
+                        text = { Text(category.name) },
+                        onClick = {
+                            onCategorySelected(category)
+                            expanded = false
+                        }
+                    )
+                }
+
             }
         }
     }
