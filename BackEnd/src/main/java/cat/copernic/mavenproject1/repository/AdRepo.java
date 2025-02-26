@@ -22,4 +22,5 @@ public interface AdRepo extends JpaRepository<Ad, Long> {
     
     boolean existsById(Long id);
 
+    
 }

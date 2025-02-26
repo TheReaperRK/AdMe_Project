@@ -44,10 +44,20 @@ fun RegisterScreen(registerViewModel: RegisterViewModel, navController: NavContr
         registerViewModel.selectedImageUri.value = uri
     }
 
+    // Reinicia los valores cuando se entra en la pantalla
+    LaunchedEffect(Unit) {
+        registerViewModel.name.value = ""
+        registerViewModel.email.value = ""
+        registerViewModel.phone.value = ""
+        registerViewModel.password.value = ""
+        registerViewModel.confirmPassword.value = ""
+        registerViewModel.selectedImageUri.value = null
+    }
+
     Box(modifier = Modifier.fillMaxSize().background(OrangePrimary), contentAlignment = Alignment.Center) {
         Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.padding(32.dp)) {
             IconButton(
-                onClick = { navController.popBackStack() },
+                onClick = { navController.navigate("login") },
                 modifier = Modifier.padding(start = 16.dp, top = 16.dp).size(48.dp).align(Alignment.Start).offset(y = -20.dp)
             ) {
                 Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Volver", tint = Color.White)
@@ -66,30 +76,20 @@ fun RegisterScreen(registerViewModel: RegisterViewModel, navController: NavContr
             )
 
             Spacer(modifier = Modifier.height(16.dp))
-
             InputField("Nombre", registerViewModel.name.value, { registerViewModel.name.value = it },
                 registerViewModel.nameError.value, 60)
-
             Spacer(modifier = Modifier.height(16.dp))
-
             InputField("Correo", registerViewModel.email.value, { registerViewModel.email.value = it },
                 registerViewModel.emailError.value, 60)
-
             Spacer(modifier = Modifier.height(16.dp))
-
             InputField("Teléfono", registerViewModel.phone.value, { registerViewModel.phone.value = it },
                 registerViewModel.phoneError.value, 15)
-
             Spacer(modifier = Modifier.height(16.dp))
-
             InputField("Contraseña", registerViewModel.password.value, { registerViewModel.password.value = it },
                 registerViewModel.passwordError.value, 20, true)
-
             Spacer(modifier = Modifier.height(16.dp))
-
             InputField("Confirmar Contraseña", registerViewModel.confirmPassword.value, { registerViewModel.confirmPassword.value = it },
                 registerViewModel.confirmPasswordError.value, 20, true)
-
             Spacer(modifier = Modifier.height(16.dp))
             Button(onClick = { registerViewModel.register(context, navController) },
                 colors = ButtonDefaults.buttonColors(containerColor = BrownTertiary),
@@ -135,5 +135,7 @@ fun InputField(label: String, value: String, onValueChange: (String) -> Unit, er
         }
     }
 }
+
+
 
 

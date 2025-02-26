@@ -31,4 +31,7 @@ interface UserApiRest {
 
     @PUT("update/{userId}")
     suspend fun updateUser(@Path("userId") userId: Long, @Body updatedUser: User): Response<User>
+
+    @PUT("expireWord/{userId}")
+    suspend fun expireWord(@Path("userId") userId: Long): Response<User>
 }

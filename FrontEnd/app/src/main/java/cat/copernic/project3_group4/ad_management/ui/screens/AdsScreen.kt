@@ -3,6 +3,7 @@ package cat.copernic.project3_group4.ad_management.ui.screens
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -91,30 +92,24 @@ fun FilterSection(
     Column(modifier = Modifier.padding(16.dp)) {
         Text("Filtrar por Categoría", fontSize = 16.sp, fontWeight = FontWeight.Bold)
 
-        Column {
-            var rowElements = mutableListOf<Category>()
-            categories.forEachIndexed { index, category ->
-                rowElements.add(category)
-                if (rowElements.size == 3 || index == categories.lastIndex) { // Máximo 3 por fila
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        rowElements.forEach { cat ->
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                Checkbox(
-                                    checked = selectedCategories.contains(cat.id),
-                                    onCheckedChange = {
-                                        val newSelection = selectedCategories.toMutableSet()
-                                        if (it) newSelection.add(cat.id) else newSelection.remove(cat.id)
-                                        onCategorySelected(newSelection)
-                                    }
-                                )
-                                Text(cat.name)
-                            }
+        LazyRow(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            items(categories) { category ->
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(4.dp)
+                ) {
+                    Checkbox(
+                        checked = selectedCategories.contains(category.id),
+                        onCheckedChange = {
+                            val newSelection = selectedCategories.toMutableSet()
+                            if (it) newSelection.add(category.id) else newSelection.remove(category.id)
+                            onCategorySelected(newSelection)
                         }
-                    }
-                    rowElements = mutableListOf()
+                    )
+                    Text(category.name)
                 }
             }
         }
@@ -128,6 +123,7 @@ fun FilterSection(
         )
     }
 }
+
 
 
 @Composable

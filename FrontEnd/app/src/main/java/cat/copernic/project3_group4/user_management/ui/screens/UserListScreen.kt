@@ -121,7 +121,7 @@ fun UserItem(user: User, navController: NavController, userApi: UserApiRest, use
 
             Row {
                 Button(
-                    onClick = { navController.navigate("EditUserScreen") },
+                    onClick = { navController.navigate("EditUserScreen/${user.id}") }, // Pasar el ID del usuario
                     modifier = Modifier.weight(1f).shadow(elevation = 8.dp, shape = RoundedCornerShape(40) ).clip(
                         RoundedCornerShape(40)
                     ),
