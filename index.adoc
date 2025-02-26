@@ -636,7 +636,7 @@ https://trello.com/invite/b/67a1d1bfc7a1b5638db61d1b/ATTI48ae2e1e265dfd7b635b86c
 
 [[dialy-stand-up]]
 === 2. Dialy stand up
-image::dialy20.png[]
+image::daIly20.png[]
 image::daily24.png[]
 image::daily25.png[]
 image::daily26.png[]
