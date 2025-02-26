@@ -266,8 +266,6 @@ fun ProposalItem(proposal: Category, navController: NavController, categoryViewM
                     onClick = {
                         coroutineScope.launch {
 
-
-
                             showDialogProposal = true;
                             categoryViewModel.fetchProposals()
                         }
