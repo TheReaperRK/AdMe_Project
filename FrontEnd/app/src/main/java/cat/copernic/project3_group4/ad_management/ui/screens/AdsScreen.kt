@@ -3,6 +3,7 @@ package cat.copernic.project3_group4.ad_management.ui.screens
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -91,30 +92,24 @@ fun FilterSection(
     Column(modifier = Modifier.padding(16.dp)) {
         Text("Filtrar por Categoría", fontSize = 16.sp, fontWeight = FontWeight.Bold)
 
-        Column {
-            var rowElements = mutableListOf<Category>()
-            categories.forEachIndexed { index, category ->
-                rowElements.add(category)
-                if (rowElements.size == 3 || index == categories.lastIndex) { // Máximo 3 por fila
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        rowElements.forEach { cat ->
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                Checkbox(
-                                    checked = selectedCategories.contains(cat.id),
-                                    onCheckedChange = {
-                                        val newSelection = selectedCategories.toMutableSet()
-                                        if (it) newSelection.add(cat.id) else newSelection.remove(cat.id)
-                                        onCategorySelected(newSelection)
-                                    }
-                                )
-                                Text(cat.name)
-                            }
+        LazyRow(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            items(categories) { category ->
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(4.dp)
+                ) {
+                    Checkbox(
+                        checked = selectedCategories.contains(category.id),
+                        onCheckedChange = {
+                            val newSelection = selectedCategories.toMutableSet()
+                            if (it) newSelection.add(category.id) else newSelection.remove(category.id)
+                            onCategorySelected(newSelection)
                         }
-                    }
-                    rowElements = mutableListOf()
+                    )
+                    Text(category.name)
                 }
             }
         }
@@ -130,11 +125,16 @@ fun FilterSection(
 }
 
 
+
 @Composable
 fun AdItem(ad: Ad) {
     val imageUrl = remember { base64ToByteArray(ad.data) }
+    val author = ad.author // Accede al autor del anuncio
+
     Card(
-        modifier = Modifier.fillMaxWidth().padding(8.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp),
         shape = RoundedCornerShape(8.dp),
         colors = CardDefaults.cardColors(containerColor = OrangePrimary)
     ) {
@@ -145,14 +145,36 @@ fun AdItem(ad: Ad) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(150.dp)
-                    .clip(RoundedCornerShape(0.dp, 0.dp,24.dp, 24.dp)), // Bordes redondeados
+                    .clip(RoundedCornerShape(0.dp, 0.dp, 24.dp, 24.dp)), // Bordes redondeados
                 contentScale = ContentScale.Crop
             )
             Column(modifier = Modifier.padding(8.dp)) {
                 Text(ad.title, fontSize = 16.sp, fontWeight = FontWeight.Bold)
                 Text(ad.description, fontSize = 14.sp, maxLines = 2)
                 Text("${ad.price}€", fontSize = 14.sp, fontWeight = FontWeight.Bold)
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Divider(color = Color.Black, thickness = 1.dp)
+
+                Text(
+                    text = "Información del vendedor:",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 14.sp,
+                    modifier = Modifier.padding(vertical = 4.dp)
+                )
+
+                author?.let {
+                    Text("Nombre: ${it.name}", fontSize = 12.sp)
+                    Text("Email: ${it.email}", fontSize = 12.sp)
+                    Text("Teléfono: ${it.phoneNumber}", fontSize = 12.sp)
+                } ?: Text(
+                    "No se encontró información del usuario",
+                    fontSize = 12.sp,
+                    color = Color.Gray
+                )
             }
         }
     }
 }
+

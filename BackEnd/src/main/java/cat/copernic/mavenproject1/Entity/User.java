@@ -51,8 +51,7 @@ public class User {
 
     /**
      * Binary content of the category image. Stored as a large object (LOB).
-     */ 
-
+     */
     @Lob
     @Column(nullable = true, columnDefinition = "LONGBLOB")
     private byte[] image;
@@ -81,18 +80,16 @@ public class User {
      * List of advertisements associated with this user. This is a one-to-many
      * relationship with Ad entities.
      */
-    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "author", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.EAGER)
     @JsonIgnore
     private List<Ad> ads = new ArrayList<>();
 
-        //Constructors
-    
+    //Constructors
     private String resetToken; // Token para restablecer contraseña
 
     public User() {
     }
-    
-    
+
     public User(String name, String email, String phoneNumber, String word, boolean status, Roles role) {
         this.name = name;
         this.email = email;
@@ -111,7 +108,6 @@ public class User {
         this.role = role;
         this.ads = ads;
     }
-    
 
     public User(Long id, String name, String email, String phoneNumber, byte[] image, String word, boolean status, Roles role, List<Ad> ads) {
         this.id = id;
@@ -135,7 +131,7 @@ public class User {
         this.role = role;
         this.ads = ads;
     }
-    
+
     public User(String name, String email, String phoneNumber, byte[] image, String word, boolean status, Roles role) {
         this.name = name;
         this.email = email;
@@ -145,7 +141,7 @@ public class User {
         this.status = status;
         this.role = role;
     }
-    
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -164,9 +160,8 @@ public class User {
                 && role == user.role;  // Excluye ads de la comparación
 
     }
-    
-     //Getters i setters
 
+    //Getters i setters
     public Long getId() {
         return id;
     }
@@ -251,6 +246,5 @@ public class User {
     public String toString() {
         return "User{" + "id=" + id + ", name=" + name + ", email=" + email + ", phoneNumber=" + phoneNumber + ", image=" + image + ", word=" + word + ", status=" + status + ", role=" + role + ", ads=" + ads + ", resetToken=" + resetToken + '}';
     }
-    
-    
+
 }
