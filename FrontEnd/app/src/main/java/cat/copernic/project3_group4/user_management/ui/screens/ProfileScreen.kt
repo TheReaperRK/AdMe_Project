@@ -74,7 +74,7 @@ fun ProfileScreen(userState: MutableState<User?>, navController: NavController, 
                     Spacer(modifier = Modifier.height(16.dp))
 
                     DrawerButton("Usuarios") { navController.navigate("user_list") }
-                    DrawerButton("Propuestas") {}
+                    DrawerButton("Propuestas") {navController.navigate("proposal_list")}
                     DrawerButton("Cerrar sesión") {
                         userState.value = null
                         navController.navigate("login")

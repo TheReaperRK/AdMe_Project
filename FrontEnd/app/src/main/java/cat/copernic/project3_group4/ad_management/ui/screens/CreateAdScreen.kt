@@ -58,7 +58,7 @@ fun CreateAdScreen(navController: NavController, viewModel: CategoryViewModel, u
     var imageUri by remember { mutableStateOf<Uri?>(null) }
     var encodedImage by remember { mutableStateOf("") }
     val context = LocalContext.current
-    val categories by viewModel.categories.observeAsState(initial = emptyList())
+    val categories by viewModel.categories.collectAsState(initial = emptyList())
 
     val imagePickerLauncher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         uri?.let { selectedUri ->
