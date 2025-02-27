@@ -81,6 +81,16 @@ fun UserListScreen(navController: NavController, modifier: Modifier = Modifier) 
                     fontWeight = FontWeight.Bold,
                     color = Color.White
                 )
+
+                IconButton(
+                    onClick = { navController.navigate("create_user") }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = "Añadir",
+                        tint = Color.White
+                    )
+                }
             }
         }
 
@@ -101,10 +111,7 @@ fun UserItem(user: User, navController: NavController, userApi: UserApiRest, use
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp),
-        colors = CardDefaults.cardColors(containerColor = OrangePrimary),
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = 6.dp
-        ),// Fondo marrón
+        colors = CardDefaults.cardColors(containerColor = OrangePrimary) //
     ) {
         Column(modifier = Modifier
             .padding(paddingValues = PaddingValues(bottom = 4.dp, top= 16.dp, end = 16.dp, start = 16.dp))
