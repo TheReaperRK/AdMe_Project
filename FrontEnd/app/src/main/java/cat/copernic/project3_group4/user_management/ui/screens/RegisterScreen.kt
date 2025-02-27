@@ -1,8 +1,6 @@
 package cat.copernic.project3_group4.user_management.ui.screens
 
 import RegisterViewModel
-import android.net.Uri
-import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -20,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.White
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -29,11 +28,6 @@ import androidx.navigation.NavController
 import cat.copernic.project3_group4.R
 import cat.copernic.project3_group4.core.ui.theme.BrownTertiary
 import cat.copernic.project3_group4.core.ui.theme.OrangePrimary
-import cat.copernic.project3_group4.core.ui.theme.OrangeSecondary
-import cat.copernic.project3_group4.core.utils.createPartFromString
-import cat.copernic.project3_group4.core.utils.uriToMultipartBodyPart
-import cat.copernic.project3_group4.user_management.data.datasource.AuthRetrofitInstance
-import kotlinx.coroutines.launch
 import coil.compose.rememberAsyncImagePainter
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -67,15 +61,17 @@ fun RegisterScreen(registerViewModel: RegisterViewModel, navController: NavContr
                 Image(
                     painter = rememberAsyncImagePainter(it),
                     contentDescription = "Imagen de perfil",
-                    modifier = Modifier.size(100.dp).clip(RoundedCornerShape(50.dp)).background(White).clickable { launcher.launch("image/*") }
+                    modifier = Modifier.size(100.dp).clip(RoundedCornerShape(50.dp)).background(White).clickable { launcher.launch("image/*") },
+                    contentScale = ContentScale.Crop
+
                 )
             } ?: Image(
-                painter = painterResource(id = R.drawable.ic_logo),
+                painter = painterResource(id = R.drawable.blank_profile_picture_973460_960_720),
                 contentDescription = "Seleccionar imagen",
-                modifier = Modifier.size(100.dp).clickable { launcher.launch("image/*") }
+                modifier = Modifier.size(100.dp).clip(RoundedCornerShape(50.dp)).clickable { launcher.launch("image/*") }
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(32.dp))
             InputField("Nombre", registerViewModel.name.value, { registerViewModel.name.value = it },
                 registerViewModel.nameError.value, 60)
             Spacer(modifier = Modifier.height(16.dp))
@@ -135,6 +131,7 @@ fun InputField(label: String, value: String, onValueChange: (String) -> Unit, er
         }
     }
 }
+
 
 
 

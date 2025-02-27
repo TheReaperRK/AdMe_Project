@@ -42,7 +42,9 @@ import cat.copernic.project3_group4.category_management.ui.screens.ProposalsScre
 import cat.copernic.project3_group4.main.screens.PasswordRecover
 import cat.copernic.project3_group4.main.screens.ProfileScreen
 import cat.copernic.project3_group4.main.screens.RecoverByToken
+import cat.copernic.project3_group4.user_management.ui.screens.CreateUserScreen
 import cat.copernic.project3_group4.user_management.ui.screens.EditUserScreen
+import cat.copernic.project3_group4.user_management.ui.viewmodels.ProfileViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,6 +58,8 @@ class MainActivity : ComponentActivity() {
                 val categoryViewModel: CategoryViewModel = viewModel()
                 val adsViewModel: AdsViewModel = viewModel()
                 val registerViewModel: RegisterViewModel = viewModel()
+                val profileViewModel: ProfileViewModel = viewModel()
+
 
                 // Aquí guardamos el usuario autenticado
                 val userState = rememberSaveable { mutableStateOf<User?>(null) }
@@ -68,7 +72,7 @@ class MainActivity : ComponentActivity() {
                     ) {
                         composable("login") { LoginScreen(navController, userState) }
                         composable("user_list") { UserListScreen(navController) }
-                        composable("profile") { ProfileScreen(userState, navController) }
+                        composable("profile") { ProfileScreen(userState, navController, adsViewModel, profileViewModel) }
                         composable("register") { RegisterScreen(registerViewModel, navController) }
                         composable("categoryScreen") {
                             CategoryScreen(
@@ -158,7 +162,11 @@ class MainActivity : ComponentActivity() {
                                 navController = navController
                             )
                         }
-
+                        composable("create_User") {
+                            CreateUserScreen(
+                                navController = navController
+                            )
+                        }
 
 
 

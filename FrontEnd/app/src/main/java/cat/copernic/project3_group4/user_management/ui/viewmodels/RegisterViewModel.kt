@@ -40,7 +40,7 @@ class RegisterViewModel : ViewModel() {
             isValid = false
         } else phoneError.value = null
 
-        /*if (password.value.length < 8 || !password.value.any { it.isUpperCase() } ||
+        if (password.value.length < 8 || !password.value.any { it.isUpperCase() } ||
             !password.value.any { it.isLowerCase() } || !password.value.any { it.isDigit() } ||
             !password.value.any { !it.isLetterOrDigit() }) {
             passwordError.value = "Debe tener mínimo 8 caracteres, mayúsculas, minúsculas, números y un símbolo."
@@ -48,7 +48,6 @@ class RegisterViewModel : ViewModel() {
         } else passwordError.value = null
 
 
-         */
         if (password.value != confirmPassword.value) {
             confirmPasswordError.value = "Las contraseñas no coinciden."
             isValid = false
