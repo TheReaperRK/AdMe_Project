@@ -160,4 +160,4 @@ fun isValidPassword(password: String) =
             password.any { it.isUpperCase() } &&
             password.any { it.isLowerCase() } &&
             password.any { it.isDigit() } &&
-            password.any { !it.isLetterOrDigit() }
+            password.any { !it.isLetterOrDigit() }  

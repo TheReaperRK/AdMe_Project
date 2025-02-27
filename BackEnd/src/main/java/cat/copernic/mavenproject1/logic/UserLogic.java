@@ -134,6 +134,16 @@ public class UserLogic {
 
     }
     
+    public void updateUserImage(User user, MultipartFile imageFile) {
+        try {
+            user.setImage(imageFile.getBytes());
+            userRepo.save(user);
+        } catch (IOException e) {
+            System.out.println("excepcion error al guardar imagen");
+            throw new RuntimeException("Error al guardar la imagen", e);
+        }
+    }
+    
     public boolean checkPassword(String rawPassword, String encodedPassword) {
         return passwordEncoder.matches(rawPassword, encodedPassword);
     }

@@ -58,6 +58,8 @@ public class User {
      */
     private List<Ad> ads = new ArrayList<>();
 
+    private String resetToken; // Token para restablecer contraseña
+
 
     public User(String name, String email, String phoneNumber, String word, boolean status, Roles role) {
         this.name = name;
@@ -91,6 +93,23 @@ public class User {
 
     public User(Long id, String name, String email,  String phoneNumber, boolean status, Roles role) {
         this.id = id;
+        this.name = name;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.status = status;
+        this.role = role;
+    }
+    public User(Long id, String name, String email,  String phoneNumber, boolean status, Roles role, String word) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.status = status;
+        this.role = role;
+        this.word = word;
+    }
+
+    public User(String name, String email,  String phoneNumber, boolean status, Roles role) {
         this.name = name;
         this.email = email;
         this.phoneNumber = phoneNumber;
@@ -151,6 +170,10 @@ public class User {
     }
 
 
+    @Override
+    public String toString() {
+        return "User{" + "id=" + id + ", name=" + name + ", email=" + email + ", phoneNumber=" + phoneNumber + ", image=" + image + ", word=" + word + ", status=" + status + ", role=" + role + ", ads=" + ads + ", resetToken=" + resetToken + '}';
+    }
 
 }
 

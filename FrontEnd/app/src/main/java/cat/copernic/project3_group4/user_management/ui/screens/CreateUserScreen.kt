@@ -12,7 +12,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -24,8 +23,7 @@ import cat.copernic.project3_group4.user_management.data.datasource.UserRetrofit
 import kotlinx.coroutines.launch
 
 @Composable
-fun EditUserScreen(userId: Long, navController: NavController) {
-
+fun CreateUserScreen(navController: NavController) {
     val retrofit = UserRetrofitInstance.retrofitInstance
     val userApi = retrofit.create(UserApiRest::class.java)
     val context = LocalContext.current
@@ -37,32 +35,7 @@ fun EditUserScreen(userId: Long, navController: NavController) {
     var isStatus by remember { mutableStateOf(true) }
     var selectedRole by remember { mutableStateOf(Roles.USER) }
 
-
-
-    LaunchedEffect(userId) {
-        coroutineScope.launch {
-            try {
-                val response = userApi.getUserById(userId)
-
-                if (response.isSuccessful) {
-                    response.body()?.let {
-                        name = it.name
-                        email = it.email
-                        phoneNumber = it.phoneNumber
-                        isStatus = it.isStatus
-                        selectedRole = it.role
-                    }
-                } else {
-                    Toast.makeText(context, "Error al cargar usuario", Toast.LENGTH_SHORT).show()
-                }
-            } catch (e: Exception) {
-                Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
-
     Column(modifier = Modifier.fillMaxSize()) {
-        // Barra superior fija
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -78,7 +51,7 @@ fun EditUserScreen(userId: Long, navController: NavController) {
                         tint = Color.White
                     )
                 }
-                Text("Editar Usuario", fontSize = 22.sp, fontWeight = FontWeight.Bold, color = Color.White)
+                Text("Crear Usuario", fontSize = 22.sp, fontWeight = FontWeight.Bold, color = Color.White)
             }
         }
 
@@ -147,13 +120,17 @@ fun EditUserScreen(userId: Long, navController: NavController) {
             Button(
                 onClick = {
                     coroutineScope.launch {
+                        val newUser = User(0, name, email, phoneNumber, isStatus, selectedRole, "1")
                         try {
-                            val response = userApi.expireWord(userId)
+                            val response = userApi.createUser(newUser)
                             if (response.isSuccessful) {
-                                Toast.makeText(context, "Contraseña caducada", Toast.LENGTH_SHORT).show()
+                                response.body()?.let { userId ->
+                                    userApi.expireWord(userId)
+                                }
+                                Toast.makeText(context, "Usuario creado con éxito", Toast.LENGTH_SHORT).show()
                                 navController.popBackStack()
                             } else {
-                                Toast.makeText(context, "Error al caducar la contraseña", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(context, "Error al crear usuario", Toast.LENGTH_SHORT).show()
                             }
                         } catch (e: Exception) {
                             Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
@@ -163,32 +140,7 @@ fun EditUserScreen(userId: Long, navController: NavController) {
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(containerColor = OrangePrimary)
             ) {
-                Text("Caducar contraseña", color = Color.White)
-            }
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Button(
-                onClick = {
-                    coroutineScope.launch {
-                        val updatedUser = User(userId ,name, email, phoneNumber, isStatus, selectedRole)
-                        try {
-                            val response = userApi.updateUser(userId, updatedUser)
-                            if (response.isSuccessful) {
-                                Toast.makeText(context, "Usuario actualizado", Toast.LENGTH_SHORT).show()
-                                navController.popBackStack()
-                            } else {
-                                Toast.makeText(context, "Error al actualizar", Toast.LENGTH_SHORT).show()
-                            }
-                        } catch (e: Exception) {
-                            Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                },
-                modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(containerColor = OrangePrimary)
-            ) {
-                Text("Guardar Cambios", color = Color.White)
+                Text("Crear Usuario", color = Color.White)
             }
         }
     }

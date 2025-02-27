@@ -4,6 +4,8 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Base64
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -41,14 +43,25 @@ import cat.copernic.project3_group4.core.ui.theme.OrangeSecondary
 import coil.compose.AsyncImage
 import kotlinx.coroutines.launch
 import cat.copernic.project3_group4.main.screens.BottomNavigationBar
+import cat.copernic.project3_group4.user_management.ui.viewmodels.ProfileViewModel
 import com.google.android.gms.common.api.Response
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileScreen(userState: MutableState<User?>, navController: NavController, adsViewModel: AdsViewModel = viewModel()) {
+fun ProfileScreen(userState: MutableState<User?>, navController: NavController, adsViewModel: AdsViewModel = viewModel(), profileViewModel: ProfileViewModel) {
+
+    var selectedImageUri by remember { mutableStateOf<android.net.Uri?>(null) }
+    val context = LocalContext.current
     val user = userState.value
     val scope = rememberCoroutineScope()
     val drawerState = rememberDrawerState(DrawerValue.Closed)
+    var showChangeImageDialog by remember { mutableStateOf(false)
+    }
+
+    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+        selectedImageUri = uri!! // ✅ Guarda la URI seleccionada en una variable de estado
+        profileViewModel.uploadProfileImage(user!!.id ,uri, context) // ✅ Ahora sí podemos usarla aquí
+    }
 
     if (user == null) {
         Text("No hay usuario autenticado", textAlign = TextAlign.Center, modifier = Modifier.fillMaxSize())
@@ -114,8 +127,19 @@ fun ProfileScreen(userState: MutableState<User?>, navController: NavController, 
                     Image(
                         bitmap = it.asImageBitmap(),
                         contentDescription = "Profile Image",
-                        modifier = Modifier.size(100.dp).clip(CircleShape),
+                        modifier = Modifier
+                            .size(100.dp)
+                            .clip(CircleShape)
+                            .clickable { showChangeImageDialog = true },
                         contentScale = ContentScale.Crop
+                    )
+                }
+                Spacer(modifier = Modifier.height(12.dp))
+
+                if (showChangeImageDialog) {
+                    ChangeImageDialog(
+                        onDismiss = { showChangeImageDialog = false },
+                        onConfirm = { launcher.launch("image/*") }
                     )
                 }
                 Spacer(modifier = Modifier.height(12.dp))
@@ -304,4 +328,23 @@ fun DrawerButton(text: String, onClick: () -> Unit) {
     ) {
         Text(text, color = Color.White)
     }
+}
+
+@Composable
+fun ChangeImageDialog(onDismiss: () -> Unit, onConfirm: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Cambiar imagen de perfil") },
+        text = { Text("¿Deseas cambiar tu imagen de perfil?") },
+        confirmButton = {
+            Button(onClick = onConfirm) {
+                Text("Seleccionar imagen")
+            }
+        },
+        dismissButton = {
+            Button(onClick = onDismiss) {
+                Text("Cancelar")
+            }
+        }
+    )
 }
