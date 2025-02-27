@@ -42,6 +42,7 @@ import cat.copernic.project3_group4.category_management.ui.screens.ProposalsScre
 import cat.copernic.project3_group4.main.screens.PasswordRecover
 import cat.copernic.project3_group4.main.screens.ProfileScreen
 import cat.copernic.project3_group4.main.screens.RecoverByToken
+import cat.copernic.project3_group4.user_management.ui.screens.CreateUserScreen
 import cat.copernic.project3_group4.user_management.ui.screens.EditUserScreen
 
 class MainActivity : ComponentActivity() {
@@ -158,7 +159,11 @@ class MainActivity : ComponentActivity() {
                                 navController = navController
                             )
                         }
-
+                        composable("create_User") {
+                            CreateUserScreen(
+                                navController = navController
+                            )
+                        }
 
 
 

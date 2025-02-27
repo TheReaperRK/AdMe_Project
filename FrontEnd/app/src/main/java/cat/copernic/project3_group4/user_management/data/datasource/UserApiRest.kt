@@ -1,12 +1,16 @@
 package cat.copernic.project3_group4.user_management.data.datasource
 
 import cat.copernic.project3_group4.core.models.User
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.PUT
+import retrofit2.http.Part
 import retrofit2.http.Path
 
 interface UserApiRest {
@@ -16,7 +20,7 @@ interface UserApiRest {
 
     @GET("byId/{userId}")
     suspend fun getUserById(@Path("userId") userId: Long): Response<User>
- 
+
     @POST("create")
     suspend fun createUser(@Body user: User): Response<Long>
 

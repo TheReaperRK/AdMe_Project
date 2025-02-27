@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -77,6 +78,16 @@ fun UserListScreen(navController: NavController, modifier: Modifier = Modifier) 
                     fontWeight = FontWeight.Bold,
                     color = Color.White
                 )
+
+                IconButton(
+                    onClick = { navController.navigate("create_user") }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = "Añadir",
+                        tint = Color.White
+                    )
+                }
             }
         }
 
@@ -97,7 +108,7 @@ fun UserItem(user: User, navController: NavController, userApi: UserApiRest, use
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp),
-        colors = CardDefaults.cardColors(containerColor = OrangePrimary) // Fondo marrón
+        colors = CardDefaults.cardColors(containerColor = OrangePrimary) //
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(text = user.name, fontSize = 18.sp, fontWeight = FontWeight.Bold, color = Color.White)

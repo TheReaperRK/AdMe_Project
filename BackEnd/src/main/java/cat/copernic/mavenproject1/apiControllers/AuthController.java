@@ -57,20 +57,20 @@ public class AuthController {
         }
     }
     
-    @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestParam String name, @RequestParam String email,
-            @RequestParam String phone, @RequestParam String password,
-            @RequestParam(value = "image", required = false) MultipartFile imageFile) {
-        
-        User createdUser = new User (name, email, phone, password, false, Roles.USER);
-        
-        if (userLogic.userIsUnique(createdUser)) {
-            userLogic.tryCreation(createdUser, imageFile);
-            return ResponseEntity.ok(createdUser);
+        @PostMapping("/register")
+        public ResponseEntity<?> registerUser(@RequestParam String name, @RequestParam String email,
+                @RequestParam String phone, @RequestParam String password,
+                @RequestParam(value = "image", required = false) MultipartFile imageFile) {
+
+            User createdUser = new User (name, email, phone, password, false, Roles.USER);
+
+            if (userLogic.userIsUnique(createdUser)) {
+                userLogic.tryCreation(createdUser, imageFile);
+                return ResponseEntity.ok(createdUser);
+            }
+
+            return ResponseEntity.status(401).body("No s'ha pogut crear");
         }
-        
-        return ResponseEntity.status(401).body("No s'ha pogut crear");
-    }
     
     @PostMapping("/recover")
     public ResponseEntity<?> recoverPassword(@RequestParam String email) {
