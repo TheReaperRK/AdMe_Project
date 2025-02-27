@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
@@ -11,6 +12,8 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -78,16 +81,6 @@ fun UserListScreen(navController: NavController, modifier: Modifier = Modifier) 
                     fontWeight = FontWeight.Bold,
                     color = Color.White
                 )
-
-                IconButton(
-                    onClick = { navController.navigate("create_user") }
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Add,
-                        contentDescription = "Añadir",
-                        tint = Color.White
-                    )
-                }
             }
         }
 
@@ -108,10 +101,18 @@ fun UserItem(user: User, navController: NavController, userApi: UserApiRest, use
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp),
-        colors = CardDefaults.cardColors(containerColor = OrangePrimary) //
+        colors = CardDefaults.cardColors(containerColor = OrangePrimary),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 6.dp
+        ),// Fondo marrón
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(text = user.name, fontSize = 18.sp, fontWeight = FontWeight.Bold, color = Color.White)
+        Column(modifier = Modifier
+            .padding(paddingValues = PaddingValues(bottom = 4.dp, top= 16.dp, end = 16.dp, start = 16.dp))
+            .clip(RoundedCornerShape(topStartPercent = 0, topEndPercent = 0))
+        ){
+
+
+            Text(text = user.name, fontSize = 20.sp, fontWeight = FontWeight.Bold, color = Color.White)
             Text(text = user.email, fontSize = 14.sp, color = Color.White)
             Text(text = "Teléfono: ${user.phoneNumber}", fontSize = 14.sp, color = Color.White)
             Text(text = "Estado: ${if (user.isStatus) "Activo" else "Inactivo"}", fontSize = 14.sp, color = Color.White)
@@ -122,8 +123,10 @@ fun UserItem(user: User, navController: NavController, userApi: UserApiRest, use
             Row {
                 Button(
                     onClick = { navController.navigate("EditUserScreen/${user.id}") }, // Pasar el ID del usuario
-                    modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(containerColor = BrownTertiary)
+                    modifier = Modifier.weight(1f).shadow(elevation = 8.dp, shape = RoundedCornerShape(40) ).clip(
+                        RoundedCornerShape(40)
+                    ),
+                    colors = ButtonDefaults.buttonColors(containerColor = BrownTertiary) // Botón naranja
                 ) {
                     Text("Editar", color = Color.White)
                 }
@@ -132,7 +135,9 @@ fun UserItem(user: User, navController: NavController, userApi: UserApiRest, use
 
                 Button(
                     onClick = { showDialog = true },
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier.weight(1f).shadow(elevation = 8.dp, shape = RoundedCornerShape(40) ).clip(
+                        RoundedCornerShape(40)
+                    ),
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
                 ) {
                     Text("Eliminar", color = Color.White)
@@ -169,7 +174,9 @@ fun UserItem(user: User, navController: NavController, userApi: UserApiRest, use
                             }
                         }
                     },
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier.weight(1f).shadow(elevation = 8.dp, shape = RoundedCornerShape(40) ).clip(
+                        RoundedCornerShape(40)
+                    ),
                     colors = ButtonDefaults.buttonColors(containerColor = Color.White)
                 ) {
                     Text(if (user.isStatus) "Desactivar" else "Activar", color = OrangePrimary)
