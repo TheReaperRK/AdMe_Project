@@ -301,31 +301,7 @@ admin@admin.com
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                    Row(modifier = Modifier.fillMaxWidth().wrapContentHeight()) {
 
-                        val thumbOffset by animateDpAsState(
-                            targetValue = if (proposal) 20.dp else 0.dp,
-                            animationSpec = tween(durationMillis = 150), // Animación rápida y sutil
-                            label = "Thumb Offset Animation"
-                        )
-                        Text("Proposta: ", fontSize = 18.sp, fontWeight = FontWeight.Bold)
-                        Box(
-                            modifier = Modifier
-                                .width(50.dp)
-                                .height(30.dp)
-                                .clip(RoundedCornerShape(15.dp))
-                                .background(if (proposal) Color.Green else Color.Gray)
-                                .clickable { proposal = !proposal }
-                                .padding(4.dp)
-                        ) {
-                            Box(
-                                modifier = Modifier
-                                    .size(22.dp)
-                                    .offset(x = thumbOffset)
-                                    .background(Color.White, CircleShape)
-                            )
-                        }
-                    }
 
                 // Botón para enviar el formulario
                 Button(

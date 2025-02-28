@@ -2,6 +2,7 @@ package cat.copernic.project3_group4.ad_management.ui.screens
 
 import android.util.Base64
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -9,8 +10,15 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -27,15 +35,27 @@ import cat.copernic.project3_group4.main.screens.BottomNavigationBar
 import coil.compose.AsyncImage
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.boundsInWindow
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.node.Ref
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.DpOffset
+import cat.copernic.project3_group4.R
 import cat.copernic.project3_group4.category_management.ui.viewmodels.CategoryViewModel
 import cat.copernic.project3_group4.core.models.Category
 import cat.copernic.project3_group4.core.models.User
+import cat.copernic.project3_group4.core.ui.theme.BrownTertiary
 import cat.copernic.project3_group4.core.ui.theme.OrangePrimary
 import cat.copernic.project3_group4.core.ui.theme.OrangeSecondary
 import cat.copernic.project3_group4.main.screens.BottomNavigationBar
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -59,8 +79,15 @@ fun AdsScreen(categoryId: Long?, adsViewModel: AdsViewModel, navController: NavC
         }
         return
     }
+
     val ads by adsViewModel.ads.observeAsState(initial = emptyList())
     val category by categoryViewModel.category.collectAsState(initial =Category())
+    var expandedAdminMenu by remember { mutableStateOf(false) }
+    var menuPosition by remember { mutableStateOf(Offset.Zero) }
+    val density = LocalDensity.current
+    var showDialog by remember { mutableStateOf(false) }
+    val coroutineScope = rememberCoroutineScope()
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -104,28 +131,58 @@ fun AdsScreen(categoryId: Long?, adsViewModel: AdsViewModel, navController: NavC
                     )
                 }
 
-                // Sección derecha: Número de anuncios
-                Text(
-                    text = "Anuncios: ${ads.size}",
-                    fontSize = 18.sp,
-                    color = Color.White,
-                    textAlign = TextAlign.End
-                )
+
 
                 if(user.role.name == "ADMIN"){
-                    Button(
-                        onClick = {navController.navigate("editCategoryScreen/${category.id}")},
-                        shape = CircleShape,
-                        colors =ButtonDefaults.buttonColors(containerColor = Color(0xFFFFAA00))
-                    ) {
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.TopEnd) {
+                        //DropdownMenuStyled(navController)
+                        Button(
+                            onClick = {expandedAdminMenu = !expandedAdminMenu},
+                            shape = CircleShape,
+                            colors = ButtonDefaults.buttonColors(if(expandedAdminMenu) Color.White else Color.Transparent),
+                            modifier = Modifier.onGloballyPositioned { posicion ->
+                                val rect = posicion.boundsInWindow()
+                                menuPosition = Offset(rect.left, rect.top)
+                            }
 
-                        //Text("Modificar")
+                        ) {
 
-                        Icon(
-                            imageVector = Icons.Default.Edit,
-                            contentDescription = "Volver",
-                            tint = Color.White // Color del icono en blanco
-                        )
+                            //Text("Modificar")
+
+                            Icon(
+                                imageVector = if(expandedAdminMenu) Icons.Default.Close else Icons.Default.Menu ,
+                                contentDescription = "Volver",
+                                tint = if(expandedAdminMenu) OrangeSecondary else Color.White, // Color del icono en blanco
+                                modifier = Modifier.size(28.dp)
+                            )
+                        }
+                        DropdownMenu(
+                            expanded = expandedAdminMenu,
+                            onDismissRequest = { expandedAdminMenu = false },
+                            offset = with(density) { DpOffset(menuPosition.x.toDp(), menuPosition.y.toDp()-40.dp) },
+                            modifier = Modifier
+                                .background(MaterialTheme.colorScheme.surface)
+                                .border(3.dp, OrangeSecondary, shape = RoundedCornerShape(12.dp))
+
+                        ) {
+                            DropdownMenuItem(
+                                text = { MenuItemContent("Modificar", Icons.Default.Edit) },
+                                onClick = {
+                                    expandedAdminMenu = false
+                                    navController.navigate("editCategoryScreen/${category.id}")
+                                }
+                            )
+                            DropdownMenuItem(
+                                text = { MenuItemContent("Eliminar", Icons.Default.Delete) },
+                                onClick = {
+                                    expandedAdminMenu = false
+                                    showDialog = true
+                                }
+
+                            )
+
+                        }
+
                     }
                 }
 
@@ -134,6 +191,11 @@ fun AdsScreen(categoryId: Long?, adsViewModel: AdsViewModel, navController: NavC
         }
 
         if (ads.isEmpty()) {
+            Row(modifier = Modifier.fillMaxWidth().wrapContentHeight(), horizontalArrangement = Arrangement.Center) {
+                Text("${category.description}", fontSize =20.sp, modifier = Modifier.padding(20.dp))
+
+            }
+            HorizontalDivider(modifier = Modifier.padding(horizontal = 40.dp), thickness = 2.dp)
             Text(
                 text = "No hay anuncios disponibles",
                 modifier = Modifier
@@ -145,6 +207,13 @@ fun AdsScreen(categoryId: Long?, adsViewModel: AdsViewModel, navController: NavC
             )
         } else {
             LazyColumn(modifier = Modifier.weight(1f)) {
+                item{
+                    Row(modifier = Modifier.fillMaxWidth().wrapContentHeight(), horizontalArrangement = Arrangement.Center) {
+                        Text("${category.description}", fontSize =20.sp, modifier = Modifier.padding(20.dp))
+
+                    }
+                    HorizontalDivider(modifier = Modifier.padding(horizontal = 40.dp), thickness = 2.dp)
+                }
                 items(ads) { ad ->
                     AdItem(ad) { clickedCategory ->
                         adsViewModel.setSelectedCategory(clickedCategory)
@@ -152,8 +221,53 @@ fun AdsScreen(categoryId: Long?, adsViewModel: AdsViewModel, navController: NavC
                 }
             }
         }
+        if (showDialog) {
+            AlertDialog(
+                onDismissRequest = { showDialog = false },
+                title = { Text("Confirmar eliminación", fontWeight = FontWeight.Bold, color = BrownTertiary) },
+                text = { if(ads.size > 0)
+                    Text("La categoria ${category.name} tiene ${ads.size} anuncios asociados, eliminalos para proceder a la eliminacion.")
+                    else
+                    Text("¿Seguro que quieres eliminar a ${category.name}? Esta acción no se puede deshacer.", color = Color.Black) },
 
+                confirmButton = {
+                    Button(
+                        onClick = {
+                            coroutineScope.launch {
+                                try {
+
+                                    val response = categoryViewModel.deleteCategoryById(category.id)
+
+                                    categoryViewModel.fetchProposals()
+                                } catch (e: Exception) {
+                                    println("Error: ${e.message}")
+                                }
+                            }
+
+                            showDialog = false
+                            navController.navigate("categoryScreen")
+                            categoryViewModel.fetchCategories()
+
+                        },
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error),
+                        enabled = if(ads.size > 0) false else true,
+
+                    ) {
+                        Text("Eliminar", color = Color.White)
+                    }
+                },
+                dismissButton = {
+                    Button(
+                        onClick = { showDialog = false },
+                        colors = ButtonDefaults.buttonColors(containerColor = Color.LightGray)
+                    ) {
+                        Text("Cancelar", color = Color.Black)
+                    }
+                }
+            )
+        }
         BottomNavigationBar(navController)
+
     }
 }
 
@@ -211,6 +325,7 @@ fun AdItem(ad: Ad, onCategoryClick: (Long) -> Unit) {
                 color = Color.Gray
             )
         }
+
     }
 
     if (isExpanded) {
@@ -275,6 +390,7 @@ fun AdItem(ad: Ad, onCategoryClick: (Long) -> Unit) {
             }
         }
     }
+
 }
 
 
@@ -283,5 +399,15 @@ fun base64ToByteArray(base64String: String): ByteArray? {
         Base64.decode(base64String, Base64.DEFAULT)
     } catch (e: IllegalArgumentException) {
         null
+    }
+}
+
+
+@Composable
+fun MenuItemContent(text: String, icon: ImageVector) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Icon(icon, contentDescription = null, tint = Color.Gray, modifier = Modifier.size(20.dp))
+        Spacer(modifier = Modifier.width(8.dp))
+        Text(text, style = MaterialTheme.typography.bodyMedium)
     }
 }
