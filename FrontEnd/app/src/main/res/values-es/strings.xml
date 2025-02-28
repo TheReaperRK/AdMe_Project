@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Project3_Group4</string>
+    <string name="title_main_screen">Home</string>
+    <string name="search_category">Buscar categoría...</string>
+    <string name="no_authenticated_user">No hay usuario autenticado</string>
+    <string name="create_category">Crear Categoría</string>
+    <string name="proposal">Propuesta</string>
+    <string name="filter">Filtrar</string>
+    <string name="all">Todos</string>
+    <string name="home">Inicio</string>
+    <string name="ads">Anuncios</string>
+    <string name="create">Crear</string>
+    <string name="profile">Perfil</string>
+</resources>

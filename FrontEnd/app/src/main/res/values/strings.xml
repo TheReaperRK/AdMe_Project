@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">Project3_Group4</string>
+    <string name="title_main_screen">Home</string>
+    <string name="search_category">Search category...</string>
+    <string name="no_authenticated_user">No authenticated user</string>
+    <string name="create_category">Create Category</string>
+    <string name="proposal">Proposal</string>
+    <string name="filter">Filter</string>
+    <string name="all">All</string>
+    <string name="home">Home</string>
+    <string name="ads">Ads</string>
+    <string name="create">Create</string>
+    <string name="profile">Profile</string>
 </resources>
