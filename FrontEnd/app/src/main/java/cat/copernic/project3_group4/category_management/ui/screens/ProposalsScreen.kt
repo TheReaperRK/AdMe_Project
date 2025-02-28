@@ -293,7 +293,7 @@ fun ProposalItem(proposal: Category, navController: NavController, categoryViewM
                             try {
                                 val response = categoryViewModel.deleteCategoryById(proposal.id)
 
-
+                                categoryViewModel.fetchProposals()
                             } catch (e: Exception) {
                                 println("Error: ${e.message}")
                             }
@@ -329,7 +329,7 @@ fun ProposalItem(proposal: Category, navController: NavController, categoryViewM
                         coroutineScope.launch {
                             try {
                                 val response = categoryViewModel.acceptProposal(proposal.id)
-
+                                categoryViewModel.fetchProposals()
 
                             } catch (e: Exception) {
                                 println("Error: ${e.message}")
