@@ -7,6 +7,13 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.outlined.AddCircle
+import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -17,6 +24,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -24,6 +33,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 
 import androidx.navigation.compose.rememberNavController
+import cat.copernic.project3_group4.R
 import cat.copernic.project3_group4.ad_management.ui.screens.base64ToByteArray
 import cat.copernic.project3_group4.category_management.ui.viewmodels.CategoryViewModel
 import cat.copernic.project3_group4.core.models.Category
@@ -46,7 +56,6 @@ fun CategoryScreen(viewModel: CategoryViewModel, userState: MutableState<User?>,
         }
     }
 
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -64,13 +73,13 @@ fun CategoryScreen(viewModel: CategoryViewModel, userState: MutableState<User?>,
 fun TopBar(searchText: String, onSearchTextChange: (String) -> Unit) {
     Column {
         TopAppBar(
-            title = { Text("Buscar", color = Color.White) },
+            title = { Text(stringResource(R.string.title_main_screen), color = Color.White) },
             colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFFFF6600))
         )
         TextField(
             value = searchText,
             onValueChange = onSearchTextChange,
-            placeholder = { Text("Buscar categoría...") },
+            placeholder = { Text(stringResource(R.string.search_category)) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp),
@@ -79,20 +88,17 @@ fun TopBar(searchText: String, onSearchTextChange: (String) -> Unit) {
     }
 }
 
-
 @Composable
 fun FilterButtons(navController: NavController, userState: MutableState<User?>) {
     var buttonCategoryFormName: String;
     val user = userState.value
     if (user == null) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Text("No hay usuario autenticado")
+            Text(stringResource(R.string.no_authenticated_user))
         }
         return
     }
-    val title = if (user.role.name == "ADMIN") "Crear Categoria" else "Propuesta"
-
-
+    val title = if (user.role.name == "ADMIN") stringResource(R.string.create_category) else stringResource(R.string.proposal)
 
     Row(
         modifier = Modifier
@@ -103,12 +109,12 @@ fun FilterButtons(navController: NavController, userState: MutableState<User?>) 
         val buttonColor = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFAA00))
 
         Button(onClick = {}, colors = buttonColor) {
-            Text("Filtrar")
+            Text(stringResource(R.string.filter))
         }
         Button(onClick = {}, colors = buttonColor) {
-            Text("Todos")
+            Text(stringResource(R.string.all))
         }
-        Button(onClick = {navController.navigate("categoryFormScreen")}, colors = buttonColor, ) {
+        Button(onClick = { navController.navigate("categoryFormScreen") }, colors = buttonColor) {
             Text(title)
         }
     }
@@ -118,10 +124,9 @@ fun FilterButtons(navController: NavController, userState: MutableState<User?>) 
 fun CategoryList(categories: List<Category>, navController: NavController, modifier: Modifier = Modifier) {
     LazyColumn(modifier = modifier.fillMaxWidth()) {
         items(categories) { category ->
-            if(!category.isProposal){
+            if (!category.isProposal) {
                 CategoryItem(category, navController)
             }
-
         }
     }
 }
@@ -153,35 +158,95 @@ fun CategoryItem(category: Category, navController: NavController) {
     }
 }
 
-
 @Composable
 fun BottomNavigationBar(navController: NavController) {
     val currentRoute = navController.currentDestination?.route
-
-    NavigationBar(containerColor = Color(0xFFFF6600)) {
+    val selectedColor = Color(0xFFFF6600)
+    val unselectedColor = Color.White
+    NavigationBar(containerColor = Color(0xFFFF6600), modifier = Modifier.height(90.dp)) {
         NavigationBarItem(
             selected = currentRoute == "categoryScreen",
-            onClick = {navController.navigate("categoryScreen")  },
-            icon = { /* Icono aquí si lo necesitas */ },
-            label = { Text("Inicio") }
+            onClick = { navController.navigate("categoryScreen") },
+            icon = {
+                Icon(
+                    painter = painterResource(
+                        if (currentRoute == "categoryScreen") R.drawable.home_icon_filled_orange else R.drawable.home_icon_contourn,
+                    ),
+                    contentDescription = stringResource(R.string.home),
+                    tint = if (currentRoute == "categoryScreen") selectedColor else unselectedColor,
+                    modifier = Modifier.size(38.dp)
+                )
+            },
+            colors = NavigationBarItemDefaults.colors(
+                selectedIconColor = selectedColor,
+                unselectedIconColor = unselectedColor,
+                selectedTextColor = selectedColor,
+                unselectedTextColor = unselectedColor
+            ),
+            modifier = Modifier.padding(top =20.dp)
         )
+
         NavigationBarItem(
             selected = currentRoute == "AdsScreen",
-            onClick = {navController.navigate("AdsScreen")},
-            icon = { /* Icono aquí si lo necesitas */ },
-            label = { Text("ads") }
+            onClick = { navController.navigate("AdsScreen") },
+            icon = {
+                Icon(
+                    painter = painterResource(
+                        if (currentRoute == "AdsScreen") R.drawable.ad_icon_filled else R.drawable.ad_icon_contourn,
+                    ),
+                    contentDescription = stringResource(R.string.ads),
+                    tint = if (currentRoute == "AdsScreen") selectedColor else unselectedColor,
+                    modifier = Modifier.size(49.dp)
+                )
+            },
+            colors = NavigationBarItemDefaults.colors(
+                selectedIconColor = selectedColor,
+                unselectedIconColor = unselectedColor,
+                selectedTextColor = selectedColor,
+                unselectedTextColor = unselectedColor
+            ),
+            modifier = Modifier.padding(top =20.dp)
         )
         NavigationBarItem(
             selected = currentRoute == "createAdScreen",
-            onClick = {navController.navigate("createAdScreen")},
-            icon = { /* Icono aquí si lo necesitas */ },
-            label = { Text("create") }
+            onClick = { navController.navigate("createAdScreen") },
+            icon = { Icon(
+                painter = painterResource(
+                    if (currentRoute == "createAdScreen") R.drawable.a_adir_icon_filled else R.drawable.a_adir_icon_contourn,
+                ),
+                contentDescription = stringResource(R.string.create),
+                tint = if (currentRoute == "createAdScreen") selectedColor else unselectedColor,
+                modifier = Modifier.size(42.dp)
+            ) },
+            colors = NavigationBarItemDefaults.colors(
+                selectedIconColor = selectedColor,
+                unselectedIconColor = unselectedColor,
+                selectedTextColor = selectedColor,
+                unselectedTextColor = unselectedColor
+            ),
+            modifier = Modifier.padding(top =20.dp)
+
+
         )
         NavigationBarItem(
             selected = currentRoute == "profile",
-            onClick = {navController.navigate("profile")},
-            icon = { /* Icono aquí si lo necesitas */ },
-            label = { Text("profile") }
+            onClick = { navController.navigate("profile") },
+            icon = {  Icon(
+                painter = painterResource(
+                    if (currentRoute == "profile") R.drawable.profile_icon_filled else R.drawable.profile_icon_contourn,
+                ),
+                contentDescription = stringResource(R.string.profile),
+                tint = if (currentRoute == "profile") selectedColor else unselectedColor,
+                modifier = Modifier.size(42.dp)
+            )},
+            colors = NavigationBarItemDefaults.colors(
+                selectedIconColor = selectedColor,
+                unselectedIconColor = unselectedColor,
+                selectedTextColor = selectedColor,
+                unselectedTextColor = unselectedColor
+            ),
+            modifier = Modifier.padding(top =20.dp)
+
         )
     }
 }
@@ -192,5 +257,5 @@ fun PreviewCategoryScreen() {
     val viewModel: CategoryViewModel = viewModel()
     val navController = rememberNavController()
     val userState = rememberSaveable { mutableStateOf<User?>(null) }
-    CategoryScreen(viewModel = viewModel, userState = userState,  navController = navController)
+    CategoryScreen(viewModel = viewModel, userState = userState, navController = navController)
 }
