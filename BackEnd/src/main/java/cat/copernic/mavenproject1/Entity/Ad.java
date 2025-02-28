@@ -8,9 +8,9 @@ import java.time.LocalDate;
 //import lombok.NoArgsConstructor;
 
 /**
- * Represents an advertisement (Ad) in the AdMe application.
- * This entity contains details about an advertisement, including title,
- * description, image data, price, creation date, author, and category.
+ * Represents an advertisement (Ad) in the AdMe application. This entity
+ * contains details about an advertisement, including title, description, image
+ * data, price, creation date, author, and category.
  */
 @Entity
 @Table(name = "ads")
@@ -18,66 +18,62 @@ import java.time.LocalDate;
 //@NoArgsConstructor
 //@AllArgsConstructor
 public class Ad {
-    
+
     /**
      * Unique identifier for the Ad. It is the primary key and auto-generated.
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     /**
      * Title of the advertisement. Must be unique and cannot be null.
      */
     @Column(nullable = false)
     private String title;
-    
+
     /**
      * Description of the advertisement. Must be unique and cannot be null.
      */
     @Column(nullable = false)
     private String description;
-    
+
     /**
-     * Binary content of the advertisement image. Stored as a large object (LOB).
+     * Binary content of the advertisement image. Stored as a large object
+     * (LOB).
      */
     @Lob
     @Column(nullable = false, columnDefinition = "LONGBLOB")
     private byte[] data;
-    
+
     /**
      * Price of the advertisement. Must be unique and cannot be null.
      */
     @Column(nullable = false)
     private double price;
-    
+
     /**
-     * Date when the advertisement was created. Must be unique and cannot be null.
+     * Date when the advertisement was created. Must be unique and cannot be
+     * null.
      */
     @Column(nullable = false)
     private LocalDate creationDate;
-    
+
     /**
-     * The author of the advertisement. It is a many-to-one relationship with User.
+     * The author of the advertisement. It is a many-to-one relationship with
+     * User.
      */
     @ManyToOne
     @JoinColumn(name = "author_id", nullable = false)
     private User author;
-    
-    /**
-     * The category to which the advertisement belongs. It is a many-to-one relationship with Category.
-     */
+
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
-    
-    //Constructors
 
+    //Constructors
     public Ad() {
     }
-    
-    
-    
 
     public Ad(Long id, String title, String description, byte[] data, double price, LocalDate creationDate, User author, Category category) {
         this.id = id;
@@ -89,7 +85,7 @@ public class Ad {
         this.author = author;
         this.category = category;
     }
-    
+
     public Ad(String title, String description, byte[] data, double price, LocalDate creationDate, User author, Category category) {
         this.title = title;
         this.description = description;
@@ -165,6 +161,4 @@ public class Ad {
         this.category = category;
     }
 
-    
-    
 }

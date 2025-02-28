@@ -117,30 +117,6 @@ fun EditUserScreen(userId: Long, navController: NavController) {
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            Button(
-                onClick = {
-                    coroutineScope.launch {
-                        try {
-                            val response = userApi.expireWord(userId)
-                            if (response.isSuccessful) {
-                                Toast.makeText(context, "Contraseña caducada", Toast.LENGTH_SHORT).show()
-                                navController.popBackStack()
-                            } else {
-                                Toast.makeText(context, "Error al caducar la contraseña", Toast.LENGTH_SHORT).show()
-                            }
-                        } catch (e: Exception) {
-                            Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                },
-                modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(containerColor = OrangePrimary)
-            ) {
-                Text("Caducar contraseña", color = Color.White)
-            }
-
-            Spacer(modifier = Modifier.height(12.dp))
-
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
                 Text("Estado: ${if (isStatus) "Activo" else "Inactivo"}")
                 Switch(checked = isStatus, onCheckedChange = { isStatus = it })
@@ -167,6 +143,30 @@ fun EditUserScreen(userId: Long, navController: NavController) {
             }
 
             Spacer(modifier = Modifier.height(20.dp))
+
+            Button(
+                onClick = {
+                    coroutineScope.launch {
+                        try {
+                            val response = userApi.expireWord(userId)
+                            if (response.isSuccessful) {
+                                Toast.makeText(context, "Contraseña caducada", Toast.LENGTH_SHORT).show()
+                                navController.popBackStack()
+                            } else {
+                                Toast.makeText(context, "Error al caducar la contraseña", Toast.LENGTH_SHORT).show()
+                            }
+                        } catch (e: Exception) {
+                            Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                },
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(containerColor = OrangePrimary)
+            ) {
+                Text("Caducar contraseña", color = Color.White)
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
 
             Button(
                 onClick = {

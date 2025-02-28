@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -60,7 +61,7 @@ fun UserListScreen(navController: NavController, modifier: Modifier = Modifier) 
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color(0xFFFF6600))
+                .background(OrangePrimary)
                 .padding(vertical = 16.dp, horizontal = 16.dp),
             contentAlignment = Alignment.CenterStart
         ) {
@@ -80,6 +81,16 @@ fun UserListScreen(navController: NavController, modifier: Modifier = Modifier) 
                     fontWeight = FontWeight.Bold,
                     color = Color.White
                 )
+
+                IconButton(
+                    onClick = { navController.navigate("create_user") }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = "Añadir",
+                        tint = Color.White
+                    )
+                }
             }
         }
 
@@ -100,10 +111,7 @@ fun UserItem(user: User, navController: NavController, userApi: UserApiRest, use
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp),
-        colors = CardDefaults.cardColors(containerColor = OrangePrimary),
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = 6.dp
-        ),// Fondo marrón
+        colors = CardDefaults.cardColors(containerColor = OrangePrimary) //
     ) {
         Column(modifier = Modifier
             .padding(paddingValues = PaddingValues(bottom = 4.dp, top= 16.dp, end = 16.dp, start = 16.dp))

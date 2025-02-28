@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -34,6 +35,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 
 
 /**
@@ -84,6 +86,16 @@ public class UserApiController {
         }
         
        
+    }
+    
+    @PutMapping("/update-profile-image/{userId}")
+    public ResponseEntity<?> updateProfileImage(@PathVariable Long userId, @RequestParam("image") MultipartFile imageFile) {
+
+        System.out.println("dentro");
+        User user = userLogic.getUserById(userId);
+        
+        userLogic.updateUserImage(user, imageFile);
+        return ResponseEntity.ok(user); // Devuelve el usuario actualizado en JSON
     }
     
     @DeleteMapping("/delete/{userId}")
@@ -260,6 +272,7 @@ public class UserApiController {
         
         return response;
     }
+    
     
     @PostMapping("/create")
     public ResponseEntity<Long> createUser(@RequestBody User user) throws IOException {
