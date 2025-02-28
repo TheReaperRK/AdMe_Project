@@ -86,8 +86,10 @@ fun ProfileScreen(userState: MutableState<User?>, navController: NavController, 
                     Text("Menú", fontSize = 22.sp, fontWeight = FontWeight.Bold, color = OrangePrimary)
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    DrawerButton("Usuarios") { navController.navigate("user_list") }
-                    DrawerButton("Propuestas") {navController.navigate("proposal_list")}
+                    if(user.role.name == "ADMIN") {
+                        DrawerButton("Usuarios") { navController.navigate("user_list") }
+                        DrawerButton("Propuestas") { navController.navigate("proposal_list") }
+                    }
                     DrawerButton("Cerrar sesión") {
                         userState.value = null
                         navController.navigate("login")
