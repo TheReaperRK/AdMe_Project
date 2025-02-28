@@ -129,8 +129,12 @@ fun FilterSection(
 @Composable
 fun AdItem(ad: Ad) {
     val imageUrl = remember { base64ToByteArray(ad.data) }
+    val author = ad.author // Accede al autor del anuncio
+
     Card(
-        modifier = Modifier.fillMaxWidth().padding(8.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp),
         shape = RoundedCornerShape(8.dp),
         colors = CardDefaults.cardColors(containerColor = OrangePrimary)
     ) {
@@ -141,14 +145,36 @@ fun AdItem(ad: Ad) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(150.dp)
-                    .clip(RoundedCornerShape(0.dp, 0.dp,24.dp, 24.dp)), // Bordes redondeados
+                    .clip(RoundedCornerShape(0.dp, 0.dp, 24.dp, 24.dp)), // Bordes redondeados
                 contentScale = ContentScale.Crop
             )
             Column(modifier = Modifier.padding(8.dp)) {
                 Text(ad.title, fontSize = 16.sp, fontWeight = FontWeight.Bold)
                 Text(ad.description, fontSize = 14.sp, maxLines = 2)
                 Text("${ad.price}€", fontSize = 14.sp, fontWeight = FontWeight.Bold)
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Divider(color = Color.Black, thickness = 1.dp)
+
+                Text(
+                    text = "Información del vendedor:",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 14.sp,
+                    modifier = Modifier.padding(vertical = 4.dp)
+                )
+
+                author?.let {
+                    Text("Nombre: ${it.name}", fontSize = 12.sp)
+                    Text("Email: ${it.email}", fontSize = 12.sp)
+                    Text("Teléfono: ${it.phoneNumber}", fontSize = 12.sp)
+                } ?: Text(
+                    "No se encontró información del usuario",
+                    fontSize = 12.sp,
+                    color = Color.Gray
+                )
             }
         }
     }
 }
+

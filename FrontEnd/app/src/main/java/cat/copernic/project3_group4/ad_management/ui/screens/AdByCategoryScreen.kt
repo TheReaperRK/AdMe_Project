@@ -161,14 +161,13 @@ fun AdsScreen(categoryId: Long?, adsViewModel: AdsViewModel, navController: NavC
 fun AdItem(ad: Ad, onCategoryClick: (Long) -> Unit) {
     var isExpanded by remember { mutableStateOf(false) }
     val imageUrl = remember { base64ToByteArray(ad.data) }
+    val author = ad.author
 
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
-            .clickable {
-                isExpanded = true
-            },
+            .clickable { isExpanded = true },
         shape = RoundedCornerShape(8.dp),
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
@@ -190,6 +189,26 @@ fun AdItem(ad: Ad, onCategoryClick: (Long) -> Unit) {
                 fontSize = 14.sp,
                 color = OrangePrimary,
                 modifier = Modifier.clickable { onCategoryClick(ad.category.id) }
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+            Divider(color = OrangeSecondary, thickness = 1.dp)
+
+            Text(
+                text = "Información del vendedor:",
+                fontWeight = FontWeight.Bold,
+                fontSize = 14.sp,
+                modifier = Modifier.padding(vertical = 4.dp)
+            )
+
+            author?.let {
+                Text("Nombre: ${it.name}", fontSize = 12.sp)
+                Text("Email: ${it.email}", fontSize = 12.sp)
+                Text("Teléfono: ${it.phoneNumber}", fontSize = 12.sp)
+            } ?: Text(
+                "No se encontró información del usuario",
+                fontSize = 12.sp,
+                color = Color.Gray
             )
         }
     }
@@ -213,9 +232,10 @@ fun AdItem(ad: Ad, onCategoryClick: (Long) -> Unit) {
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(200.dp)
-                            .clip(RoundedCornerShape(24.dp)), // Bordes redondeados
+                            .clip(RoundedCornerShape(24.dp)),
                         contentScale = ContentScale.Fit
                     )
+
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(text = ad.title, fontSize = 20.sp, fontWeight = FontWeight.Bold)
                     Text(text = ad.description, fontSize = 16.sp)
@@ -226,6 +246,27 @@ fun AdItem(ad: Ad, onCategoryClick: (Long) -> Unit) {
                         color = OrangePrimary,
                         modifier = Modifier.clickable { onCategoryClick(ad.category.id) }
                     )
+
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Divider(color = OrangeSecondary, thickness = 1.dp)
+
+                    Text(
+                        text = "Información del vendedor:",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 14.sp,
+                        modifier = Modifier.padding(vertical = 4.dp)
+                    )
+
+                    author?.let {
+                        Text("Nombre: ${it.name}", fontSize = 12.sp)
+                        Text("Email: ${it.email}", fontSize = 12.sp)
+                        Text("Teléfono: ${it.phoneNumber}", fontSize = 12.sp)
+                    } ?: Text(
+                        "No se encontró información del usuario",
+                        fontSize = 12.sp,
+                        color = Color.Gray
+                    )
+
                     Spacer(modifier = Modifier.height(16.dp))
                     Button(onClick = { isExpanded = false }) {
                         Text("Cerrar")
@@ -235,6 +276,7 @@ fun AdItem(ad: Ad, onCategoryClick: (Long) -> Unit) {
         }
     }
 }
+
 
 fun base64ToByteArray(base64String: String): ByteArray? {
     return try {
