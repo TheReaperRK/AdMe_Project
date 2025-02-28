@@ -1,6 +1,7 @@
 package cat.copernic.project3_group4.ad_management.ui.screens
 
 import android.app.Activity
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.util.Base64
 import android.widget.Toast
@@ -11,8 +12,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -20,6 +19,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -27,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
 import cat.copernic.project3_group4.ad_management.ui.viewmodels.AdsViewModel
 import cat.copernic.project3_group4.category_management.ui.viewmodels.CategoryViewModel
 import cat.copernic.project3_group4.core.models.Ad
@@ -35,8 +37,6 @@ import cat.copernic.project3_group4.core.models.User
 import cat.copernic.project3_group4.main.screens.BottomNavigationBar
 import kotlinx.coroutines.launch
 import java.io.InputStream
-
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -103,7 +103,9 @@ fun UpdateAdScreen(
                 OutlinedTextField(
                     value = description,
                     onValueChange = { if (it.length in 0..100) description = it },
-                    modifier = Modifier.fillMaxWidth().height(100.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(100.dp),
                     textStyle = TextStyle(fontSize = 16.sp),
                     placeholder = { Text("Introduce entre 20 y 100 caracteres") },
                     isError = description.length in 1..19
@@ -130,16 +132,24 @@ fun UpdateAdScreen(
 
                 Spacer(modifier = Modifier.height(12.dp))
                 Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                    Image(
-                        painter = rememberAsyncImagePainter(imageUri ?: "data:image/png;base64,$encodedImage"),
-                        contentDescription = "Imagen seleccionada",
-                        modifier = Modifier
-                            .size(150.dp)
-                            .clip(RoundedCornerShape(10.dp))
-                            .background(Color.LightGray)
-                            .clickable { imagePickerLauncher.launch("image/*") }
-                    )
+                    val imageBitmap by remember(encodedImage) {
+                        mutableStateOf(base64ToImageBitmap(encodedImage))
+                    }
+
+                    imageBitmap?.let {
+                        Image(
+                            bitmap = it,
+                            contentDescription = "Imagen seleccionada",
+                            modifier = Modifier
+                                .size(150.dp)
+                                .clip(RoundedCornerShape(10.dp))
+                                .background(Color.LightGray)
+                                .clickable { imagePickerLauncher.launch("image/*") }
+                        )
+                    } ?: Text("Haz clic para seleccionar una imagen", color = Color.Gray)
                 }
+
+
 
                 Spacer(modifier = Modifier.height(12.dp))
                 Button(
@@ -188,12 +198,21 @@ fun UpdateAdScreen(
     }
 }
 
-
 fun encodeImage(inputStream: InputStream?): String {
     return inputStream?.use {
         val bytes = it.readBytes()
-        Base64.encodeToString(bytes, Base64.DEFAULT)
+        Base64.encodeToString(bytes, Base64.NO_WRAP)
     } ?: ""
+}
+fun base64ToImageBitmap(base64: String): ImageBitmap? {
+    return try {
+        val decodedBytes = Base64.decode(base64, Base64.DEFAULT)
+        val bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
+        bitmap?.asImageBitmap()
+    } catch (e: Exception) {
+        e.printStackTrace()
+        null
+    }
 }
 
 @Composable

@@ -43,6 +43,8 @@ import java.io.InputStream
 import java.text.SimpleDateFormat
 import java.util.*
 
+
+
 fun isValidPrice(price: String): Boolean {
     return price.toDoubleOrNull() != null && price.toDouble() >= 0
 }
