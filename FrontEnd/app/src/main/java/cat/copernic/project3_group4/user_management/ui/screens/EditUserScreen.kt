@@ -26,7 +26,7 @@ import cat.copernic.project3_group4.user_management.data.datasource.UserRetrofit
 import kotlinx.coroutines.launch
 
 @Composable
-fun EditUserScreen(userState: MutableState<User?>, navController: NavController) {
+fun EditUserScreen(userId: Long, userState: MutableState<User?>, navController: NavController) {
 
     val user = userState.value
     val retrofit = UserRetrofitInstance.retrofitInstance

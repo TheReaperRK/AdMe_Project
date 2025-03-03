@@ -189,7 +189,7 @@ fun BottomNavigationBar(navController: NavController) {
                     painter = painterResource(
                         if (currentRoute == "categoryScreen") R.drawable.home_icon_filled_orange else R.drawable.home_icon_contourn,
                     ),
-                    contentDescription = stringResource(R.string.home),
+                    contentDescription = "home",
                     tint = if (currentRoute == "categoryScreen") selectedColor else unselectedColor,
                     modifier = Modifier.size(38.dp)
                 )
@@ -231,7 +231,7 @@ fun BottomNavigationBar(navController: NavController) {
                 painter = painterResource(
                     if (currentRoute == "createAdScreen") R.drawable.a_adir_icon_filled else R.drawable.a_adir_icon_contourn,
                 ),
-                contentDescription = stringResource(R.string.create),
+                contentDescription = "create",
                 tint = if (currentRoute == "createAdScreen") selectedColor else unselectedColor,
                 modifier = Modifier.size(42.dp)
             ) },

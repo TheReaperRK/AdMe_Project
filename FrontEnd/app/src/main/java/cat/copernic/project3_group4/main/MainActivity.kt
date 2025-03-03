@@ -129,7 +129,7 @@ class MainActivity : ComponentActivity() {
                         composable("EditUserScreen/{userId}") { backStackEntry ->
                             val userId = backStackEntry.arguments?.getString("userId")?.toLongOrNull()
                             if (userId != null) {
-                                EditUserScreen(userId, navController)
+                                EditUserScreen(userId, userState, navController)
                             } else {
                                 // Manejar caso donde no hay un ID válido
                             }
