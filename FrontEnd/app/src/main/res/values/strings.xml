@@ -122,6 +122,20 @@
     <string name="deactivate">Deactivate</string>
     <string name="confirm_delete">Confirm Deletion</string>
     <string name="confirm_delete_message">Are you sure you want to delete %1$s? This action cannot be undone.</string>
+    <string name="sort_categories">Sort categories A-Z</string>
+    <string name="sort_title">Title</string>
+    <string name="sort_price_asc">Price ↑</string>
+    <string name="sort_price_desc">Price ↓</string>
+    <string name="sort_by">Sort by:</string>
+    <string name="search_placeholder">Search...</string>
+    <string name="max_price">Max price: %1$d€</string>
+    <string name="see_more">See more</string>
+    <string name="see_less">See less</string>
+    <string name="email1">Email: </string>
+    <string name="phone1">Phone: </string>
+    <string name="status_format">Status: %1$s</string>
+    <string name="role_format">Role: %1$s</string>
+
 </resources>
 
 

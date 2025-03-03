@@ -74,7 +74,7 @@ fun ProfileScreen(userState: MutableState<User?>, navController: NavController, 
         adsViewModel.fetchAdsByUser(user.id.toString())
     }
 
-    val ads by adsViewModel.ads.observeAsState(initial = emptyList())
+    val ads by adsViewModel.ads.collectAsState(initial = emptyList())
     val imageBitmap = user.imageBytes?.let { BitmapFactory.decodeByteArray(it, 0, it.size) }
 
     ModalNavigationDrawer(
@@ -153,6 +153,7 @@ fun ProfileScreen(userState: MutableState<User?>, navController: NavController, 
                 Text(stringResource(R.string.phone, user.phoneNumber), fontSize = 14.sp, color = Color.Gray)
                 Text(stringResource(R.string.status, if (user.isStatus) stringResource(R.string.active) else stringResource(R.string.inactive)), fontSize = 14.sp, color = Color.Gray)
                 Text(stringResource(R.string.role, user.role), fontSize = 14.sp, color = Color.Gray)
+
                 Spacer(modifier = Modifier.height(24.dp))
                 Text(stringResource(R.string.my_ads), fontSize = 20.sp, fontWeight = FontWeight.Bold, color = OrangePrimary)
 

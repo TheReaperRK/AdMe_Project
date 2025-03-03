@@ -14,6 +14,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
@@ -142,7 +143,8 @@ class MainActivity : ComponentActivity() {
                                     adsViewModel.fetchAdById(adId)
                                 }
 
-                                val ad by adsViewModel.ad.observeAsState()
+                                val ad by adsViewModel.ad.collectAsState()
+
 
                                 ad?.let {
                                     UpdateAdScreen(
