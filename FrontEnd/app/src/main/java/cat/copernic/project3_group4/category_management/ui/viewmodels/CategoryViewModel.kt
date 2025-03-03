@@ -33,6 +33,9 @@ class CategoryViewModel : ViewModel() {
                 val response = categoryApi.getAllCategories()
                 if (response.isSuccessful) {
                     _categories.value =(response.body() ?: emptyList())
+                    Log.d("FetchCategories", "✅ Categorias obtenidas correctamente")
+                }else{
+                    Log.e("FetchCategories","❌ Error al obtener las categorias: ${response.code()} - ${response.errorBody()}" )
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -45,8 +48,12 @@ class CategoryViewModel : ViewModel() {
                 val response = categoryApi.getCategoryById(categoryId)
                 if (response.isSuccessful) {
                     _category.value = (response.body()?: Category())
+                    Log.d("FetchCategoryById", "✅ Categoria obtenida correctamente")
+                }else{
+                    Log.e("FetchCategoryById","❌ Error al obtener la categoria: ${response.code()} - ${response.errorBody()}" )
                 }
             } catch (e: Exception) {
+
                 e.printStackTrace()
             }
         }
@@ -73,7 +80,7 @@ class CategoryViewModel : ViewModel() {
                     fetchCategories()
 
 
-            } catch (e: Exception) {
+            } catch (e: Exception ) {
                 e.printStackTrace()
             }
         }
@@ -85,6 +92,9 @@ class CategoryViewModel : ViewModel() {
                 val response = categoryApi.getAllProposals()
                 if (response.isSuccessful) {
                     _proposals.value = (response.body() ?: emptyList())
+                    Log.d("FetchProposals", "✅ Propuestas obtenidas correctamente")
+                }else{
+                    Log.e("FetchProposals","❌ Error al obtener las propuestas: ${response.code()} - ${response.errorBody()}" )
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
