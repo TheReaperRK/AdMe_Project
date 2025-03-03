@@ -29,6 +29,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -61,9 +62,11 @@ fun ProfileScreen(userState: MutableState<User?>, navController: NavController, 
     }
 
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
-        selectedImageUri = uri!! // ✅ Guarda la URI seleccionada en una variable de estado
-        profileViewModel.uploadProfileImage(user!!.id ,uri, context) // ✅ Ahora sí podemos usarla aquí
+        selectedImageUri = uri!! // Guarda la URI seleccionada en una variable de estado
+        profileViewModel.uploadProfileImage(user!!.id ,uri, context)
+        Toast.makeText(context, "Imagen actualizada", Toast.LENGTH_SHORT).show()
     }
+
 
     if (user == null) {
         Text(stringResource(R.string.no_user_authenticated), textAlign = TextAlign.Center, modifier = Modifier.fillMaxSize())
@@ -127,9 +130,9 @@ fun ProfileScreen(userState: MutableState<User?>, navController: NavController, 
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Spacer(modifier = Modifier.height(20.dp))
-                imageBitmap?.let {
+                if (imageBitmap != null) {
                     Image(
-                        bitmap = it.asImageBitmap(),
+                        bitmap = imageBitmap.asImageBitmap(),
                         contentDescription = stringResource(R.string.profile_image),
                         modifier = Modifier
                             .size(100.dp)
@@ -137,13 +140,32 @@ fun ProfileScreen(userState: MutableState<User?>, navController: NavController, 
                             .clickable { showChangeImageDialog = true },
                         contentScale = ContentScale.Crop
                     )
+                } else {
+                    Image(
+                        painter = painterResource(id = R.drawable.blank_profile_picture_973460_960_720),
+                        contentDescription = "Seleccionar imagen",
+                        modifier = Modifier
+                            .size(100.dp)
+                            .clip(RoundedCornerShape(50.dp))
+                            .clickable { showChangeImageDialog = true  }
+                    )
                 }
+
                 Spacer(modifier = Modifier.height(12.dp))
 
                 if (showChangeImageDialog) {
                     ChangeImageDialog(
                         onDismiss = { showChangeImageDialog = false },
-                        onConfirm = { launcher.launch("image/*") }
+                        onConfirm = {
+                            try {
+                                launcher.launch("image/*")
+                                showChangeImageDialog = false
+                            } catch (e: java.lang.RuntimeException) {
+
+                            } catch (a: java.lang.NullPointerException){
+
+                            }
+                        }
                     )
                 }
                 Spacer(modifier = Modifier.height(12.dp))
@@ -177,6 +199,7 @@ fun AdsSection(ads: List<Ad>, adsViewModel: AdsViewModel, navController: NavCont
         }
     }
 }
+
 
 
 @Composable
@@ -304,6 +327,7 @@ fun AdCard(ad: Ad, adsViewModel: AdsViewModel, navController: NavController) {
         }
     }
 }
+
 
 
 fun base64ToBitmap(base64Str: String?): Bitmap? {
