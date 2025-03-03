@@ -21,11 +21,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import cat.copernic.project3_group4.R
 import cat.copernic.project3_group4.category_management.ui.viewmodels.CategoryViewModel
 import cat.copernic.project3_group4.core.models.Ad
 import cat.copernic.project3_group4.core.models.Category
@@ -72,59 +74,75 @@ fun CreateAdScreen(navController: NavController, viewModel: CategoryViewModel, u
         viewModel.fetchCategories()
     }
 
+    val titleError = title.length in 1..3
+    val descriptionError = description.length in 1..9
+    val priceError = price.isEmpty() || !isValidPrice(price)
+    val categoryError = selectedCategory == null
+    val imageError = encodedImage.isEmpty()
+
+    val isFormValid = !titleError && !descriptionError && !priceError && !categoryError && !imageError
+
     Column(modifier = Modifier.fillMaxSize().background(Color.White)) {
         SmallTopAppBar(
-            title = { Text("Crear Anuncio", color = Color.White) },
+            title = { Text(stringResource(R.string.create_ad), color = Color.White) },
             colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = Color(0xFFFF6600))
         )
 
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text("Título", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+        Column(modifier = Modifier.weight(1f).padding(16.dp)) {
+            Text(stringResource(R.string.title), fontSize = 18.sp, fontWeight = FontWeight.Bold)
             OutlinedTextField(
                 value = title,
                 onValueChange = { if (it.length in 0..15) title = it },
                 modifier = Modifier.fillMaxWidth(),
                 textStyle = TextStyle(fontSize = 16.sp),
-                placeholder = { Text("Introduce entre 4 y 15 caracteres") },
-                isError = title.length in 1..3
+                placeholder = { Text(stringResource(R.string.title_placeholder)) },
+                isError = titleError
             )
-
-            if (title.length in 1..3) {
-                Text("El título debe tener entre 4 y 15 caracteres", color = Color.Red, fontSize = 12.sp)
+            if (titleError) {
+                Text(stringResource(R.string.title_error), color = Color.Red, fontSize = 12.sp)
             }
 
             Spacer(modifier = Modifier.height(12.dp))
-            Text("Categoría", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+
+            Text(stringResource(R.string.category2), fontSize = 18.sp, fontWeight = FontWeight.Bold)
             CategoriDropdownMenu(selectedCategory, categories) { selectedCategory = it }
+            if (categoryError) {
+                Text(stringResource(R.string.category_error), color = Color.Red, fontSize = 12.sp)
+            }
 
             Spacer(modifier = Modifier.height(12.dp))
-            Text("Descripción", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+
+            Text(stringResource(R.string.description), fontSize = 18.sp, fontWeight = FontWeight.Bold)
             OutlinedTextField(
                 value = description,
                 onValueChange = { if (it.length in 0..100) description = it },
                 modifier = Modifier.fillMaxWidth().height(100.dp),
                 textStyle = TextStyle(fontSize = 16.sp),
-                placeholder = { Text("Introduce entre 20 y 100 caracteres") },
-                isError = description.length in 1..19
+                placeholder = { Text(stringResource(R.string.description_placeholder)) },
+                isError = descriptionError
             )
-
-            if (description.length in 1..19) {
-                Text("La descripción debe tener al menos 20 caracteres", color = Color.Red, fontSize = 12.sp)
+            if (descriptionError) {
+                Text(stringResource(R.string.description_error), color = Color.Red, fontSize = 12.sp)
             }
 
-
             Spacer(modifier = Modifier.height(12.dp))
-            Text("Precio", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+
+            Text(stringResource(R.string.price2), fontSize = 18.sp, fontWeight = FontWeight.Bold)
             OutlinedTextField(
                 value = price,
                 onValueChange = { if (it.all { char -> char.isDigit() || char == '.' }) price = it },
                 modifier = Modifier.fillMaxWidth(),
                 textStyle = TextStyle(fontSize = 16.sp),
-                placeholder = { Text("Introduce el precio") }
+                placeholder = { Text(stringResource(R.string.price_placeholder)) },
+                isError = priceError
             )
+            if (priceError) {
+                Text(stringResource(R.string.price_error), color = Color.Red, fontSize = 12.sp)
+            }
 
             Spacer(modifier = Modifier.height(12.dp))
-            Text("Imagen", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+
+            Text(stringResource(R.string.image), fontSize = 18.sp, fontWeight = FontWeight.Bold)
             Box(
                 modifier = Modifier
                     .size(150.dp)
@@ -135,63 +153,59 @@ fun CreateAdScreen(navController: NavController, viewModel: CategoryViewModel, u
                 imageUri?.let {
                     Image(
                         painter = rememberAsyncImagePainter(it),
-                        contentDescription = "Imagen seleccionada",
+                        contentDescription = stringResource(R.string.selected_image),
                         modifier = Modifier.fillMaxSize()
                     )
                 } ?: run {
                     Icon(
                         imageVector = Icons.Default.Add,
-                        contentDescription = "Añadir imagen",
+                        contentDescription = stringResource(R.string.add_image),
                         modifier = Modifier.align(Alignment.Center)
                     )
                 }
             }
+            if (imageError) {
+                Text(stringResource(R.string.image_error), color = Color.Red, fontSize = 12.sp)
+            }
 
             Spacer(modifier = Modifier.height(12.dp))
+
             Button(
                 onClick = {
-                    when {
-                        title.length < 4 -> Toast.makeText(context, "El título debe tener entre 4 y 15 caracteres", Toast.LENGTH_SHORT).show()
-                        description.length < 20 -> Toast.makeText(context, "La descripción debe tener al menos 20 caracteres", Toast.LENGTH_SHORT).show()
-                        price.isEmpty() || !isValidPrice(price) -> Toast.makeText(context, "Introduce un precio válido", Toast.LENGTH_SHORT).show()
-                        selectedCategory == null -> Toast.makeText(context, "Selecciona una categoría", Toast.LENGTH_SHORT).show()
-                        encodedImage.isEmpty() -> Toast.makeText(context, "Debes seleccionar una imagen", Toast.LENGTH_SHORT).show()
-                        else -> {
-                            val newAd = Ad(
-                                title,
-                                description,
-                                encodedImage,
-                                price.toDouble(),
-                                SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date()),
-                                user,
-                                selectedCategory!!
-                            )
-                            CoroutineScope(Dispatchers.IO).launch {
-                                val response = AdRetrofitInstance.create(AdApiRest::class.java).createAd(newAd)
-                                (context as Activity).runOnUiThread {
-                                    if (response.isSuccessful) {
-                                        Toast.makeText(context, "Anuncio creado correctamente", Toast.LENGTH_SHORT).show()
-                                        navController.navigate("categoryScreen")
-                                    } else {
-                                        Toast.makeText(context, "Error al crear el anuncio", Toast.LENGTH_LONG).show()
-                                    }
-                                }
+                    val newAd = Ad(
+                        title,
+                        description,
+                        encodedImage,
+                        price.toDouble(),
+                        SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date()),
+                        user,
+                        selectedCategory!!
+                    )
+                    CoroutineScope(Dispatchers.IO).launch {
+                        val response = AdRetrofitInstance.create(AdApiRest::class.java).createAd(newAd)
+                        (context as Activity).runOnUiThread {
+                            if (response.isSuccessful) {
+                                Toast.makeText(context, context.getString(R.string.ad_created_success), Toast.LENGTH_SHORT).show()
+                                navController.navigate("categoryScreen")
+                            } else {
+                                Toast.makeText(context, context.getString(R.string.ad_creation_error), Toast.LENGTH_LONG).show()
                             }
                         }
                     }
                 },
                 modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFAA00)),
-                shape = RoundedCornerShape(10.dp)
+                shape = RoundedCornerShape(10.dp),
+                enabled = isFormValid
             ) {
-                Text("Crear anuncio", color = Color.White, fontSize = 18.sp)
+                Text(stringResource(R.string.create_ad), color = Color.White, fontSize = 18.sp)
             }
         }
 
-        Spacer(modifier = Modifier.weight(1f))
         BottomNavigationBar(navController)
     }
 }
+
 
 
 
@@ -202,10 +216,11 @@ fun CategoriDropdownMenu(
     onCategorySelected: (Category) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
+    val selectCategoryText = stringResource(id = R.string.category_error) // "Selecciona una categoría"
 
     Box(modifier = Modifier.fillMaxWidth()) {
         OutlinedButton(onClick = { expanded = true }, modifier = Modifier.fillMaxWidth()) {
-            Text(selectedCategory?.name ?: "Selecciona una categoría")
+            Text(selectedCategory?.name ?: selectCategoryText)
         }
         DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
             categories.forEach { category ->
@@ -223,6 +238,7 @@ fun CategoriDropdownMenu(
         }
     }
 }
+
 
 fun encodedImage(inputStream: InputStream?): String {
     return inputStream?.use {

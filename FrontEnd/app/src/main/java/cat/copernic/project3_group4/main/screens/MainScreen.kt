@@ -73,7 +73,7 @@ fun CategoryScreen(viewModel: CategoryViewModel, userState: MutableState<User?>,
 fun TopBar(searchText: String, onSearchTextChange: (String) -> Unit) {
     Column {
         TopAppBar(
-            title = { Text(stringResource(R.string.title_main_screen), color = Color.White) },
+            title = { Text(stringResource(R.string.search), color = Color.White) },
             colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFFFF6600))
         )
         TextField(
@@ -87,6 +87,7 @@ fun TopBar(searchText: String, onSearchTextChange: (String) -> Unit) {
         )
     }
 }
+
 
 @Composable
 fun FilterButtons(navController: NavController, userState: MutableState<User?>) {
@@ -134,6 +135,8 @@ fun CategoryList(categories: List<Category>, navController: NavController, modif
 @Composable
 fun CategoryItem(category: Category, navController: NavController) {
     val imageUrl by remember(category.image) { mutableStateOf(base64ToByteArray(category.image)) }
+    var expanded by remember { mutableStateOf(false) }
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -155,8 +158,22 @@ fun CategoryItem(category: Category, navController: NavController) {
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(8.dp)
         )
+
+        Button(onClick = { expanded = !expanded }) {
+            Text(if (expanded) "Ver menos" else "Ver más")
+        }
+
+        if (expanded) {
+            Text(
+                text = category.description,
+                fontSize = 16.sp,
+                modifier = Modifier.padding(8.dp)
+            )
+
+        }
     }
 }
+
 
 @Composable
 fun BottomNavigationBar(navController: NavController) {

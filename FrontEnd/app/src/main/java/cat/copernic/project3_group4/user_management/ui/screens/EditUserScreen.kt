@@ -11,11 +11,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import cat.copernic.project3_group4.R
 import cat.copernic.project3_group4.core.models.User
 import cat.copernic.project3_group4.core.ui.theme.OrangePrimary
 import cat.copernic.project3_group4.core.utils.enums.Roles
@@ -24,8 +26,9 @@ import cat.copernic.project3_group4.user_management.data.datasource.UserRetrofit
 import kotlinx.coroutines.launch
 
 @Composable
-fun EditUserScreen(userId: Long, navController: NavController) {
+fun EditUserScreen(userState: MutableState<User?>, navController: NavController) {
 
+    val user = userState.value
     val retrofit = UserRetrofitInstance.retrofitInstance
     val userApi = retrofit.create(UserApiRest::class.java)
     val context = LocalContext.current
@@ -34,15 +37,21 @@ fun EditUserScreen(userId: Long, navController: NavController) {
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var phoneNumber by remember { mutableStateOf("") }
+    var word by remember { mutableStateOf("") }
     var isStatus by remember { mutableStateOf(true) }
     var selectedRole by remember { mutableStateOf(Roles.USER) }
 
+    if (user == null) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            Text(stringResource(R.string.no_authenticated_user), textAlign = TextAlign.Center)
+        }
+        return
+    }
 
-
-    LaunchedEffect(userId) {
+    LaunchedEffect(user.id) {
         coroutineScope.launch {
             try {
-                val response = userApi.getUserById(userId)
+                val response = userApi.getUserById(user.id)
 
                 if (response.isSuccessful) {
                     response.body()?.let {
@@ -53,10 +62,10 @@ fun EditUserScreen(userId: Long, navController: NavController) {
                         selectedRole = it.role
                     }
                 } else {
-                    Toast.makeText(context, "Error al cargar usuario", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, context.getString(R.string.error_loading_user), Toast.LENGTH_SHORT).show()
                 }
             } catch (e: Exception) {
-                Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "${context.getString(R.string.error)}: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -74,11 +83,11 @@ fun EditUserScreen(userId: Long, navController: NavController) {
                 IconButton(onClick = { navController.popBackStack() }) {
                     Icon(
                         imageVector = Icons.Default.KeyboardArrowLeft,
-                        contentDescription = "Volver",
+                        contentDescription = stringResource(R.string.back),
                         tint = Color.White
                     )
                 }
-                Text("Editar Usuario", fontSize = 22.sp, fontWeight = FontWeight.Bold, color = Color.White)
+                Text(stringResource(R.string.edit_user), fontSize = 22.sp, fontWeight = FontWeight.Bold, color = Color.White)
             }
         }
 
@@ -93,7 +102,7 @@ fun EditUserScreen(userId: Long, navController: NavController) {
             OutlinedTextField(
                 value = name,
                 onValueChange = { name = it },
-                label = { Text("Nombre") },
+                label = { Text(stringResource(R.string.name)) },
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -102,7 +111,7 @@ fun EditUserScreen(userId: Long, navController: NavController) {
             OutlinedTextField(
                 value = email,
                 onValueChange = { email = it },
-                label = { Text("Correo Electrónico") },
+                label = { Text(stringResource(R.string.email)) },
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -111,14 +120,23 @@ fun EditUserScreen(userId: Long, navController: NavController) {
             OutlinedTextField(
                 value = phoneNumber,
                 onValueChange = { phoneNumber = it },
-                label = { Text("Teléfono") },
+                label = { Text(stringResource(R.string.phone)) },
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            OutlinedTextField(
+                value = word,
+                onValueChange = { word = it },
+                label = { Text(stringResource(R.string.password)) },
                 modifier = Modifier.fillMaxWidth()
             )
 
             Spacer(modifier = Modifier.height(12.dp))
 
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
-                Text("Estado: ${if (isStatus) "Activo" else "Inactivo"}")
+                Text("${stringResource(R.string.status)}: ${if (isStatus) stringResource(R.string.active) else stringResource(R.string.inactive)}")
                 Switch(checked = isStatus, onCheckedChange = { isStatus = it })
             }
 
@@ -127,7 +145,7 @@ fun EditUserScreen(userId: Long, navController: NavController) {
             var expanded by remember { mutableStateOf(false) }
             Box(contentAlignment = Alignment.Center) {
                 Button(onClick = { expanded = true }) {
-                    Text("Rol: $selectedRole")
+                    Text("${stringResource(R.string.role)}: $selectedRole")
                 }
                 DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
                     Roles.values().forEach { role ->
@@ -147,48 +165,24 @@ fun EditUserScreen(userId: Long, navController: NavController) {
             Button(
                 onClick = {
                     coroutineScope.launch {
+                        val updatedUser = User(name, email, phoneNumber, word, isStatus, selectedRole)
                         try {
-                            val response = userApi.expireWord(userId)
+                            val response = userApi.updateUser(user.id, updatedUser)
                             if (response.isSuccessful) {
-                                Toast.makeText(context, "Contraseña caducada", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(context, context.getString(R.string.user_updated), Toast.LENGTH_SHORT).show()
                                 navController.popBackStack()
                             } else {
-                                Toast.makeText(context, "Error al caducar la contraseña", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(context, context.getString(R.string.error_updating), Toast.LENGTH_SHORT).show()
                             }
                         } catch (e: Exception) {
-                            Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, "${context.getString(R.string.error)}: ${e.message}", Toast.LENGTH_SHORT).show()
                         }
                     }
                 },
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(containerColor = OrangePrimary)
             ) {
-                Text("Caducar contraseña", color = Color.White)
-            }
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Button(
-                onClick = {
-                    coroutineScope.launch {
-                        val updatedUser = User(userId ,name, email, phoneNumber, isStatus, selectedRole)
-                        try {
-                            val response = userApi.updateUser(userId, updatedUser)
-                            if (response.isSuccessful) {
-                                Toast.makeText(context, "Usuario actualizado", Toast.LENGTH_SHORT).show()
-                                navController.popBackStack()
-                            } else {
-                                Toast.makeText(context, "Error al actualizar", Toast.LENGTH_SHORT).show()
-                            }
-                        } catch (e: Exception) {
-                            Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                },
-                modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(containerColor = OrangePrimary)
-            ) {
-                Text("Guardar Cambios", color = Color.White)
+                Text(stringResource(R.string.save_changes), color = Color.White)
             }
         }
     }

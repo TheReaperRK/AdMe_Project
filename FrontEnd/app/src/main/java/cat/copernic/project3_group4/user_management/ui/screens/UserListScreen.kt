@@ -15,10 +15,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import cat.copernic.project3_group4.R
 import cat.copernic.project3_group4.core.models.User
 import cat.copernic.project3_group4.core.ui.theme.BrownTertiary
 import cat.copernic.project3_group4.core.ui.theme.OrangePrimary
@@ -55,7 +57,7 @@ fun UserListScreen(navController: NavController, modifier: Modifier = Modifier) 
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(Color.White) // Fondo general blanco
+            .background(Color.White)
     ) {
         // CABECERA NARANJA
         Box(
@@ -71,12 +73,12 @@ fun UserListScreen(navController: NavController, modifier: Modifier = Modifier) 
                 ) {
                     Icon(
                         imageVector = Icons.Default.KeyboardArrowLeft,
-                        contentDescription = "Volver",
+                        contentDescription = stringResource(R.string.back),
                         tint = Color.White
                     )
                 }
                 Text(
-                    text = "Usuarios (${users.size})",
+                    text = stringResource(R.string.users_count, users.size),
                     fontSize = 22.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White
@@ -111,7 +113,7 @@ fun UserItem(user: User, navController: NavController, userApi: UserApiRest, use
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp),
-        colors = CardDefaults.cardColors(containerColor = OrangePrimary) //
+        colors = CardDefaults.cardColors(containerColor = OrangePrimary)
     ) {
         Column(modifier = Modifier
             .padding(paddingValues = PaddingValues(bottom = 4.dp, top= 16.dp, end = 16.dp, start = 16.dp))
@@ -121,9 +123,9 @@ fun UserItem(user: User, navController: NavController, userApi: UserApiRest, use
 
             Text(text = user.name, fontSize = 20.sp, fontWeight = FontWeight.Bold, color = Color.White)
             Text(text = user.email, fontSize = 14.sp, color = Color.White)
-            Text(text = "Teléfono: ${user.phoneNumber}", fontSize = 14.sp, color = Color.White)
-            Text(text = "Estado: ${if (user.isStatus) "Activo" else "Inactivo"}", fontSize = 14.sp, color = Color.White)
-            Text(text = "Rol: ${user.role}", fontSize = 14.sp, color = Color.White)
+            Text(text = stringResource(R.string.phone_number, user.phoneNumber), fontSize = 14.sp, color = Color.White)
+            Text(text = stringResource(R.string.status, if (user.isStatus) stringResource(R.string.active) else stringResource(R.string.inactive)), fontSize = 14.sp, color = Color.White)
+            Text(text = stringResource(R.string.role, user.role), fontSize = 14.sp, color = Color.White)
 
             Spacer(modifier = Modifier.height(8.dp))
 
@@ -133,9 +135,9 @@ fun UserItem(user: User, navController: NavController, userApi: UserApiRest, use
                     modifier = Modifier.weight(1f).shadow(elevation = 8.dp, shape = RoundedCornerShape(40) ).clip(
                         RoundedCornerShape(40)
                     ),
-                    colors = ButtonDefaults.buttonColors(containerColor = BrownTertiary) // Botón naranja
+                    colors = ButtonDefaults.buttonColors(containerColor = BrownTertiary)
                 ) {
-                    Text("Editar", color = Color.White)
+                    Text(stringResource(R.string.edit), color = Color.White)
                 }
 
                 Spacer(modifier = Modifier.width(8.dp))
@@ -147,7 +149,7 @@ fun UserItem(user: User, navController: NavController, userApi: UserApiRest, use
                     ),
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
                 ) {
-                    Text("Eliminar", color = Color.White)
+                    Text(stringResource(R.string.delete), color = Color.White)
                 }
 
                 Spacer(modifier = Modifier.width(8.dp))
@@ -158,9 +160,6 @@ fun UserItem(user: User, navController: NavController, userApi: UserApiRest, use
                             try {
                                 val response = if (user.isStatus) userApi.desactivateUserStatus(user.id) else userApi.activateUserStatus(user.id)
                                 if (response.isSuccessful) {
-                                    println("Usuario activado")
-
-                                    // Buscar y actualizar el usuario en la lista
                                     val index = users.indexOfFirst { it.id == user.id }
                                     if (index != -1) {
                                         users[index] = User(
@@ -168,13 +167,10 @@ fun UserItem(user: User, navController: NavController, userApi: UserApiRest, use
                                             users[index].name,
                                             users[index].email,
                                             users[index].phoneNumber,
-                                            !users[index].isStatus,  // Invierte el estado
+                                            !users[index].isStatus,
                                             users[index].role
                                         )
-
                                     }
-                                } else {
-                                    println("Error al actualizar estado del usuario")
                                 }
                             } catch (e: Exception) {
                                 println("Error: ${e.message}")
@@ -186,10 +182,8 @@ fun UserItem(user: User, navController: NavController, userApi: UserApiRest, use
                     ),
                     colors = ButtonDefaults.buttonColors(containerColor = Color.White)
                 ) {
-                    Text(if (user.isStatus) "Desactivar" else "Activar", color = OrangePrimary)
+                    Text(if (user.isStatus) stringResource(R.string.deactivate) else stringResource(R.string.activate), color = OrangePrimary)
                 }
-
-
             }
         }
     }
@@ -197,8 +191,8 @@ fun UserItem(user: User, navController: NavController, userApi: UserApiRest, use
     if (showDialog) {
         AlertDialog(
             onDismissRequest = { showDialog = false },
-            title = { Text("Confirmar eliminación", fontWeight = FontWeight.Bold, color = BrownTertiary) },
-            text = { Text("¿Seguro que quieres eliminar a ${user.name}? Esta acción no se puede deshacer.", color = Color.Black) },
+            title = { Text(stringResource(R.string.confirm_delete), fontWeight = FontWeight.Bold, color = BrownTertiary) },
+            text = { Text(stringResource(R.string.confirm_delete_message, user.name), color = Color.Black) },
             confirmButton = {
                 Button(
                     onClick = {
@@ -207,8 +201,6 @@ fun UserItem(user: User, navController: NavController, userApi: UserApiRest, use
                                 val response = userApi.deleteUser(user.id)
                                 if (response.isSuccessful) {
                                     users.remove(user)
-                                } else {
-                                    println("Error al eliminar usuario")
                                 }
                             } catch (e: Exception) {
                                 println("Error: ${e.message}")
@@ -218,7 +210,7 @@ fun UserItem(user: User, navController: NavController, userApi: UserApiRest, use
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
                 ) {
-                    Text("Eliminar", color = Color.White)
+                    Text(stringResource(R.string.delete), color = Color.White)
                 }
             },
             dismissButton = {
@@ -226,7 +218,7 @@ fun UserItem(user: User, navController: NavController, userApi: UserApiRest, use
                     onClick = { showDialog = false },
                     colors = ButtonDefaults.buttonColors(containerColor = Color.LightGray)
                 ) {
-                    Text("Cancelar", color = Color.Black)
+                    Text(stringResource(R.string.cancel), color = Color.Black)
                 }
             }
         )
