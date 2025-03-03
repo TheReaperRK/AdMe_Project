@@ -122,7 +122,8 @@
     <string name="deactivate">Desactivar</string>
     <string name="confirm_delete">Confirmar eliminació</string>
     <string name="confirm_delete_message">Segur que vols eliminar a %1$s? Aquesta acció no es pot desfer.</string>
-    </resources>
+    <string name="user_not_activated">L\'usuari no esta activat</string>
+</resources>
 
 
 
