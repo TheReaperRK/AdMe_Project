@@ -46,16 +46,21 @@ public class AuthController {
     public ResponseEntity<?> loginUser(@RequestParam String email, @RequestParam String password) {
         
         
-        User user = userLogic.authenticateUser(email, password);
+        Long res = userLogic.authenticateUser(email, password);
 
-
-        if (user != null) {
+        User user;
+        
+        if (res >= 0) {
+            user = userRepo.getById(res);
             return ResponseEntity.ok(user);  // Enviar los datos del usuario si es correcto
-        } else {
             
+        } else if (res == -2L) 
             return ResponseEntity.status(401).body("Credenciales incorrectas");
-        }
+         else
+            return ResponseEntity.badRequest().body("Usuario no activado");
     }
+        
+    
     
         @PostMapping("/register")
         public ResponseEntity<?> registerUser(@RequestParam String name, @RequestParam String email,
