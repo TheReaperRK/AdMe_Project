@@ -133,7 +133,7 @@ fun CategoryList(categories: List<Category>, navController: NavController, modif
 
 @Composable
 fun CategoryItem(category: Category, navController: NavController) {
-    val imageUrl = remember { base64ToByteArray(category.image) }
+    val imageUrl by remember(category.image) { mutableStateOf(base64ToByteArray(category.image)) }
     Column(
         modifier = Modifier
             .fillMaxWidth()

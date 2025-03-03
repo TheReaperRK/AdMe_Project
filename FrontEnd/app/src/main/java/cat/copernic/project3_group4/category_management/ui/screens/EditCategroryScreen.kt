@@ -118,7 +118,7 @@ fun EditCategoryScreen(
     userState: MutableState<User?>,
     navController: NavController
 ) {
-
+    val context = LocalContext.current
     var name by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
     var proposal by remember { mutableStateOf(false) }
@@ -126,47 +126,51 @@ fun EditCategoryScreen(
     var imageBitmap by remember { mutableStateOf<ImageBitmap?>(null) }
     var byteArray by remember { mutableStateOf<ByteArray?>(null)}
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
+
     LaunchedEffect(categoryId) {
-        require(categoryId != null) { "ID de categoría inválido" }
-        categoryViewModel.fetchCategoryById(categoryId)
+        if(categoryId == null) {
+            Handler(Looper.getMainLooper()).post {
+                Toast.makeText(
+                    context,
+                    "ID de categoría inválido",
+                    Toast.LENGTH_SHORT
+                ).show()
+                Log.e(
+                    ContentValues.TAG,
+                    "Error al cargar la categoria"
+                )
+
+            }
+            navController.popBackStack()
+        }else{
+            categoryViewModel.fetchCategoryById(categoryId)
+        }
+
+
     }
+    val category by categoryViewModel.category.collectAsState()
+    LaunchedEffect(category) {
+        if (categoryId != null) {
+            name = category.name ?: ""
+            description = category.description ?: ""
+            proposal = category.isProposal
 
-    val category by categoryViewModel.category.collectAsState(initial =Category())
-    LaunchedEffect(Unit) {
-
-
-        name = category.name
-        description = category.description
-        proposal = category.isProposal
-
-        category.image?.let { base64String ->
-            byteArray = base64ToByteArray(base64String)
-            imageBitmap = byteArrayToImageBitmap(byteArray)
+            category.image?.let { base64String ->
+                byteArray = base64ToByteArray(base64String)
+                imageBitmap = byteArrayToImageBitmap(byteArray)
+            }
+        } else {
+            Handler(Looper.getMainLooper()).post {
+                Toast.makeText(
+                    context,
+                    "ID de categoría inválido",
+                    Toast.LENGTH_SHORT
+                ).show()
+                Log.e(ContentValues.TAG, "Error al cargar la categoría")
+            }
+            navController.popBackStack()
         }
     }
-
-
-
-
-
-
-
-
-
-    val user = userState.value
-    if (user == null) {
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Text("No hay usuario autenticado")
-        }
-        return
-    }
-
-
-
-
-
-
-    val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     var imageSelected by remember { mutableStateOf(false) }
 
@@ -181,6 +185,14 @@ fun EditCategoryScreen(
         }
     }
 
+
+    val user = userState.value
+    if (user == null) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            Text("No hay usuario autenticado")
+        }
+        return
+    }
 
     /*
 admin@admin.com
@@ -365,6 +377,10 @@ admin@admin.com
                                     "Completa todos los campos",
                                     Toast.LENGTH_SHORT
                                 ).show()
+                                Log.e(
+                                    ContentValues.TAG,
+                                    "Error al categoria no modificada, campos incompletos"
+                                )
                             }
                             }
                     },

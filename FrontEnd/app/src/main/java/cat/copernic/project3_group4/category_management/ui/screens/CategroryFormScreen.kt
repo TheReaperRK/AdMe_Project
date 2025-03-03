@@ -124,9 +124,11 @@ fun CategoryFormScreen(
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     var imageSelected by remember { mutableStateOf(false) }
-
+    var isError by remember { mutableStateOf(false) }
     val imagePickerLauncher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         selectedImageUri = uri
+        isError = selectedImageUri == null
+        imageSelected = selectedImageUri != null
     }
 
     Scaffold(
@@ -185,9 +187,12 @@ fun CategoryFormScreen(
                                 .width(350.dp)
                                 .clip(RoundedCornerShape(50.dp))
                                 .background(White)
-                                .clickable { imagePickerLauncher.launch("image/*") }
+                                .clickable { imagePickerLauncher.launch("image/*")
+
+                                }
+
                         )
-                        imageSelected = true
+
                     } ?: Image(
                         painter = painterResource(id = R.drawable.add_image),
                         contentDescription = "Seleccionar imagen",
@@ -196,7 +201,7 @@ fun CategoryFormScreen(
                             .width(350.dp)
                             .clickable { imagePickerLauncher.launch("image/*") }
                     )
-                    imageSelected = false
+
                 }
 
                 Spacer(modifier = Modifier.height(12.dp))
@@ -270,7 +275,7 @@ fun CategoryFormScreen(
                 Button(
                     onClick = {
 
-                        if (name.isNotBlank() && description.isNotBlank()) {
+                        if (name.isNotBlank() && description.isNotBlank() && imageSelected) {
                             coroutineScope.launch {
 
                                 val namePart = createPartFromString(name)
@@ -294,29 +299,35 @@ fun CategoryFormScreen(
 
                                             Toast.makeText(
                                                 context,
-                                                "Creación exitosa",
+                                                "Creación exitosa de categoria",
                                                 Toast.LENGTH_SHORT
                                             ).show()
+                                            Log.i(
+                                                ContentValues.TAG,
+                                                "Creación exitosa de categoria"
+                                            )
+                                            categoryViewModel.fetchCategories()
                                             navController.navigate("categoryScreen")
                                         } else {
                                             Toast.makeText(
                                                 context,
-                                                "Error en la creación",
+                                                "Error en la creación, ${response.message()}",
                                                 Toast.LENGTH_SHORT
                                             ).show()
-                                            Log.e(ContentValues.TAG, "Error al crear categoría")
+                                            Log.e(ContentValues.TAG, "Error al crear categoría  ssss, ${response.message()}")
                                         }
                                     }
                                 } catch (e: Exception) {
+
                                     Handler(Looper.getMainLooper()).post {
                                         Toast.makeText(
                                             context,
-                                            "Error en la creación",
+                                            "Error en la creaciónaaaaaa, ${e.message}",
                                             Toast.LENGTH_SHORT
                                         ).show()
                                         Log.e(
                                             ContentValues.TAG,
-                                            "Error al crear categoría: ${e.message}"
+                                            "Error al crear categoríaaaaaaa: ${e.message}"
                                         )
                                     }
                                 }
@@ -329,6 +340,10 @@ fun CategoryFormScreen(
                                     Toast.LENGTH_SHORT
                                 ).show()
                             }
+                            Log.w(
+                                ContentValues.TAG,
+                                "Categoria no creada, campos incompletos"
+                            )
                         }
                     },
                     modifier = Modifier
