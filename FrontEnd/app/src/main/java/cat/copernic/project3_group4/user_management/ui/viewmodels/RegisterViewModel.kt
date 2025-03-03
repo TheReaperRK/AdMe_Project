@@ -1,4 +1,5 @@
 import android.net.Uri
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -28,6 +29,7 @@ class RegisterViewModel : ViewModel() {
         if (name.value.length > 60 || !name.value.matches(Regex("^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$"))) {
             nameError.value = "El nombre debe tener máximo 60 caracteres y solo letras."
             isValid = false
+
         } else nameError.value = null
 
         if (email.value.length > 60 || !android.util.Patterns.EMAIL_ADDRESS.matcher(email.value).matches()) {
@@ -70,7 +72,9 @@ class RegisterViewModel : ViewModel() {
 
             if (response.isSuccessful) {
                 navController.navigate("login")
+                Log.d("Register", "✅ Registro correcto")
             } else {
+                Log.e("Register", "❌ Error en el Registro ")
                 emailError.value = "Error en el registro, intente con otro correo."
             }
         }
