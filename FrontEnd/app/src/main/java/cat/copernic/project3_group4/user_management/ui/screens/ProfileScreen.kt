@@ -28,6 +28,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -67,7 +68,7 @@ fun ProfileScreen(userState: MutableState<User?>, navController: NavController, 
     }
 
     if (user == null) {
-        Text("No hay usuario autenticado", textAlign = TextAlign.Center, modifier = Modifier.fillMaxSize())
+        Text(stringResource(R.string.no_user_authenticated), textAlign = TextAlign.Center, modifier = Modifier.fillMaxSize())
         return
     }
 
@@ -86,17 +87,19 @@ fun ProfileScreen(userState: MutableState<User?>, navController: NavController, 
                     modifier = Modifier.fillMaxSize().padding(16.dp),
                     verticalArrangement = Arrangement.Top
                 ) {
-                    Text("Menú", fontSize = 22.sp, fontWeight = FontWeight.Bold, color = OrangePrimary)
+                    Text(stringResource(R.string.menu), fontSize = 22.sp, fontWeight = FontWeight.Bold, color = OrangePrimary)
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    DrawerButton("Usuarios") { navController.navigate("user_list") }
-                    DrawerButton("Propuestas") {navController.navigate("proposal_list")}
-                    DrawerButton("Cerrar sesión") {
+                    if(user.role.name == "ADMIN") {
+                        DrawerButton(stringResource(R.string.users)) { navController.navigate("user_list") }
+                        DrawerButton(stringResource(R.string.proposals)) { navController.navigate("proposal_list") }
+                    }
+                    DrawerButton(stringResource(R.string.logout)) {
                         userState.value = null
                         navController.navigate("login")
                     }
-                    DrawerButton("Restablecer contraseña") {
-                        navController.navigate("paswordRecover")
+                    DrawerButton(stringResource(R.string.reset_password)) {
+                        navController.navigate("passwordRecover")
                     }
                 }
             }
@@ -105,11 +108,11 @@ fun ProfileScreen(userState: MutableState<User?>, navController: NavController, 
         Scaffold(
             topBar = {
                 SmallTopAppBar(
-                    title = { Text("Perfil", color = Color.White) },
+                    title = { Text(stringResource(R.string.profile), color = Color.White) },
                     colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = OrangeSecondary),
                     navigationIcon = {
                         IconButton(onClick = { scope.launch { drawerState.open() } }) {
-                            Icon(imageVector = Icons.Default.Menu, contentDescription = "Menú", tint = Color.White)
+                            Icon(imageVector = Icons.Default.Menu, contentDescription = stringResource(R.string.menu), tint = Color.White)
                         }
                     }
                 )
@@ -129,7 +132,7 @@ fun ProfileScreen(userState: MutableState<User?>, navController: NavController, 
                 if (imageBitmap != null) {
                     Image(
                         bitmap = imageBitmap.asImageBitmap(),
-                        contentDescription = "Profile Image",
+                        contentDescription = stringResource(R.string.profile_image),
                         modifier = Modifier
                             .size(100.dp)
                             .clip(CircleShape)
@@ -159,24 +162,22 @@ fun ProfileScreen(userState: MutableState<User?>, navController: NavController, 
                 Spacer(modifier = Modifier.height(12.dp))
                 Text(user.name, fontSize = 22.sp, fontWeight = FontWeight.Bold, color = Color.Black)
                 Spacer(modifier = Modifier.height(6.dp))
-                Text("Email: ${user.email}", fontSize = 14.sp, color = Color.Gray)
-                Text("Teléfono: ${user.phoneNumber}", fontSize = 14.sp, color = Color.Gray)
-                Text("Estado: ${if (user.isStatus) "Activo" else "Inactivo"}", fontSize = 14.sp, color = Color.Gray)
-                Text("Rol: ${user.role}", fontSize = 14.sp, color = Color.Gray)
+                Text(stringResource(R.string.email, user.email), fontSize = 14.sp, color = Color.Gray)
+                Text(stringResource(R.string.phone, user.phoneNumber), fontSize = 14.sp, color = Color.Gray)
+                Text(stringResource(R.string.status, if (user.isStatus) stringResource(R.string.active) else stringResource(R.string.inactive)), fontSize = 14.sp, color = Color.Gray)
+                Text(stringResource(R.string.role, user.role), fontSize = 14.sp, color = Color.Gray)
                 Spacer(modifier = Modifier.height(24.dp))
-                Text("Mis Anuncios", fontSize = 20.sp, fontWeight = FontWeight.Bold, color = OrangePrimary)
+                Text(stringResource(R.string.my_ads), fontSize = 20.sp, fontWeight = FontWeight.Bold, color = OrangePrimary)
 
                 if (ads.isEmpty()) {
-                    Text("No tienes anuncios aún.", fontSize = 14.sp, color = Color.Gray)
+                    Text(stringResource(R.string.no_ads), fontSize = 14.sp, color = Color.Gray)
                 } else {
-                    AdsSection(ads, adsViewModel, navController) // ✅ Pasamos adsViewModel correctamente
-
+                    AdsSection(ads, adsViewModel, navController)
                 }
             }
         }
     }
 }
-
 @Composable
 fun AdsSection(ads: List<Ad>, adsViewModel: AdsViewModel, navController: NavController) {
     LazyVerticalGrid(
@@ -213,7 +214,7 @@ fun AdCard(ad: Ad, adsViewModel: AdsViewModel, navController: NavController) {
                 if (decodedBitmap != null) {
                     Image(
                         bitmap = decodedBitmap.asImageBitmap(),
-                        contentDescription = "Ad Image",
+                        contentDescription = stringResource(R.string.ad_image),
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(120.dp),
@@ -222,7 +223,7 @@ fun AdCard(ad: Ad, adsViewModel: AdsViewModel, navController: NavController) {
                 } else {
                     AsyncImage(
                         model = "https://via.placeholder.com/150",
-                        contentDescription = "Ad Image",
+                        contentDescription = stringResource(R.string.ad_image),
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(120.dp),
@@ -237,7 +238,7 @@ fun AdCard(ad: Ad, adsViewModel: AdsViewModel, navController: NavController) {
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "${ad.price}€",
+                        text = stringResource(R.string.price, ad.price.toString()),
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.White
@@ -251,35 +252,34 @@ fun AdCard(ad: Ad, adsViewModel: AdsViewModel, navController: NavController) {
             onDismissRequest = { showMenu = false }
         ) {
             DropdownMenuItem(
-                text = { Text("Editar") },
+                text = { Text(stringResource(R.string.edit)) },
                 onClick = {
                     showMenu = false
-                    navController.navigate("UpdateAdScreen/${ad.id}") // Navegar a la pantalla de edición
+                    navController.navigate("UpdateAdScreen/${ad.id}")
                 }
             )
             DropdownMenuItem(
-                text = { Text("Eliminar") },
+                text = { Text(stringResource(R.string.delete)) },
                 onClick = {
                     showMenu = false
-                    showDialog = true // Mostrar diálogo
+                    showDialog = true
                 }
             )
         }
 
-        // Mover el AlertDialog fuera del DropdownMenu pero dentro del Box
         if (showDialog) {
             AlertDialog(
                 onDismissRequest = { showDialog = false },
                 title = {
                     Text(
-                        "Confirmar eliminación",
+                        stringResource(R.string.confirm_deletion),
                         fontWeight = FontWeight.Bold,
                         color = BrownTertiary
                     )
                 },
                 text = {
                     Text(
-                        "¿Seguro que quieres eliminar este anuncio? Esta acción no se puede deshacer.",
+                        stringResource(R.string.confirm_deletion_message),
                         color = Color.Black
                     )
                 },
@@ -290,7 +290,7 @@ fun AdCard(ad: Ad, adsViewModel: AdsViewModel, navController: NavController) {
                                 onSuccess = {
                                     Toast.makeText(
                                         context,
-                                        "✅ Anuncio eliminado",
+                                        context.getString(R.string.ad_deleted),
                                         Toast.LENGTH_SHORT
                                     ).show()
                                 },
@@ -303,7 +303,7 @@ fun AdCard(ad: Ad, adsViewModel: AdsViewModel, navController: NavController) {
                         },
                         colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
                     ) {
-                        Text("Eliminar", color = Color.White)
+                        Text(stringResource(R.string.delete), color = Color.White)
                     }
                 },
                 dismissButton = {
@@ -311,14 +311,13 @@ fun AdCard(ad: Ad, adsViewModel: AdsViewModel, navController: NavController) {
                         onClick = { showDialog = false },
                         colors = ButtonDefaults.buttonColors(containerColor = Color.LightGray)
                     ) {
-                        Text("Cancelar", color = Color.Black)
+                        Text(stringResource(R.string.cancel), color = Color.Black)
                     }
                 }
             )
         }
     }
 }
-
 
 
 fun base64ToBitmap(base64Str: String?): Bitmap? {

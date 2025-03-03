@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -56,17 +57,17 @@ fun RecoverByToken(navController: NavController) {
         Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.padding(32.dp)) {
             // Botón de regreso
             IconButton(onClick = { navController.popBackStack() }) {
-                Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Volver", tint = White)
+                Icon(imageVector = Icons.Default.ArrowBack, contentDescription = stringResource(R.string.back), tint = White)
             }
 
-            Image(painter = painterResource(id = R.drawable.ic_logo), contentDescription = "Logo", modifier = Modifier.size(100.dp))
+            Image(painter = painterResource(id = R.drawable.ic_logo), contentDescription = stringResource(R.string.logo), modifier = Modifier.size(100.dp))
             Spacer(modifier = Modifier.height(16.dp))
-            Text("Recuperar Contraseña", fontSize = 24.sp, fontWeight = FontWeight.Bold, color = White)
+            Text(stringResource(R.string.recover_password), fontSize = 24.sp, fontWeight = FontWeight.Bold, color = White)
             Spacer(modifier = Modifier.height(16.dp))
 
             // Campo para el correo
             InputField(
-                label = "Correo",
+                label = stringResource(R.string.email),
                 value = email,
                 onValueChange = { email = it },
                 error = emailError,
@@ -77,7 +78,7 @@ fun RecoverByToken(navController: NavController) {
 
             // Campo para el token
             InputField(
-                label = "Token",
+                label = stringResource(R.string.token),
                 value = token,
                 onValueChange = { token = it },
                 error = tokenError,
@@ -88,7 +89,7 @@ fun RecoverByToken(navController: NavController) {
 
             // Campo para la contraseña
             InputField(
-                label = "Nueva contraseña",
+                label = stringResource(R.string.new_password),
                 value = word,
                 onValueChange = { word = it },
                 error = passwordError,
@@ -100,7 +101,7 @@ fun RecoverByToken(navController: NavController) {
 
             // Repetir contraseña
             InputField(
-                label = "Repite la contraseña",
+                label = stringResource(R.string.repeat_password),
                 value = wordRepeat,
                 onValueChange = { wordRepeat = it },
                 error = repeatPasswordError,
@@ -113,10 +114,10 @@ fun RecoverByToken(navController: NavController) {
             // Botón de recuperación
             Button(
                 onClick = {
-                    emailError = if (!isValidEmail(email)) "Correo inválido" else null
-                    tokenError = if (token.length > 250) "El token debe tener máximo 250 caracteres" else null
-                    passwordError = if (!isValidPassword(word)) "Contraseña insegura" else null
-                    repeatPasswordError = if (word != wordRepeat) "Las contraseñas no coinciden" else null
+                    emailError = if (!isValidEmail(email))context.getString(R.string.invalid_email) else null
+                    tokenError = if (token.length > 250) context.getString(R.string.token_length_error) else null
+                    passwordError = if (!isValidPassword(word)) context.getString(R.string.weak_password) else null
+                    repeatPasswordError = if (word != wordRepeat) context.getString(R.string.passwords_do_not_match) else null
 
                     if (emailError == null && tokenError == null && passwordError == null && repeatPasswordError == null) {
                         coroutineScope.launch {
@@ -127,14 +128,14 @@ fun RecoverByToken(navController: NavController) {
                             )
 
                             if (response.isSuccessful) {
-                                Toast.makeText(context, "Se ha restablecido la contraseña", Toast.LENGTH_LONG).show()
+                                Toast.makeText(context, context.getString(R.string.password_reset_success), Toast.LENGTH_LONG).show()
                                 navController.navigate("login")
                             } else {
                                 val errorBody = response.errorBody()?.string()
                                 val errorMessage = try {
                                     JSONObject(errorBody).getString("message")
                                 } catch (e: Exception) {
-                                    "Error con los datos introducidos"
+                                    context.getString(R.string.generic_error)
                                 }
                                 emailError = if (errorMessage.contains("correo")) errorMessage else null
                                 tokenError = if (errorMessage.contains("token")) errorMessage else null
@@ -147,11 +148,12 @@ fun RecoverByToken(navController: NavController) {
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Restablecer Contraseña")
+                Text(stringResource(R.string.reset_password))
             }
         }
     }
 }
+
 
 fun isValidEmail(email: String) = email.length <= 60 && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
 
