@@ -136,6 +136,7 @@
     <string name="status_format">Status: %1$s</string>
     <string name="role_format">Role: %1$s</string>
     <string name="user_not_activated">User isn\'t activated</string>
+    <string name="name_error">The name must be between 4 and 18 characters</string>
 
 </resources>
 
