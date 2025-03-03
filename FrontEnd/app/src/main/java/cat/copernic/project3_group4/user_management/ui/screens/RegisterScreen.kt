@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
@@ -50,44 +51,44 @@ fun RegisterScreen(registerViewModel: RegisterViewModel, navController: NavContr
                 onClick = { navController.popBackStack() },
                 modifier = Modifier.padding(start = 16.dp, top = 16.dp).size(48.dp).align(Alignment.Start).offset(y = -20.dp)
             ) {
-                Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Volver", tint = Color.White)
+                Icon(imageVector = Icons.Default.ArrowBack, contentDescription = stringResource(R.string.back), tint = Color.White)
             }
 
             registerViewModel.selectedImageUri.value?.let {
                 Image(
                     painter = rememberAsyncImagePainter(it),
-                    contentDescription = "Imagen de perfil",
+                    contentDescription = stringResource(R.string.profile_image),
                     modifier = Modifier.size(100.dp).clip(RoundedCornerShape(50.dp)).background(White).clickable { launcher.launch("image/*") }
                 )
             } ?: Image(
                 painter = painterResource(id = R.drawable.ic_logo),
-                contentDescription = "Seleccionar imagen",
+                contentDescription = stringResource(R.string.select_image),
                 modifier = Modifier.size(100.dp).clickable { launcher.launch("image/*") }
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            InputField("Nombre", registerViewModel.name.value, { registerViewModel.name.value = it },
+            InputField(stringResource(R.string.name), registerViewModel.name.value, { registerViewModel.name.value = it },
                 registerViewModel.nameError.value, 60)
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            InputField("Correo", registerViewModel.email.value, { registerViewModel.email.value = it },
+            InputField(stringResource(R.string.email), registerViewModel.email.value, { registerViewModel.email.value = it },
                 registerViewModel.emailError.value, 60)
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            InputField("Teléfono", registerViewModel.phone.value, { registerViewModel.phone.value = it },
+            InputField(stringResource(R.string.phone), registerViewModel.phone.value, { registerViewModel.phone.value = it },
                 registerViewModel.phoneError.value, 15)
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            InputField("Contraseña", registerViewModel.password.value, { registerViewModel.password.value = it },
+            InputField(stringResource(R.string.password), registerViewModel.password.value, { registerViewModel.password.value = it },
                 registerViewModel.passwordError.value, 20, true)
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            InputField("Confirmar Contraseña", registerViewModel.confirmPassword.value, { registerViewModel.confirmPassword.value = it },
+            InputField(stringResource(R.string.confirm_password), registerViewModel.confirmPassword.value, { registerViewModel.confirmPassword.value = it },
                 registerViewModel.confirmPasswordError.value, 20, true)
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -96,7 +97,7 @@ fun RegisterScreen(registerViewModel: RegisterViewModel, navController: NavContr
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 16.dp)) {
-                Text("Registrarse")
+                Text(stringResource(R.string.register))
             }
         }
     }

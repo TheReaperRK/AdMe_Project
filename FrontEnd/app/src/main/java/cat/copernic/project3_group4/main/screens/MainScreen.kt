@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -24,6 +25,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 
 import androidx.navigation.compose.rememberNavController
+import cat.copernic.project3_group4.R
 import cat.copernic.project3_group4.ad_management.ui.screens.base64ToByteArray
 import cat.copernic.project3_group4.category_management.ui.viewmodels.CategoryViewModel
 import cat.copernic.project3_group4.core.models.Category
@@ -63,13 +65,13 @@ fun CategoryScreen(viewModel: CategoryViewModel, userState: MutableState<User?>,
 fun TopBar(searchText: String, onSearchTextChange: (String) -> Unit) {
     Column {
         TopAppBar(
-            title = { Text("Buscar", color = Color.White) },
+            title = { Text(stringResource(R.string.search), color = Color.White) },
             colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFFFF6600))
         )
         TextField(
             value = searchText,
             onValueChange = onSearchTextChange,
-            placeholder = { Text("Buscar categoría...") },
+            placeholder = { Text(stringResource(R.string.search_category)) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp),
@@ -78,20 +80,16 @@ fun TopBar(searchText: String, onSearchTextChange: (String) -> Unit) {
     }
 }
 
-
 @Composable
 fun FilterButtons(navController: NavController, userState: MutableState<User?>) {
-    var buttonCategoryFormName: String;
     val user = userState.value
     if (user == null) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Text("No hay usuario autenticado")
+            Text(stringResource(R.string.no_authenticated_user))
         }
         return
     }
-    val title = if (user.role.name == "ADMIN") "Crear Categoria" else "Propuesta"
-
-
+    val title = if (user.role.name == "ADMIN") stringResource(R.string.create_category) else stringResource(R.string.proposal)
 
     Row(
         modifier = Modifier
@@ -101,13 +99,8 @@ fun FilterButtons(navController: NavController, userState: MutableState<User?>) 
     ) {
         val buttonColor = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFAA00))
 
-        Button(onClick = {}, colors = buttonColor) {
-            Text("Filtrar")
-        }
-        Button(onClick = {}, colors = buttonColor) {
-            Text("Todos")
-        }
-        Button(onClick = {navController.navigate("categoryFormScreen")}, colors = buttonColor, ) {
+
+        Button(onClick = { navController.navigate("categoryFormScreen") }, colors = buttonColor) {
             Text(title)
         }
     }
@@ -125,6 +118,9 @@ fun CategoryList(categories: List<Category>, navController: NavController, modif
 @Composable
 fun CategoryItem(category: Category, navController: NavController) {
     val imageUrl = remember { base64ToByteArray(category.image) }
+    var expanded by remember { mutableStateOf(false) }
+
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -146,8 +142,22 @@ fun CategoryItem(category: Category, navController: NavController) {
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(8.dp)
         )
+
+        Button(onClick = { expanded = !expanded }) {
+            Text(if (expanded) "Ver menos" else "Ver más")
+        }
+
+        if (expanded) {
+            Text(
+                text = category.description,
+                fontSize = 16.sp,
+                modifier = Modifier.padding(8.dp)
+            )
+
+        }
     }
 }
+
 
 
 @Composable

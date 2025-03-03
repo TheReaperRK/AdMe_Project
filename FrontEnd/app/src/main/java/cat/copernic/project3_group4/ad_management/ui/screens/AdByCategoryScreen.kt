@@ -28,8 +28,10 @@ import coil.compose.AsyncImage
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import cat.copernic.project3_group4.R
 import cat.copernic.project3_group4.category_management.ui.viewmodels.CategoryViewModel
 import cat.copernic.project3_group4.core.models.Category
 import cat.copernic.project3_group4.core.models.User
@@ -39,10 +41,13 @@ import cat.copernic.project3_group4.main.screens.BottomNavigationBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AdsScreen(categoryId: Long?, adsViewModel: AdsViewModel, navController: NavController, categoryViewModel: CategoryViewModel, userState: MutableState<User?>) {
-
-
-
+fun AdsScreen(
+    categoryId: Long?,
+    adsViewModel: AdsViewModel,
+    navController: NavController,
+    categoryViewModel: CategoryViewModel,
+    userState: MutableState<User?>
+) {
     LaunchedEffect(categoryId) {
         println("Cargando anuncios para la categoría: $categoryId")
         if (categoryId == null) {
@@ -55,18 +60,17 @@ fun AdsScreen(categoryId: Long?, adsViewModel: AdsViewModel, navController: NavC
     val user = userState.value
     if (user == null) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Text("No hay usuario autenticado")
+            Text(stringResource(R.string.no_user))
         }
         return
     }
     val ads by adsViewModel.ads.observeAsState(initial = emptyList())
-    val category by categoryViewModel.category.observeAsState(initial =Category())
+    val category by categoryViewModel.category.observeAsState(initial = Category())
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
     ) {
-        // Contenedor con fondo de color OrangePrimary
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -75,22 +79,16 @@ fun AdsScreen(categoryId: Long?, adsViewModel: AdsViewModel, navController: NavC
                 .padding(horizontal = 8.dp)
         ) {
             Row(
-
-                modifier = Modifier.fillMaxSize().padding(top = 20.dp, start = 0.dp, end = 18.dp), // Hace que el Row ocupe todo el espacio del Box
+                modifier = Modifier.fillMaxSize().padding(top = 20.dp, start = 0.dp, end = 18.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Sección izquierda: Icono + Nombre de la categoría
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    IconButton(
-                        onClick = { navController.popBackStack() }
-                    ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
                             imageVector = Icons.Default.KeyboardArrowLeft,
-                            contentDescription = "Volver",
-                            tint = Color.White // Color del icono en blanco
+                            contentDescription = stringResource(R.string.back),
+                            tint = Color.White
                         )
                     }
                     Spacer(modifier = Modifier.width(1.dp))
@@ -101,39 +99,30 @@ fun AdsScreen(categoryId: Long?, adsViewModel: AdsViewModel, navController: NavC
                         color = Color.White
                     )
                 }
-
-                // Sección derecha: Número de anuncios
                 Text(
-                    text = "Anuncios: ${ads.size}",
+                    text = stringResource(R.string.ads_count, ads.size),
                     fontSize = 18.sp,
                     color = Color.White,
                     textAlign = TextAlign.End
                 )
-
-                if(user.role.name == "ADMIN"){
+                if (user.role.name == "ADMIN") {
                     Button(
-                        onClick = {navController.navigate("editCategoryScreen")},
+                        onClick = { navController.navigate("editCategoryScreen") },
                         shape = CircleShape,
-                        colors =ButtonDefaults.buttonColors(containerColor = Color(0xFFFFAA00))
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFAA00))
                     ) {
-
-                        //Text("Modificar")
-
                         Icon(
                             imageVector = Icons.Default.Edit,
-                            contentDescription = "Volver",
-                            tint = Color.White // Color del icono en blanco
+                            contentDescription = stringResource(R.string.modify),
+                            tint = Color.White
                         )
                     }
                 }
-
-
             }
         }
-
         if (ads.isEmpty()) {
             Text(
-                text = "No hay anuncios disponibles",
+                text = stringResource(R.string.no_ads),
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(16.dp),
@@ -150,7 +139,6 @@ fun AdsScreen(categoryId: Long?, adsViewModel: AdsViewModel, navController: NavC
                 }
             }
         }
-
         BottomNavigationBar(navController)
     }
 }
@@ -183,31 +171,12 @@ fun AdItem(ad: Ad, onCategoryClick: (Long) -> Unit) {
             Text(text = ad.description, fontSize = 14.sp, maxLines = 2, overflow = TextOverflow.Ellipsis)
             Text(text = "${ad.price}€", fontSize = 16.sp, fontWeight = FontWeight.Bold, color = Color.Black)
             Text(
-                text = "Categoría: ${ad.category.name}",
+                text = stringResource(R.string.category, ad.category.name),
                 fontSize = 14.sp,
                 color = OrangePrimary,
                 modifier = Modifier.clickable { onCategoryClick(ad.category.id) }
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
-            Divider(color = OrangeSecondary, thickness = 1.dp)
-
-            Text(
-                text = "Información del vendedor:",
-                fontWeight = FontWeight.Bold,
-                fontSize = 14.sp,
-                modifier = Modifier.padding(vertical = 4.dp)
-            )
-
-            author?.let {
-                Text("Nombre: ${it.name}", fontSize = 12.sp)
-                Text("Email: ${it.email}", fontSize = 12.sp)
-                Text("Teléfono: ${it.phoneNumber}", fontSize = 12.sp)
-            } ?: Text(
-                "No se encontró información del usuario",
-                fontSize = 12.sp,
-                color = Color.Gray
-            )
         }
     }
 
@@ -239,7 +208,7 @@ fun AdItem(ad: Ad, onCategoryClick: (Long) -> Unit) {
                     Text(text = ad.description, fontSize = 16.sp)
                     Text(text = "${ad.price}€", fontSize = 18.sp, fontWeight = FontWeight.Bold)
                     Text(
-                        text = "Categoría: ${ad.category.name}",
+                        text = stringResource(R.string.category, ad.category.name),
                         fontSize = 16.sp,
                         color = OrangePrimary,
                         modifier = Modifier.clickable { onCategoryClick(ad.category.id) }
@@ -249,31 +218,32 @@ fun AdItem(ad: Ad, onCategoryClick: (Long) -> Unit) {
                     Divider(color = OrangeSecondary, thickness = 1.dp)
 
                     Text(
-                        text = "Información del vendedor:",
+                        text = stringResource(R.string.seller_info),
                         fontWeight = FontWeight.Bold,
                         fontSize = 14.sp,
                         modifier = Modifier.padding(vertical = 4.dp)
                     )
 
                     author?.let {
-                        Text("Nombre: ${it.name}", fontSize = 12.sp)
-                        Text("Email: ${it.email}", fontSize = 12.sp)
-                        Text("Teléfono: ${it.phoneNumber}", fontSize = 12.sp)
+                        Text(stringResource(R.string.seller_name, it.name), fontSize = 12.sp)
+                        Text(stringResource(R.string.seller_email, it.email), fontSize = 12.sp)
+                        Text(stringResource(R.string.seller_phone, it.phoneNumber), fontSize = 12.sp)
                     } ?: Text(
-                        "No se encontró información del usuario",
+                        stringResource(R.string.no_user_info),
                         fontSize = 12.sp,
                         color = Color.Gray
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
                     Button(onClick = { isExpanded = false }) {
-                        Text("Cerrar")
+                        Text(stringResource(R.string.close))
                     }
                 }
             }
         }
     }
 }
+
 
 
 fun base64ToByteArray(base64String: String): ByteArray? {

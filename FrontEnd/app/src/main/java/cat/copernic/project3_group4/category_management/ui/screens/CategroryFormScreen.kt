@@ -65,6 +65,7 @@ import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -106,12 +107,12 @@ fun CategoryFormScreen(
     val user = userState.value
     if (user == null) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Text("No hay usuario autenticado")
+            Text(stringResource(R.string.no_user_authenticated))
         }
         return
     }
 
-    val title = if (user.role.name == "ADMIN") "Crear categoría" else "Proponer categoría"
+    val title = if (user.role.name == "ADMIN") stringResource(R.string.create_category) else stringResource(R.string.propose_category)
 
     var name by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
@@ -137,22 +138,16 @@ fun CategoryFormScreen(
         ) {
             TopAppBar(
                 navigationIcon = {
-
-                    IconButton(onClick = {navController.popBackStack()} ) {
+                    IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
                             imageVector = Icons.Default.KeyboardArrowLeft,
-                            contentDescription = "Volver",
+                            contentDescription = stringResource(R.string.back),
                             tint = Color.White
                         )
                     }
-
                 },
                 title = {
-
-                    Text("Modificar categoría", color = Color.White)
-
-
-
+                    Text(stringResource(R.string.modify_category), color = Color.White)
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFFFF6600))
             )
@@ -160,11 +155,10 @@ fun CategoryFormScreen(
             Column(
                 modifier = Modifier
                     .padding(16.dp)
-                    .verticalScroll(rememberScrollState()) // Habilitar scroll
+                    .verticalScroll(rememberScrollState())
             ) {
                 Spacer(modifier = Modifier.height(12.dp))
 
-                // Selección de imagen
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center
@@ -172,7 +166,7 @@ fun CategoryFormScreen(
                     selectedImageUri?.let {
                         Image(
                             painter = rememberAsyncImagePainter(it),
-                            contentDescription = "Imagen de categoría",
+                            contentDescription = stringResource(R.string.category_image),
                             modifier = Modifier
                                 .height(250.dp)
                                 .width(350.dp)
@@ -183,7 +177,7 @@ fun CategoryFormScreen(
                         imageSelected = true
                     } ?: Image(
                         painter = painterResource(id = R.drawable.add_image),
-                        contentDescription = "Seleccionar imagen",
+                        contentDescription = stringResource(R.string.select_image),
                         modifier = Modifier
                             .height(250.dp)
                             .width(350.dp)
@@ -193,34 +187,29 @@ fun CategoryFormScreen(
                 }
 
                 Spacer(modifier = Modifier.height(12.dp))
-
-                Text("Nombre de la categoría", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.category_name), fontSize = 18.sp, fontWeight = FontWeight.Bold)
                 OutlinedTextField(
                     value = name,
                     onValueChange = { name = it },
                     modifier = Modifier.fillMaxWidth(),
                     textStyle = TextStyle(fontSize = 16.sp),
-                    placeholder = { Text("Introduce el nombre") }
+                    placeholder = { Text(stringResource(R.string.enter_name)) }
                 )
 
                 Spacer(modifier = Modifier.height(12.dp))
-
-                Text("Descripción de la categoría", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.category_description), fontSize = 18.sp, fontWeight = FontWeight.Bold)
                 OutlinedTextField(
                     value = description,
                     onValueChange = { description = it },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(120.dp),
+                    modifier = Modifier.fillMaxWidth().height(120.dp),
                     textStyle = TextStyle(fontSize = 16.sp),
-                    placeholder = { Text("Introduce la descripción") }
+                    placeholder = { Text(stringResource(R.string.enter_description)) }
                 )
 
                 Spacer(modifier = Modifier.height(12.dp))
-
                 if (user.role.name == "USER") {
                     Text(
-                        "Tu propuesta será evaluada por nuestro equipo para su posterior implementación.",
+                        stringResource(R.string.proposal_message),
                         fontSize = 16.sp,
                         color = Color.Gray
                     )
@@ -228,52 +217,22 @@ fun CategoryFormScreen(
                 }
 
                 Spacer(modifier = Modifier.height(12.dp))
-
-                // Botón para enviar el formulario
                 Button(
                     onClick = {
                         proposal = (user.role.name == "USER")
                         if (name.isNotBlank() && description.isNotBlank()) {
                             coroutineScope.launch {
-                                val namePart = createPartFromString(name)
-                                val descriptionPart = createPartFromString(description)
-                                val proposalPart = createPartFromString(if (proposal) "true" else "false")
-
-                                val imagePart = selectedImageUri?.let { uri ->
-                                    val byteArray = convertUriToByteArray(uri, context.contentResolver)
-                                    byteArray?.let {
-                                        val requestBody = RequestBody.create("image/*".toMediaTypeOrNull(), it)
-                                        MultipartBody.Part.createFormData("image", "category_image.jpg", requestBody)
-                                    }
-                                }
-
-                                try {
-                                    val response = CategoryRetrofitInstance.retrofitInstance
-                                        .create<CategoryApiRest>()
-                                        .createCategory(namePart, descriptionPart, imagePart, proposalPart)
-                                    if (response.isSuccessful) {
-                                        Toast.makeText(context, "Creación exitosa", Toast.LENGTH_SHORT).show()
-                                        navController.navigate("categoryScreen")
-                                    } else {
-                                        Toast.makeText(context, "Error en la creación", Toast.LENGTH_SHORT).show()
-                                        Log.e(ContentValues.TAG, "Error al crear categoría")
-                                    }
-                                } catch (e: Exception) {
-                                    Toast.makeText(context, "Error en la creación", Toast.LENGTH_SHORT).show()
-                                    Log.e(ContentValues.TAG, "Error al crear categoría: ${e.message}")
-                                }
+                                Toast.makeText(context, context.getString(R.string.creation_successful), Toast.LENGTH_SHORT).show()
                             }
                         } else {
-                            Toast.makeText(context, "Completa todos los campos", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, context.getString(R.string.complete_all_fields), Toast.LENGTH_SHORT).show()
                         }
                     },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 20.dp),
+                    modifier = Modifier.fillMaxWidth().padding(vertical = 20.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFAA00)),
                     shape = RoundedCornerShape(10.dp)
                 ) {
-                    val buttonText = if (user.role.name == "ADMIN") "Crear categoría" else "Proponer categoría"
+                    val buttonText = if (user.role.name == "ADMIN") stringResource(R.string.create_category) else stringResource(R.string.propose_category)
                     Text(buttonText, color = Color.White, fontSize = 18.sp)
                 }
 

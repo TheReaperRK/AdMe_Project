@@ -66,6 +66,7 @@ import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -108,14 +109,12 @@ fun EditCategoryScreen(
     val user = userState.value
     if (user == null) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Text("No hay usuario autenticado")
+            Text(stringResource(R.string.no_user_authenticated))
         }
         return
     }
-    // Título según el rol del usuario
-    //categoryViewModel.fetchCategoryById(categoryId)
-    val category by categoryViewModel.category.observeAsState(initial =Category())
 
+    val category by categoryViewModel.category.observeAsState(initial = Category())
     var name by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
     var proposal by remember { mutableStateOf(false) }
@@ -124,14 +123,10 @@ fun EditCategoryScreen(
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     var imageSelected by remember { mutableStateOf(false) }
-    // Launcher para seleccionar imagen
     val imagePickerLauncher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         selectedImageUri = uri
     }
 
-/*
-admin@admin.com
- */
     Scaffold(
         bottomBar = { BottomNavigationBar(navController) }
     ) { paddingValues ->
@@ -140,104 +135,79 @@ admin@admin.com
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color.White)
-                .paddingFromBaseline(0.dp,paddingValues.calculateBottomPadding()),
+                .paddingFromBaseline(0.dp, paddingValues.calculateBottomPadding()),
             horizontalAlignment = Alignment.Start,
-
-
-
         ) {
             TopAppBar(
                 navigationIcon = {
-
-                    IconButton(onClick = {navController.popBackStack()} ) {
+                    IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
                             imageVector = Icons.Default.KeyboardArrowLeft,
-                            contentDescription = "Volver",
+                            contentDescription = stringResource(R.string.go_back),
                             tint = Color.White
                         )
                     }
-
                 },
                 title = {
-
-                    Text("Modificar categoría", color = Color.White)
-
-
-
+                    Text(stringResource(R.string.modify_category), color = Color.White)
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFFFF6600))
             )
 
-
-            Column(modifier = Modifier.padding(16.dp)
-            ) {
-                //Spacer(modifier = Modifier.height(12.dp))
-
-                // Selección de imagen
+            Column(modifier = Modifier.padding(16.dp)) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    // Mostrar la imagen seleccionada o un ícono por defecto
                     selectedImageUri?.let {
                         Image(
                             painter = rememberAsyncImagePainter(it),
-                            contentDescription = "Imagtge de categoria",
+                            contentDescription = stringResource(R.string.category_image),
                             modifier = Modifier
                                 .height(300.dp)
                                 .width(450.dp)
                                 .clip(RoundedCornerShape(50.dp))
-                                .background(White)
+                                .background(Color.White)
                                 .clickable { imagePickerLauncher.launch("image/*") }
                         )
                         imageSelected = true
                     } ?: Image(
                         painter = painterResource(id = R.drawable.add_image),
-                        contentDescription = "Seleccionar imagen",
+                        contentDescription = stringResource(R.string.select_image),
                         modifier = Modifier
                             .height(300.dp)
                             .width(450.dp)
                             .clickable { imagePickerLauncher.launch("image/*") }
-                            .border(2.dp, color = BrownTertiary)
-
+                            .border(2.dp, color = Color.Gray)
                     )
                     imageSelected = false
                 }
                 Spacer(modifier = Modifier.height(12.dp))
 
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                // Campo: Nombre de la categoría
-                Text("Nombre de la categoría", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.category_name), fontSize = 18.sp, fontWeight = FontWeight.Bold)
                 OutlinedTextField(
                     value = name,
                     onValueChange = { name = it },
                     modifier = Modifier.fillMaxWidth(),
                     textStyle = TextStyle(fontSize = 16.sp),
-                    placeholder = { Text("Introduce el nombre") }
+                    placeholder = { Text(stringResource(R.string.enter_name)) }
                 )
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                // Campo: Descripción de la categoría
-                Text("Descripción de la categoría", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.category_description), fontSize = 18.sp, fontWeight = FontWeight.Bold)
                 OutlinedTextField(
                     value = description,
                     onValueChange = { description = it },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(120.dp),
+                    modifier = Modifier.fillMaxWidth().height(120.dp),
                     textStyle = TextStyle(fontSize = 16.sp),
-                    placeholder = { Text("Introduce la descripción") }
+                    placeholder = { Text(stringResource(R.string.enter_description)) }
                 )
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                // Botón para enviar el formulario
                 Button(
                     onClick = {
-                        // Para usuarios, la categoría se propone; para admin, se crea directamente
                         proposal = (user.role.name == "USER")
                         if (name.isNotBlank() && description.isNotBlank()) {
                             coroutineScope.launch {
@@ -258,43 +228,31 @@ admin@admin.com
                                         .create<CategoryApiRest>()
                                         .createCategory(namePart, descriptionPart, imagePart, proposalPart)
                                     if (response.isSuccessful) {
-                                        Toast.makeText(context, "Creación exitosa", Toast.LENGTH_SHORT).show()
+                                        Toast.makeText(context, context.getString(R.string.creation_successful), Toast.LENGTH_SHORT).show()
                                         navController.navigate("categoryScreen")
                                     } else {
-                                        Toast.makeText(context, "Error en la creación", Toast.LENGTH_SHORT).show()
-                                        Log.e(ContentValues.TAG, "Error al crear categoría")
+                                        Toast.makeText(context, context.getString(R.string.creation_failed), Toast.LENGTH_SHORT).show()
                                     }
                                 } catch (e: Exception) {
-                                    Toast.makeText(context, "Error en la creación", Toast.LENGTH_SHORT).show()
-                                    Log.e(ContentValues.TAG, "Error al crear categoría: ${e.message}")
+                                    Toast.makeText(context, context.getString(R.string.creation_failed), Toast.LENGTH_SHORT).show()
                                 }
                             }
                         } else {
-                            Toast.makeText(context, "Completa todos los campos", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, context.getString(R.string.complete_all_fields), Toast.LENGTH_SHORT).show()
                         }
                     },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 20.dp),
+                    modifier = Modifier.fillMaxWidth().padding(vertical = 20.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFAA00)),
                     shape = RoundedCornerShape(10.dp)
                 ) {
-                    val buttonText = if (user.role.name == "ADMIN") "Crear categoría" else "Proponer categoría"
-                    Text(buttonText, color = Color.White, fontSize = 18.sp)
-
+                    val buttonText = if (user.role.name == "ADMIN") R.string.create_category else R.string.propose_category
+                    Text(stringResource(buttonText), color = Color.White, fontSize = 18.sp)
                 }
 
                 Spacer(modifier = Modifier.height(12.dp))
-
-
             }
-
-
         }
-
     }
-
 }
-
 
 
