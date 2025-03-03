@@ -75,6 +75,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -118,6 +119,14 @@ fun EditCategoryScreen(
     userState: MutableState<User?>,
     navController: NavController
 ) {
+    val user = userState.value
+    if (user == null) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            Text(stringResource(R.string.no_user_authenticated))
+        }
+        return
+    }
+    val context = LocalContext.current
 
     var name by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
@@ -126,51 +135,53 @@ fun EditCategoryScreen(
     var imageBitmap by remember { mutableStateOf<ImageBitmap?>(null) }
     var byteArray by remember { mutableStateOf<ByteArray?>(null)}
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
+
     LaunchedEffect(categoryId) {
-        require(categoryId != null) { "ID de categoría inválido" }
-        categoryViewModel.fetchCategoryById(categoryId)
+        if(categoryId == null) {
+            Handler(Looper.getMainLooper()).post {
+                Toast.makeText(
+                    context,
+                    "ID de categoría inválido",
+                    Toast.LENGTH_SHORT
+                ).show()
+                Log.e(
+                    ContentValues.TAG,
+                    "Error al cargar la categoria"
+                )
+
+            }
+            navController.popBackStack()
+        }else{
+            categoryViewModel.fetchCategoryById(categoryId)
+        }
+
+
     }
+    val category by categoryViewModel.category.collectAsState()
+    LaunchedEffect(category) {
+        if (categoryId != null) {
+            name = category.name ?: ""
+            description = category.description ?: ""
+            proposal = category.isProposal
 
-    val category by categoryViewModel.category.collectAsState(initial =Category())
-    LaunchedEffect(Unit) {
-
-
-        name = category.name
-        description = category.description
-        proposal = category.isProposal
-
-        category.image?.let { base64String ->
-            byteArray = base64ToByteArray(base64String)
-            imageBitmap = byteArrayToImageBitmap(byteArray)
+            category.image?.let { base64String ->
+                byteArray = base64ToByteArray(base64String)
+                imageBitmap = byteArrayToImageBitmap(byteArray)
+            }
+        } else {
+            Handler(Looper.getMainLooper()).post {
+                Toast.makeText(
+                    context,
+                    "ID de categoría inválido",
+                    Toast.LENGTH_SHORT
+                ).show()
+                Log.e(ContentValues.TAG, "Error al cargar la categoría")
+            }
+            navController.popBackStack()
         }
     }
-
-
-
-
-
-
-
-
-
-    val user = userState.value
-    if (user == null) {
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Text("No hay usuario autenticado")
-        }
-        return
-    }
-
-
-
-
-
-
-    val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     var imageSelected by remember { mutableStateOf(false) }
-
-    // Launcher per a seleccionar la imatge
     val imagePickerLauncher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         selectedImageUri = uri
         uri?.let {
@@ -181,10 +192,6 @@ fun EditCategoryScreen(
         }
     }
 
-
-    /*
-admin@admin.com
- */
     Scaffold(
         bottomBar = { BottomNavigationBar(navController) }
     ) { paddingValues ->
@@ -201,33 +208,22 @@ admin@admin.com
         ) {
             TopAppBar(
                 navigationIcon = {
-
-                    IconButton(onClick = {navController.popBackStack()} ) {
+                    IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
                             imageVector = Icons.Default.KeyboardArrowLeft,
-                            contentDescription = "Volver",
+                            contentDescription = stringResource(R.string.go_back),
                             tint = Color.White
                         )
                     }
 
                 },
                 title = {
-
-                    Text("Modificar categoría ${categoryId}", color = Color.White)
-
-
-
+                    Text(stringResource(R.string.modify_category), color = Color.White)
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFFFF6600))
             )
 
-
-            Column(modifier = Modifier.padding(16.dp)
-            ) {
-                //Spacer(modifier = Modifier.height(12.dp))
-
-
-                // Selección de imagen
+            Column(modifier = Modifier.padding(16.dp)) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center
@@ -235,7 +231,7 @@ admin@admin.com
                    if(selectedImageUri != null){
                        Image(
                            painter = rememberAsyncImagePainter(selectedImageUri),
-                           contentDescription = "Imagen de categoría",
+                           contentDescription = stringResource(R.string.category_image),
                            modifier = Modifier
                                .height(250.dp)
                                .width(350.dp)
@@ -249,7 +245,7 @@ admin@admin.com
                        imageBitmap?.let {
                            Image(
                                bitmap = it,
-                               contentDescription = "Seleccionar imagen",
+                               contentDescription = stringResource(R.string.select_image),
                                modifier = Modifier
                                    .height(250.dp)
                                    .width(350.dp)
@@ -269,44 +265,33 @@ admin@admin.com
                        imageSelected = false
                    }
                 }
-
                 Spacer(modifier = Modifier.height(12.dp))
 
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                // Campo: Nombre de la categoría
-                Text("Nombre de la categoría", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.category_name), fontSize = 18.sp, fontWeight = FontWeight.Bold)
                 OutlinedTextField(
                     value = name,
                     onValueChange = { name = it },
                     modifier = Modifier.fillMaxWidth(),
                     textStyle = TextStyle(fontSize = 16.sp),
-                    placeholder = { Text("Introduce el nombre") }
+                    placeholder = { Text(stringResource(R.string.enter_name)) }
                 )
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                // Campo: Descripción de la categoría
-                Text("Descripción de la categoría", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.category_description), fontSize = 18.sp, fontWeight = FontWeight.Bold)
                 OutlinedTextField(
                     value = description,
                     onValueChange = { description = it },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(120.dp),
+                    modifier = Modifier.fillMaxWidth().height(120.dp),
                     textStyle = TextStyle(fontSize = 16.sp),
-                    placeholder = { Text("Introduce la descripción") }
+                    placeholder = { Text(stringResource(R.string.enter_description)) }
                 )
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-
-
-                // Botón para enviar el formulario
                 Button(
                     onClick = {
-
+                        proposal = (user.role.name == "USER")
                         if (name.isNotBlank() && description.isNotBlank()) {
 
                                 val namePart = createPartFromString(name)
@@ -314,9 +299,10 @@ admin@admin.com
                                 val proposalPart = createPartFromString(if (proposal) "true" else "false")
                                 val idPart = createPartFromString(categoryId.toString())
                                 val imagePart = byteArray?.let {
-                                        val requestBody = RequestBody.create("image/*".toMediaTypeOrNull(), it)
-                                        MultipartBody.Part.createFormData("image", "category_image.jpg", requestBody)
-                                    } //admin@admin.com
+                                    val requestBody = RequestBody.create("image/*".toMediaTypeOrNull(), it)
+                                    MultipartBody.Part.createFormData("image", "category_image.jpg", requestBody)
+                                }
+
                             coroutineScope.launch {
                                 try{
                                     val response = categoryViewModel.updateCategory(
@@ -359,18 +345,22 @@ admin@admin.com
                                 }
                             }
                         } else {
+                            Toast.makeText(context, context.getString(R.string.complete_all_fields), Toast.LENGTH_SHORT).show()
+                        }
                             Handler(Looper.getMainLooper()).post {
                                 Toast.makeText(
                                     context,
                                     "Completa todos los campos",
                                     Toast.LENGTH_SHORT
                                 ).show()
+                                Log.e(
+                                    ContentValues.TAG,
+                                    "Error al categoria no modificada, campos incompletos"
+                                )
                             }
-                            }
+
                     },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 20.dp),
+                    modifier = Modifier.fillMaxWidth().padding(vertical = 20.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFAA00)),
                     shape = RoundedCornerShape(10.dp)
                 ) {
@@ -386,10 +376,7 @@ admin@admin.com
 
 
         }
-
-
     }
-
 }
 fun encodeImage(inputStream: InputStream?): String {
     return inputStream?.use {

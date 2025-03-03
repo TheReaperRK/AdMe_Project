@@ -14,6 +14,7 @@ import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -50,12 +51,12 @@ fun LoginScreen(navController: NavController, userState: MutableState<User?>) {
         ) {
             Image(
                 painter = painterResource(id = R.drawable.ic_logo),
-                contentDescription = "Logo",
+                contentDescription = stringResource(id = R.string.logo_description),
                 modifier = Modifier.size(100.dp)
             )
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = "Iniciar Sesión",
+                text = stringResource(id = R.string.login_title),
                 style = TextStyle(fontSize = 28.sp, fontWeight = FontWeight.Bold, color = White)
             )
             Spacer(modifier = Modifier.height(16.dp))
@@ -63,7 +64,7 @@ fun LoginScreen(navController: NavController, userState: MutableState<User?>) {
             OutlinedTextField(
                 value = email,
                 onValueChange = { email = it },
-                label = { Text("Introduce el correo:") },
+                label = { Text(stringResource(id = R.string.enter_email)) },
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier.fillMaxWidth()
             )
@@ -71,7 +72,7 @@ fun LoginScreen(navController: NavController, userState: MutableState<User?>) {
             OutlinedTextField(
                 value = password,
                 onValueChange = { password = it },
-                label = { Text("Introduce la contraseña:") },
+                label = { Text(stringResource(id = R.string.enter_password)) },
                 visualTransformation = PasswordVisualTransformation(),
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier.fillMaxWidth()
@@ -79,7 +80,7 @@ fun LoginScreen(navController: NavController, userState: MutableState<User?>) {
 
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "¿Has olvidado la contraseña?",
+                text = stringResource(id = R.string.forgot_password),
                 color = White,
                 fontSize = 14.sp,
                 modifier = Modifier.clickable { navController.navigate("paswordRecover") }
@@ -99,14 +100,12 @@ fun LoginScreen(navController: NavController, userState: MutableState<User?>) {
                                     navController.navigate("categoryScreen")
                                 }
                             } else {
-                                Toast.makeText(context, "Credenciales incorrectas", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(context, context.getString(R.string.invalid_credentials), Toast.LENGTH_SHORT).show()
                             }
                         } catch (e: IOException) {
-                            // 🔴 Error de conexión (Servidor caído, sin Internet, etc.)
-                            Toast.makeText(context, "⚠️ Error de conexión con el servidor", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, context.getString(R.string.connection_error), Toast.LENGTH_SHORT).show()
                         } catch (e: HttpException) {
-                            // 🔴 Error HTTP (500, 404, etc.)
-                            Toast.makeText(context, "⚠️ Error en el servidor: ${e.code()}", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, context.getString(R.string.server_error, e.code()), Toast.LENGTH_SHORT).show()
                         }
                     }
                 },
@@ -114,7 +113,7 @@ fun LoginScreen(navController: NavController, userState: MutableState<User?>) {
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(containerColor = OrangeSecondary)
             ) {
-                Text("Iniciar sesión", color = White)
+                Text(stringResource(id = R.string.login_button), color = White)
             }
             Spacer(modifier = Modifier.height(8.dp))
             OutlinedButton(
@@ -125,7 +124,7 @@ fun LoginScreen(navController: NavController, userState: MutableState<User?>) {
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(containerColor = White)
             ) {
-                Text("Registrarse", color = Black)
+                Text(stringResource(id = R.string.register_button), color = Black)
             }
         }
     }

@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.paddingFromBaseline
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -74,6 +75,7 @@ import cat.copernic.project3_group4.core.models.User
 import cat.copernic.project3_group4.core.ui.theme.BrownTertiary
 import cat.copernic.project3_group4.core.ui.theme.OrangePrimary
 import cat.copernic.project3_group4.main.screens.BottomNavigationBar
+import cat.copernic.project3_group4.main.screens.CategoryItem
 import cat.copernic.project3_group4.user_management.data.datasource.UserApiRest
 import coil.compose.AsyncImage
 import kotlinx.coroutines.launch
@@ -89,13 +91,13 @@ fun ProposalsScreen(
 
     val coroutineScope = rememberCoroutineScope()
     val proposals by categoryViewModel.proposals.collectAsState()
-    LaunchedEffect(Unit) {
+    /*LaunchedEffect(Unit) {
         coroutineScope.launch {
             categoryViewModel.fetchProposals()
 
 
         }
-    }
+    }*/
     LaunchedEffect(proposals) {
         categoryViewModel.fetchProposals()
     }
@@ -107,6 +109,7 @@ fun ProposalsScreen(
                 .fillMaxSize()
                 .background(Color.White) // Fondo general blanco
                 .paddingFromBaseline(0.dp, paddingValues.calculateBottomPadding())
+                .padding(bottom = 90.dp)
         ) {
 
             TopAppBar(
@@ -135,23 +138,29 @@ fun ProposalsScreen(
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFFFF6600))
             )
+            ProposalList(proposals, navController, categoryViewModel)
 
-            LazyColumn(modifier = Modifier.fillMaxSize()) {
-                items(proposals) { proposal ->
-                    ProposalItem(proposal, navController, categoryViewModel)
-                    }
 
-            }
         }
     }
 }
+@Composable
+fun ProposalList(proposals: List<Category>, navController: NavController, categoryViewModel: CategoryViewModel) {
 
+    LazyColumn(modifier = Modifier.fillMaxWidth()) {
+        items(proposals) { proposal ->
+                ProposalItem(proposal, navController, categoryViewModel)
+
+        }
+    }
+}
 @Composable
 fun ProposalItem(proposal: Category, navController: NavController, categoryViewModel: CategoryViewModel) {
+
     val coroutineScope = rememberCoroutineScope()
     var showDialog by remember { mutableStateOf(false) }
     var showDialogProposal by remember {mutableStateOf(false)}
-    val imageUrl = remember { base64ToByteArray(proposal.image) }
+    val imageUrl by remember(proposal.image) { mutableStateOf(base64ToByteArray(proposal.image)) }
     var expanded by remember { mutableStateOf(false) }
     Card(
         modifier = Modifier
@@ -167,6 +176,7 @@ fun ProposalItem(proposal: Category, navController: NavController, categoryViewM
         Column(
             modifier = Modifier
             .padding(paddingValues = PaddingValues(bottom = 2.dp))
+
             .clip(RoundedCornerShape(topStartPercent = 0, topEndPercent = 0))
 
         ){
@@ -267,7 +277,7 @@ fun ProposalItem(proposal: Category, navController: NavController, categoryViewM
                         coroutineScope.launch {
 
                             showDialogProposal = true;
-                            categoryViewModel.fetchProposals()
+
                         }
                     },
                     modifier = Modifier.weight(1f).padding(4.dp).shadow(elevation = 19.dp, shape = RoundedCornerShape(40) ).clip(RoundedCornerShape(40)),
@@ -292,8 +302,8 @@ fun ProposalItem(proposal: Category, navController: NavController, categoryViewM
                         coroutineScope.launch {
                             try {
                                 val response = categoryViewModel.deleteCategoryById(proposal.id)
-
                                 categoryViewModel.fetchProposals()
+
                             } catch (e: Exception) {
                                 println("Error: ${e.message}")
                             }

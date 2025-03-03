@@ -73,7 +73,7 @@ fun CategoryScreen(viewModel: CategoryViewModel, userState: MutableState<User?>,
 fun TopBar(searchText: String, onSearchTextChange: (String) -> Unit) {
     Column {
         TopAppBar(
-            title = { Text(stringResource(R.string.title_main_screen), color = Color.White) },
+            title = { Text(stringResource(R.string.search), color = Color.White) },
             colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFFFF6600))
         )
         TextField(
@@ -87,6 +87,7 @@ fun TopBar(searchText: String, onSearchTextChange: (String) -> Unit) {
         )
     }
 }
+
 
 @Composable
 fun FilterButtons(navController: NavController, userState: MutableState<User?>) {
@@ -133,7 +134,9 @@ fun CategoryList(categories: List<Category>, navController: NavController, modif
 
 @Composable
 fun CategoryItem(category: Category, navController: NavController) {
-    val imageUrl = remember { base64ToByteArray(category.image) }
+    val imageUrl by remember(category.image) { mutableStateOf(base64ToByteArray(category.image)) }
+    var expanded by remember { mutableStateOf(false) }
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -155,8 +158,22 @@ fun CategoryItem(category: Category, navController: NavController) {
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(8.dp)
         )
+
+        Button(onClick = { expanded = !expanded }) {
+            Text(if (expanded) "Ver menos" else "Ver más")
+        }
+
+        if (expanded) {
+            Text(
+                text = category.description,
+                fontSize = 16.sp,
+                modifier = Modifier.padding(8.dp)
+            )
+
+        }
     }
 }
+
 
 @Composable
 fun BottomNavigationBar(navController: NavController) {
@@ -172,7 +189,7 @@ fun BottomNavigationBar(navController: NavController) {
                     painter = painterResource(
                         if (currentRoute == "categoryScreen") R.drawable.home_icon_filled_orange else R.drawable.home_icon_contourn,
                     ),
-                    contentDescription = stringResource(R.string.home),
+                    contentDescription = "home",
                     tint = if (currentRoute == "categoryScreen") selectedColor else unselectedColor,
                     modifier = Modifier.size(38.dp)
                 )
@@ -214,7 +231,7 @@ fun BottomNavigationBar(navController: NavController) {
                 painter = painterResource(
                     if (currentRoute == "createAdScreen") R.drawable.a_adir_icon_filled else R.drawable.a_adir_icon_contourn,
                 ),
-                contentDescription = stringResource(R.string.create),
+                contentDescription = "create",
                 tint = if (currentRoute == "createAdScreen") selectedColor else unselectedColor,
                 modifier = Modifier.size(42.dp)
             ) },
