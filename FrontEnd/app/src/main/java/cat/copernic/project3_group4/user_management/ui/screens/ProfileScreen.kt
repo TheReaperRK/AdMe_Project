@@ -320,6 +320,7 @@ fun AdCard(ad: Ad, adsViewModel: AdsViewModel, navController: NavController) {
 }
 
 
+
 fun base64ToBitmap(base64Str: String?): Bitmap? {
     return try {
         if (base64Str.isNullOrEmpty()) return null
