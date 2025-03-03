@@ -122,7 +122,8 @@
     <string name="deactivate">Desactivar</string>
     <string name="confirm_delete">Confirmar eliminació</string>
     <string name="confirm_delete_message">Segur que vols eliminar a %1$s? Aquesta acció no es pot desfer.</string>
-    </resources>
+    <string name="name_error">El nom ha de ser entre 4 i 18 caracters</string>
+</resources>
 
 
 

@@ -122,7 +122,8 @@
     <string name="deactivate">Deactivate</string>
     <string name="confirm_delete">Confirm Deletion</string>
     <string name="confirm_delete_message">Are you sure you want to delete %1$s? This action cannot be undone.</string>
-    </resources>
+    <string name="name_error">The name must be between 4 and 18 characters</string>
+</resources>
 
 
 
