@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -53,19 +54,19 @@ fun PasswordRecover(navController: NavController) {
             ) {
                 Icon(
                     imageVector = Icons.Default.ArrowBack,
-                    contentDescription = "Volver",
+                    contentDescription = stringResource(R.string.back),
                     tint = White
                 )
             }
 
             Image(
                 painter = painterResource(id = R.drawable.ic_logo),
-                contentDescription = "Logo",
+                contentDescription = stringResource(R.string.logo),
                 modifier = Modifier.size(100.dp)
             )
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = "Recuperar Contraseña",
+                text = stringResource(R.string.recover_password),
                 style = TextStyle(fontSize = 24.sp, fontWeight = FontWeight.Bold, color = White)
             )
             Spacer(modifier = Modifier.height(16.dp))
@@ -74,7 +75,7 @@ fun PasswordRecover(navController: NavController) {
             OutlinedTextField(
                 value = email,
                 onValueChange = { email = it },
-                label = { Text("Introduce tu correo:") },
+                label = { Text(stringResource(R.string.enter_email)) },
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier.fillMaxWidth()
             )
@@ -89,11 +90,11 @@ fun PasswordRecover(navController: NavController) {
                         val response = AuthRetrofitInstance.authApi.recoverPassword(emailRequestBody)
 
                         if (response.isSuccessful) {
-                            Toast.makeText(context, "Correo de recuperación enviado", Toast.LENGTH_LONG).show()
+                            Toast.makeText(context, context.getString(R.string.recovery_email_sent), Toast.LENGTH_LONG).show()
                             println("correo de recuperacion enviado: " + email)
                             navController.navigate("recoverByToken")
                         } else {
-                            Toast.makeText(context, "Error al enviar la solicitud", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, context.getString(R.string.error_sending_request), Toast.LENGTH_SHORT).show()
                         }
                     }
                 },
@@ -101,7 +102,7 @@ fun PasswordRecover(navController: NavController) {
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(containerColor = Black)
             ) {
-                Text("Recuperar Contraseña", color = White)
+                Text(stringResource(R.string.recover_password), color = White)
             }
         }
     }
