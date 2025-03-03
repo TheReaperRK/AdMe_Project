@@ -111,7 +111,7 @@ fun EditUserScreen(userId: Long, userState: MutableState<User?>, navController: 
             OutlinedTextField(
                 value = email,
                 onValueChange = { email = it },
-                label = { Text(stringResource(R.string.email)) },
+                label = { Text(stringResource(R.string.email1)) },
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -120,7 +120,7 @@ fun EditUserScreen(userId: Long, userState: MutableState<User?>, navController: 
             OutlinedTextField(
                 value = phoneNumber,
                 onValueChange = { phoneNumber = it },
-                label = { Text(stringResource(R.string.phone)) },
+                label = { Text(stringResource(R.string.phone1)) },
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -135,8 +135,16 @@ fun EditUserScreen(userId: Long, userState: MutableState<User?>, navController: 
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
-                Text("${stringResource(R.string.status)}: ${if (isStatus) stringResource(R.string.active) else stringResource(R.string.inactive)}")
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = stringResource(
+                        R.string.status_format, // Definido en strings.xml
+                        if (isStatus) stringResource(R.string.active) else stringResource(R.string.inactive)
+                    )
+                )
                 Switch(checked = isStatus, onCheckedChange = { isStatus = it })
             }
 
@@ -145,7 +153,7 @@ fun EditUserScreen(userId: Long, userState: MutableState<User?>, navController: 
             var expanded by remember { mutableStateOf(false) }
             Box(contentAlignment = Alignment.Center) {
                 Button(onClick = { expanded = true }) {
-                    Text("${stringResource(R.string.role)}: $selectedRole")
+                    Text(stringResource(R.string.role_format, selectedRole.name))
                 }
                 DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
                     Roles.values().forEach { role ->
@@ -159,6 +167,7 @@ fun EditUserScreen(userId: Long, userState: MutableState<User?>, navController: 
                     }
                 }
             }
+
 
             Spacer(modifier = Modifier.height(20.dp))
 

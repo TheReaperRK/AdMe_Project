@@ -43,8 +43,8 @@ fun AdsScreen(adsViewModel: AdsViewModel, navController: NavController, userStat
     var maxPrice by remember { mutableStateOf(10000f) }
     var searchText by remember { mutableStateOf("") }
     var sortOption by remember { mutableStateOf("Default") }
-    val ads by adsViewModel.ads.observeAsState(initial = emptyList())
-    val categories by adsViewModel.categories.observeAsState(initial = emptyList())
+    val ads by adsViewModel.ads.collectAsState()
+    val categories by adsViewModel.categories.collectAsState()
     val user = userState.value
     LaunchedEffect(Unit) {
         adsViewModel.fetchCategories()
@@ -97,13 +97,16 @@ fun SearchBar(searchText: String, onSearchTextChanged: (String) -> Unit) {
     TextField(
         value = searchText,
         onValueChange = onSearchTextChanged,
-        placeholder = { Text("Buscar...") },
+        placeholder = { Text(stringResource(R.string.search_placeholder)) },
         singleLine = true,
-        modifier = Modifier.fillMaxWidth().padding(16.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
         keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Search),
         keyboardActions = KeyboardActions(onSearch = { /* Handle search */ })
     )
 }
+
 
 
 @Composable
@@ -116,11 +119,22 @@ fun FilterSection(
     onSortOptionSelected: (String) -> Unit
 ) {
     Column(modifier = Modifier.padding(16.dp)) {
-        Text("Ordenar por:", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+        Text(
+            text = stringResource(R.string.sort_by),
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Bold
+        )
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            Button(onClick = { onSortOptionSelected("Title") }) { Text("Título") }
-            Button(onClick = { onSortOptionSelected("Price Asc") }) { Text("Precio ↑") }
-            Button(onClick = { onSortOptionSelected("Price Desc") }) { Text("Precio ↓") }
+            Button(onClick = { onSortOptionSelected("Title") }) {
+                Text(stringResource(R.string.sort_title))
+            }
+            Button(onClick = { onSortOptionSelected("Price Asc") }) {
+                Text(stringResource(R.string.sort_price_asc))
+            }
+            Button(onClick = { onSortOptionSelected("Price Desc") }) {
+                Text(stringResource(R.string.sort_price_desc))
+            }
+
         }
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -144,8 +158,16 @@ fun FilterSection(
             }
         }
         Spacer(modifier = Modifier.height(16.dp))
-        Text("Precio máximo: ${maxPrice.toInt()}€", fontWeight = FontWeight.Bold)
-        Slider(value = maxPrice, onValueChange = onPriceChanged, valueRange = 0f..10000f)
+        Text(
+            text = stringResource(R.string.max_price, maxPrice.toInt()),
+            fontWeight = FontWeight.Bold
+        )
+        Slider(
+            value = maxPrice,
+            onValueChange = onPriceChanged,
+            valueRange = 0f..10000f
+        )
+
     }
 }
 

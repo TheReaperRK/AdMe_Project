@@ -148,26 +148,26 @@ public class UserLogic {
         return passwordEncoder.matches(rawPassword, encodedPassword);
     }
     
-    public User authenticateUser(String email, String rawPassword) {
+    public Long authenticateUser(String email, String rawPassword) {
         
         
     User user = userRepo.findByEmail(email);
-    
-    if (user == null) {
-        System.out.println("Usuario no encontrado");
-        return null;
-    }
-    
-        System.out.println("Email: " + user.getEmail() + ", Hash almacenado: " + user.getWord());
-        System.out.println("Contraseña ingresada: " + rawPassword);
 
         if (passwordEncoder.matches(rawPassword, user.getWord())) {
-            System.out.println("✅ Autenticación exitosa");
-            return user;
+            
+            if (user.isStatus() == true) {
+                System.out.println("✅ Autenticación exitosa");
+                return user.getId();
+            }
+            else {
+                System.out.println("inactivo");
+                return -1L;
+            }
+            
         }
 
         System.out.println("❌ Autenticación fallida");
-        return null;
+        return -2L;
 }
 
     

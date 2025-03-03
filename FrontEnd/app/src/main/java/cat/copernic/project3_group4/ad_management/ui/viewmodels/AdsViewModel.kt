@@ -2,41 +2,37 @@ package cat.copernic.project3_group4.ad_management.ui.viewmodels
 
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cat.copernic.project3_group4.ad_management.data.datasource.AdApiRest
 import cat.copernic.project3_group4.core.models.Ad
 import cat.copernic.project3_group4.core.models.Category
-
 import cat.copernic.project3_group4.ad_management.data.datasource.AdRetrofitInstance
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class AdsViewModel : ViewModel() {
     private val adApi: AdApiRest = AdRetrofitInstance.create(AdApiRest::class.java)
 
-    private val _ads = MutableLiveData<List<Ad>>()
-    val ads: LiveData<List<Ad>> = _ads
+    private val _ads = MutableStateFlow<List<Ad>>(emptyList())
+    val ads: StateFlow<List<Ad>> get() = _ads
 
-    private val _ad = MutableLiveData<Ad?>()
-    val ad: LiveData<Ad?> = _ad
+    private val _ad = MutableStateFlow<Ad?>(null)
+    val ad: StateFlow<Ad?> get() = _ad
 
-    private val _categories = MutableLiveData<List<Category>>()
-    val categories: LiveData<List<Category>> = _categories
+    private val _categories = MutableStateFlow<List<Category>>(emptyList())
+    val categories: StateFlow<List<Category>> get() = _categories
 
-    private val _selectedCategory = MutableLiveData<String?>()
-    val selectedCategory: LiveData<String?> = _selectedCategory
+    private val _selectedCategory = MutableStateFlow<String?>(null)
+    val selectedCategory: StateFlow<String?> get() = _selectedCategory
 
     fun fetchAds() {
         viewModelScope.launch {
             try {
                 val response = adApi.getAllAds()
                 if (response.isSuccessful) {
-                    _ads.postValue(response.body())
-                    Log.d("FetchAds", "✅ Anucnio obtenido correctamente")
-                }else{
-                    Log.e("FetchAds","❌ Error al obtener el anuncio: ${response.code()} - ${response.errorBody()}" )
+                    _ads.value = response.body() ?: emptyList()
                 }
             } catch (e: Exception) {
                 Log.e("AdsViewModel", "🚨 Error en fetchAds(): ${e.message}")
@@ -49,8 +45,7 @@ class AdsViewModel : ViewModel() {
             try {
                 val response = adApi.getAdById(adId)
                 if (response.isSuccessful) {
-                    _ad.postValue(response.body())
-                    Log.d("FetchAdsById", "✅ Anucnios obtenidos correctamente")
+                    _ad.value = response.body()
                 } else {
                     Log.e("FetchAdsById", "❌ Error al obtener los anuncios: ${response.errorBody()?.string()}")
                 }
@@ -65,10 +60,7 @@ class AdsViewModel : ViewModel() {
             try {
                 val response = adApi.getAdsByCategory(categoryId)
                 if (response.isSuccessful) {
-                    _ads.postValue(response.body())
-                    Log.d("FetchAdsByCategory", "✅ Anucnios obtenidos por categoria correctamente")
-                } else {
-                    Log.e("FetchAdsByCategory", "❌ Error al obtener los anuncios por categoria: ${response.errorBody()?.string()}")
+                    _ads.value = response.body() ?: emptyList()
                 }
             } catch (e: Exception) {
                 Log.e("AdsViewModel", "🚨 Error en fetchAdsByCategory(): ${e.message}")
@@ -101,7 +93,7 @@ class AdsViewModel : ViewModel() {
                     }
                 }
 
-                _ads.postValue(filteredAds)
+                _ads.value = filteredAds
             } catch (e: Exception) {
                 Log.e("AdsViewModel", "🚨 Error en fetchFilteredAds(): ${e.message}")
             }
@@ -113,10 +105,7 @@ class AdsViewModel : ViewModel() {
             try {
                 val response = adApi.getCategories()
                 if (response.isSuccessful) {
-                    _categories.postValue(response.body())
-                    Log.d("fetchCategories", "✅ categorias obtenidas correctamente")
-                } else {
-                    Log.e("fetchCategories", "❌ Error al obtener las categorias: ${response.errorBody()?.string()}")
+                    _categories.value = response.body() ?: emptyList()
                 }
             } catch (e: Exception) {
                 Log.e("AdsViewModel", "🚨 Error en fetchCategories(): ${e.message}")
@@ -145,8 +134,8 @@ class AdsViewModel : ViewModel() {
             try {
                 val response = adApi.updateAd(ad)
                 if (response.isSuccessful) {
-                    fetchAds() // Actualiza la lista de anuncios
-                    fetchAdById(ad.id) // Actualiza el anuncio específico en el ViewModel
+                    fetchAds()
+                    fetchAdById(ad.id)
                     onSuccess()
                     Log.d("UpdateAd", "✅ Anuncio actualizado correctamente")
                 } else {
@@ -173,10 +162,7 @@ class AdsViewModel : ViewModel() {
             try {
                 val response = adApi.getAdsByUser(userId)
                 if (response.isSuccessful) {
-                    _ads.postValue(response.body())
-                    Log.d("FetchAdsByUser", "✅ Anucnios obtenidos por usuario correctamente")
-                } else {
-                    Log.e("FetchAdsByUser", "❌ Error al obtener los anuncios por usuario: ${response.errorBody()?.string()}")
+                    _ads.value = response.body() ?: emptyList()
                 }
             } catch (e: Exception) {
                 Log.e("AdsViewModel", "🚨 Error en fetchAdsByUser(): ${e.message}")
@@ -202,6 +188,4 @@ class AdsViewModel : ViewModel() {
             }
         }
     }
-
-
 }

@@ -93,14 +93,23 @@ fun LoginScreen(navController: NavController, userState: MutableState<User?>) {
                     coroutineScope.launch {
                         try {
                             val response = AuthRetrofitInstance.authApi.login(email, password)
-                            if (response.isSuccessful) {
-                                val authenticatedUser = response.body()
-                                if (authenticatedUser != null) {
-                                    userState.value = authenticatedUser
-                                    navController.navigate("categoryScreen")
+                            when {
+                                response.isSuccessful -> {
+                                    val authenticatedUser = response.body()
+                                    if (authenticatedUser != null) {
+                                        userState.value = authenticatedUser
+                                        navController.navigate("categoryScreen")
+                                    }
                                 }
-                            } else {
-                                Toast.makeText(context, context.getString(R.string.invalid_credentials), Toast.LENGTH_SHORT).show()
+                                response.code() == 401 -> {
+                                    Toast.makeText(context, context.getString(R.string.invalid_credentials), Toast.LENGTH_SHORT).show()
+                                }
+                                response.code() == 400 -> {
+                                    Toast.makeText(context, context.getString(R.string.user_not_activated), Toast.LENGTH_SHORT).show()
+                                }
+                                else -> {
+                                    Toast.makeText(context,"error", Toast.LENGTH_SHORT).show()
+                                }
                             }
                         } catch (e: IOException) {
                             Toast.makeText(context, context.getString(R.string.connection_error), Toast.LENGTH_SHORT).show()
@@ -115,6 +124,7 @@ fun LoginScreen(navController: NavController, userState: MutableState<User?>) {
             ) {
                 Text(stringResource(id = R.string.login_button), color = White)
             }
+
             Spacer(modifier = Modifier.height(8.dp))
             OutlinedButton(
                 onClick = {
