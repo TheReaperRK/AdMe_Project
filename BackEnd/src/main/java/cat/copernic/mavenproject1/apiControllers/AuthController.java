@@ -111,14 +111,14 @@ public class AuthController {
         }
 
         if (!(user.getResetToken().contentEquals(token))) {
-            System.out.println(user.getResetToken() + ", " + token);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(Collections.singletonMap("message", "Token invalido"));
         }
-            user.setWord(passwordEncoder.encode(word));
-                userLogic.saveUser(user);
-                
+            user.setWord(passwordEncoder.encode(word));                
             user.setResetToken(null); // per tal que no es pugui reutilitzar
+            
+            userLogic.saveUser(user);
+            
             return ResponseEntity.ok(Collections.singletonMap("message", "se ha restablecido la contraseña"));
     }
     
