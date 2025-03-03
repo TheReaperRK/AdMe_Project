@@ -63,7 +63,7 @@
     <string name="enter_email">Introdueix el teu correu:</string>
     <string name="recovery_email_sent">Correu de recuperació enviat</string>
     <string name="error_sending_request">Error en enviar la sol·licitud</string>
-
+    <string name="email">Correu</string>
     <string name="token">Token</string>
     <string name="new_password">Nova contrasenya</string>
     <string name="repeat_password">Repeteix la contrasenya</string>
@@ -120,7 +120,6 @@
     <string name="confirm_delete">Confirmar eliminació</string>
     <string name="confirm_delete_message">Segur que vols eliminar a %1$s? Aquesta acció no es pot desfer.</string>
     <string name="sort_categories">Ordenar Categoríes A-Z</string>
-    <string name="email">Correu: %1$s</string>
     <string name="phone">Telèfon: %1$s</string>
     <string name="status">Estat: %1$s</string>
     <string name="role">Rol: %1$s</string>
@@ -136,7 +135,6 @@
     <string name="phone1">Telèfon: </string>
     <string name="status_format">Estat: %1$s</string>
     <string name="role_format">Rol: %1$s</string>
-</resources>
     <string name="user_not_activated">L\'usuari no esta activat</string>
 </resources>
 

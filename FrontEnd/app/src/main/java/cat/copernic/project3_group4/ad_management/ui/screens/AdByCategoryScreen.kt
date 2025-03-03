@@ -269,7 +269,7 @@ fun AdsScreen(
 @Composable
 fun AdItem(ad: Ad, onCategoryClick: (Long) -> Unit) {
     var isExpanded by remember { mutableStateOf(false) }
-    val imageUrl = remember { base64ToByteArray(ad.data) }
+    val imageUrl by remember(ad.data) { mutableStateOf(base64ToByteArray(ad.data)) }
     val author = ad.author
 
     Card(

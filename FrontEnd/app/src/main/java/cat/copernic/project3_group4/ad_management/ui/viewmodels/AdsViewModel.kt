@@ -1,5 +1,6 @@
 package cat.copernic.project3_group4.ad_management.ui.viewmodels
 
+
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -46,7 +47,7 @@ class AdsViewModel : ViewModel() {
                 if (response.isSuccessful) {
                     _ad.value = response.body()
                 } else {
-                    Log.e("AdsViewModel", "❌ Error al obtener el anuncio: ${response.errorBody()?.string()}")
+                    Log.e("FetchAdsById", "❌ Error al obtener los anuncios: ${response.errorBody()?.string()}")
                 }
             } catch (e: Exception) {
                 Log.e("AdsViewModel", "🚨 Error en fetchAdById(): ${e.message}")
@@ -77,12 +78,18 @@ class AdsViewModel : ViewModel() {
                         val response = adApi.getAdsFiltered(categoryId, minPrice, maxPrice)
                         if (response.isSuccessful) {
                             response.body()?.let { filteredAds.addAll(it) }
+                            Log.d("fetchFilteredAds", "✅ Anucnios filtrados obtenidos  correctamente")
+                        } else {
+                            Log.e("fetchFilteredAds", "❌ Error al obtener los anuncios filtrados: ${response.errorBody()?.string()}")
                         }
                     }
                 } else {
                     val response = adApi.getAdsByPriceRange(minPrice, maxPrice)
                     if (response.isSuccessful) {
                         response.body()?.let { filteredAds.addAll(it) }
+                        Log.e("fetchFilteredAdsByPrice", "✅ Anucnios filtrados por precio obtenidos  correctamente")
+                    }else{
+                        Log.e("fetchFilteredAdsByPrice", "❌ Error al obtener los anuncios filtrados por precio: ${response.errorBody()?.string()}")
                     }
                 }
 
@@ -170,8 +177,10 @@ class AdsViewModel : ViewModel() {
                 if (response.isSuccessful) {
                     fetchAds()
                     onSuccess()
+                    Log.d("deleteAd", "✅ Anucnio eliminado  correctamente")
                 } else {
                     onError("❌ Error al eliminar el anuncio: ${response.code()}")
+                    Log.e("deleteAd", "\"❌ Error al eliminar el anuncio: ${response.errorBody()?.string()}")
                 }
             } catch (e: Exception) {
                 onError("🚨 Error en deleteAd(): ${e.message}")

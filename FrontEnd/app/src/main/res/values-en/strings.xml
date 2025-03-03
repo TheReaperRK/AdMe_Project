@@ -118,6 +118,7 @@
     <string name="deactivate">Deactivate</string>
     <string name="confirm_delete">Confirm Deletion</string>
     <string name="confirm_delete_message">Are you sure you want to delete %1$s? This action cannot be undone.</string>
+    <string name="name_error">The name must be between 4 and 18 characters</string>
     <string name="sort_categories">Sort categories A-Z</string>
     <string name="email">Email: %1$s</string>
     <string name="phone">Phone: %1$s</string>
@@ -135,8 +136,6 @@
     <string name="phone1">Phone: </string>
     <string name="status_format">Status: %1$s</string>
     <string name="role_format">Role: %1$s</string>
-
-</resources>
     <string name="user_not_activated">User isn\'t activated</string>
 </resources>
 
