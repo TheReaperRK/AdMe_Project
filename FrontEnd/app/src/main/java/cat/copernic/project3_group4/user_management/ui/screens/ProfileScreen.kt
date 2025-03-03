@@ -67,6 +67,7 @@ fun ProfileScreen(userState: MutableState<User?>, navController: NavController, 
         Toast.makeText(context, "Imagen actualizada", Toast.LENGTH_SHORT).show()
     }
 
+
     if (user == null) {
         Text(stringResource(R.string.no_user_authenticated), textAlign = TextAlign.Center, modifier = Modifier.fillMaxSize())
         return
@@ -155,8 +156,16 @@ fun ProfileScreen(userState: MutableState<User?>, navController: NavController, 
                 if (showChangeImageDialog) {
                     ChangeImageDialog(
                         onDismiss = { showChangeImageDialog = false },
-                        onConfirm = { launcher.launch("image/*")
-                                    showChangeImageDialog = false}
+                        onConfirm = {
+                            try {
+                                launcher.launch("image/*")
+                                showChangeImageDialog = false
+                            } catch (e: java.lang.RuntimeException) {
+
+                            } catch (a: java.lang.NullPointerException){
+
+                            }
+                        }
                     )
                 }
                 Spacer(modifier = Modifier.height(12.dp))
