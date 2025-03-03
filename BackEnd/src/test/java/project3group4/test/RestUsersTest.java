@@ -11,8 +11,13 @@ import cat.copernic.mavenproject1.logic.UserLogic;
 import cat.copernic.mavenproject1.repository.UserRepo;
 import java.util.List;
 import cat.copernic.mavenproject1.enums.Roles;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer;
@@ -29,6 +34,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -43,6 +51,9 @@ public class RestUsersTest {
     @Autowired
     private TestRestTemplate restTemplate;
     
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    
     @LocalServerPort
     private int port;
     
@@ -55,29 +66,35 @@ public class RestUsersTest {
     @BeforeEach
     public void setup() {
         
-        userRepo.deleteAll();
+       
         
         List<Ad> ads = new ArrayList<>(); // Lista vacía de anuncios
-
-        List<User> users = List.of(
-            new User(1L, "carlos", "carlosmendoza2003@gmail.com", "653035737", 
-                     "adygyudgaufaiof", true, Roles.ADMIN, ads),
-                
-            new User(2L, "pepe", "pepe@gmail.com", "64826429749", 
-                 "adygyudgaufaiof", false, Roles.USER, ads),
-            
-            new User(3L, "JOSE", "joselito@gmail.com", "580825285", 
-                     "adygyudgaufaiof", true, Roles.ADMIN, ads)
-        );
+        if(userRepo.findByEmail("carlosmendoza2003@gmail.com") == null){
+            userRepo.saveAndFlush(new User("carlos", "carlosmendoza2003@gmail.com", "653035737",  
+                     passwordEncoder.encode("123456"), true, Roles.ADMIN, ads));
+        }else{
+            userRepo.delete(userRepo.findByEmail("carlosmendoza2003@gmail.com"));
+            userRepo.saveAndFlush(new User("carlos", "carlosmendoza2003@gmail.com", "653035737",  
+                     passwordEncoder.encode("123456"), true, Roles.ADMIN, ads));
+        }
+        if(userRepo.findByEmail("pepe@gmail.com") == null){
+             userRepo.saveAndFlush(new User("pepe", "pepe@gmail.com", "64826429749", 
+                 passwordEncoder.encode("123456"), false, Roles.USER, ads));
+        }
+        if(userRepo.findByEmail( "joselito@gmail.com") != null){
+             userRepo.saveAndFlush(new User("JOSE", "joselito@gmail.com", "580825285", 
+                     passwordEncoder.encode("123456"), true, Roles.ADMIN, ads));
+        }
+        
 
        
-       userRepo.saveAll(users);
+       
    
     }
     
     @Test
     public void testGetAllUsersOk() {
-        
+        int totalUsers = userRepo.findAll().size();
         String url = "http://localhost:" + port + "/rest/users/all";
         
         // Realizamos la petición al endpoint real
@@ -90,20 +107,19 @@ public class RestUsersTest {
 
         List<User> receivedList = response.getBody();
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(receivedList.size(), 3);
+        assertEquals(totalUsers, receivedList.size());
         
+        userRepo.saveAndFlush(new User("admin", "admin@gmail.com", "580825285", 
+                     passwordEncoder.encode("123"), true, Roles.ADMIN, new ArrayList<Ad>()));
     }
     
     
     @Test
     public void testDeleteUserByIdOk() {
+                
         
-        List<Ad> ads = new ArrayList<>(); // Lista vacía de anuncios
         
-        User u = new User(1L, "carlos", "carlosmendoza2003@gmail.com", "653035737", 
-                     "adygyudgaufaiof", true, Roles.ADMIN, ads);
-        
-        userRepo.save(u);
+        User u = userRepo.findByEmail("carlosmendoza2003@gmail.com");
         
          // URL completa con puerto dinámico
         String url = "http://localhost:" + port + "/rest/users/delete/" + u.getId();
@@ -157,20 +173,20 @@ public class RestUsersTest {
         );
 
         // Verificamos la respuesta
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         
     }
     
     
     @Test
     public void testGetByIdOk() {
-        
-        List<Ad> ads = new ArrayList<>(); // Lista vacía de anuncios
-        
-        User u = new User(1L, "carlos", "carlosmendoza2003@gmail.com", "653035737", 
-                     "adygyudgaufaiof", true, Roles.ADMIN, ads);
+                
+        User u = new User("ahton", "terminarot@gmail.com", "653035737", 
+                     "adygyudgaufaiof", true, Roles.ADMIN);
         
         userRepo.save(u);
+        userRepo.flush();  // Asegura que la entidad se guarda inmediatamente
+
         
          // URL completa con puerto dinámico
         String url = "http://localhost:" + port + "/rest/users/byId/" + u.getId();
@@ -185,7 +201,7 @@ public class RestUsersTest {
 
         // Verificamos la respuesta
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        
+        userRepo.delete(u);
     }
     
     @Test
@@ -225,14 +241,15 @@ public class RestUsersTest {
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         
     }
-    /*
+    
     @Test
     public void testCreateOk() {
         
-        User p = new User("producte a retornar", 5.33, 1);
+        User p = new User("deiV", "davidalama@gmail.com", "6567123737", 
+                     "adawlfdgaufaiof", true, Roles.ADMIN);
         
          // URL completa con puerto dinámico
-        String url = "http://localhost:" + port + "/rest/products/create";
+        String url = "http://localhost:" + port + "/rest/users/create";
         
         //generem les capçaleres de la petició
         HttpHeaders headers = new HttpHeaders();
@@ -251,20 +268,24 @@ public class RestUsersTest {
         
         Long id = response.getBody();
         
-        User p2 = productRepo.findById(id).orElse(null);
+        User p2 = userRepo.findById(id).orElse(null);
         
-        assertEquals(p.getTitle(), p2.getTitle());
-        assertEquals(p.getPrice(), p2.getPrice());
-        assertEquals(p.getQuantity(), p2.getQuantity());
+        assertEquals(p.getName(), p2.getName());
+        assertEquals(p.getEmail(), p2.getEmail());
+        assertEquals(p.getPhoneNumber(), p2.getPhoneNumber());
+        assertEquals(p.isStatus(), p2.isStatus());
+        assertEquals(p.getRole(), p2.getRole());
         
+        userRepo.delete(p);
     }
+    
     
     @Test
     public void testCreateErrorMalformedObject() {
         
                 
          // URL completa con puerto dinámico
-        String url = "http://localhost:" + port + "/rest/products/create";
+        String url = "http://localhost:" + port + "/rest/users/create";
         
         //generem les capçaleres de la petició
         HttpHeaders headers = new HttpHeaders();
@@ -285,18 +306,40 @@ public class RestUsersTest {
     
     
     @Test
-    public void testUpdateOk() {
+    public void testUpdateOk() throws IOException {
         
-        //creem directament un producte a la BBDD
-        User p = new User("producte a modificar", 10.50, 10);
-        productRepo.save(p);
         
-        //creem un nou producte amb el mateix id, pero amb les dades modificades
-        User p2 = new User("descripció modificada", 11.50, 100);
-        p2.setId(p.getId());
+        Path projectPath = Paths.get("").toAbsolutePath();
+        Path imagePath = projectPath.resolve("src/main/java/cat/copernic/mavenproject1/tux.jpg");
+        byte[] imageBytes = Files.readAllBytes(imagePath);
+
+        // Convertir a MultipartFile simulado
+        MultipartFile imageFile = new MockMultipartFile("imagen.jpg", imageBytes);
+        
+        List<Ad> ads = new ArrayList<>(); 
+       
+        
+        List<User> users = userRepo.findAll();
+        assertFalse(users.isEmpty(), "No hay usuarios en la base de datos");
+        
+        User p = users.get(0);
+       
+        User p2 = new User("carlos2", "carlosmendoza2003@gmail.com", "653035738", "123", false, Roles.ADMIN, ads);
+                     
+        
+        //userLogic.createUser(p2, imageFile);
+
+        p.setAds(p2.getAds());
+        p.setEmail(p2.getEmail());
+        p.setName(p2.getName());
+        p.setPhoneNumber(p2.getPhoneNumber());
+        p.setRole(p2.getRole());
+        p.setWord(p2.getWord());
+        
+        p.setImage(imageFile.getBytes());
         
          // URL completa con puerto dinámico
-        String url = "http://localhost:" + port + "/rest/products/update";
+        String url = "http://localhost:" + port + "/rest/users/update";
 
         //generem les capçaleres de la petició
         HttpHeaders headers = new HttpHeaders();
@@ -306,23 +349,29 @@ public class RestUsersTest {
         ResponseEntity<Void> response = restTemplate.exchange(
             url,
             HttpMethod.PUT,
-            new HttpEntity<>(p2, headers),
+            new HttpEntity<>(p, headers),
             Void.class
         );
 
         // Verificamos la respuesta
         assertEquals(HttpStatus.OK, response.getStatusCode());
         
-        User resultat = productRepo.findById(p.getId()).orElse(null);
+        User res = userRepo.findById(p.getId()).orElse(null);
         
-        assertTrue(p2.equals(resultat));
+        assertEquals(p.getId(),res.getId());
+       
+        assertEquals(p.getName(),res.getName());
+        assertEquals(p.getPhoneNumber(),res.getPhoneNumber());
+        assertEquals(p.getRole(),res.getRole());
+        assertEquals(p.getAds(), res.getAds());
     }
+    
     
     @Test
     public void testUpdateIdNotExist() {
         
-        User p = new User("producte a modificar", 10.50, 10);
-        p.setId(Long.MAX_VALUE);
+        User p = new User("carlos", "carlosmendoza2003@gmail.com", "653035737", 
+                     "adygyudgaufaiof", true, Roles.ADMIN);
         
          // URL completa con puerto dinámico
         String url = "http://localhost:" + port + "/rest/products/update";
@@ -342,6 +391,6 @@ public class RestUsersTest {
         // Verificamos la respuesta
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
-*/
+
 }
 

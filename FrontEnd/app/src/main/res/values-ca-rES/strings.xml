@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Project3_Group4</string>
+    <string name="ads">Anuncis</string>
+    <string name="filter_by_category">Filtrar per Categoria</string>
+    <string name="filter_by_price">Filtrar per Preu: 0€ - %1$d€</string>
+    <string name="seller_info">Informació del venedor:</string>
+    <string name="seller_name">Nom: %1$s</string>
+    <string name="seller_email">Email: %1$s</string>
+    <string name="seller_phone">Telèfon: %1$s</string>
+    <string name="no_user_info">No s\'ha trobat informació de l\'usuari</string>
+    <string name="no_user">No hi ha usuari autenticat</string>
+    <string name="back">Tornar</string>
+    <string name="ads_count">Anuncis: %1$d</string>
+    <string name="modify">Modificar</string>
+    <string name="no_ads">No hi ha anuncis disponibles</string>
+    <string name="category">Categoria: %1$s</string>
+    <string name="close">Tancar</string>
+    <string name="create_ad">Crear Anunci</string>
+    <string name="title">Títol:</string>
+    <string name="title_placeholder">Introdueix entre 4 i 20 caràcters</string>
+    <string name="title_error">El títol ha de tenir entre 4 i 20 caràcters</string>
+    <string name="category_error">Selecciona una categoria</string>
+    <string name="description">Descripció:</string>
+    <string name="description_placeholder">Introdueix entre 10 i 100 caràcters</string>
+    <string name="description_error">La descripció ha de tenir almenys 10 caràcters</string>
+    <string name="price">Preu: €%s </string>
+    <string name="price_placeholder">Introdueix el preu</string>
+    <string name="price_error">Introdueix un preu vàlid</string>
+    <string name="image">Imatge</string>
+    <string name="selected_image">Imatge seleccionada</string>
+    <string name="add_image">Afegir imatge</string>
+    <string name="image_error">Has de seleccionar una imatge</string>
+    <string name="ad_created_success">Anunci creat correctament</string>
+    <string name="ad_creation_error">Error en crear l’anunci</string>
+    <string name="update_ad">Actualitzar Anunci</string>
+    <string name="ad_updated_success">Anunci actualitzat correctament</string>
+    <string name="ad_update_error">Error en actualitzar l’anunci</string>
+    <string name="click_to_select_image">Fes clic per seleccionar una imatge</string>
+    <string name="no_user_authenticated">No hi ha usuari autenticat</string>
+    <string name="create_category">Crear categoria</string>
+    <string name="propose_category">Proposar categoria</string>
+    <string name="modify_category">Modificar categoria</string>
+    <string name="category_image">Imatge de la categoria</string>
+    <string name="select_image">Seleccionar imatge</string>
+    <string name="category_name">Nom de la categoria</string>
+    <string name="enter_name">Introdueix el nom</string>
+    <string name="category_description">Descripció de la categoria</string>
+    <string name="enter_description">Introdueix la descripció</string>
+    <string name="proposal_message">La teva proposta serà avaluada pel nostre equip.</string>
+    <string name="creation_successful">Creació exitosa</string>
+    <string name="complete_all_fields">Completa tots els camps</string>
+    <string name="go_back">Tornar</string>
+    <string name="creation_failed">Error en la creació</string>
+    <string name="search">Cercar</string>
+    <string name="search_category">Cercar categoria...</string>
+    <string name="no_authenticated_user">No hi ha usuari autenticat</string>
+    <string name="proposal">Proposta</string>
+    <string name="filter">Filtrar</string>
+    <string name="all">Tots</string>
+    <string name="logo">Logotip</string>
+    <string name="recover_password">Recuperar Contrasenya</string>
+    <string name="enter_email">Introdueix el teu correu:</string>
+    <string name="recovery_email_sent">Correu de recuperació enviat</string>
+    <string name="error_sending_request">Error en enviar la sol·licitud</string>
+    <string name="email">Correu</string>
+    <string name="token">Token</string>
+    <string name="new_password">Nova contrasenya</string>
+    <string name="repeat_password">Repeteix la contrasenya</string>
+    <string name="invalid_email">Correu invàlid</string>
+    <string name="token_length_error">El token ha de tenir un màxim de 250 caràcters</string>
+    <string name="weak_password">Contrasenya insegura</string>
+    <string name="passwords_do_not_match">Les contrasenyes no coincideixen</string>
+    <string name="password_reset_success">S\'ha restablert la contrasenya</string>
+    <string name="generic_error">Error amb les dades introduïdes</string>
+    <string name="reset_password">Restablir Contrasenya</string>
+    <string name="edit_user">Editar Usuari</string>
+    <string name="name">Nom</string>
+    <string name="password">Contrasenya</string>
+    <string name="active">Actiu</string>
+    <string name="inactive">Inactiu</string>
+    <string name="category2">Categoría: </string>
+    <string name="price2">Preu: </string>
+    <string name="save_changes">Desar Canvis</string>
+    <string name="user_not_authenticated">No hi ha usuari autenticat</string>
+    <string name="error_loading_user">Error en carregar l\'usuari</string>
+    <string name="user_updated">Usuari actualitzat</string>
+    <string name="error_updating_user">Error en actualitzar</string>
+    <string name="error_updating">Error en actualitzar</string>
+    <string name="error">Error</string>
+    <string name="logo_description">Logotip</string>
+    <string name="login_title">Inicia Sessió</string>
+    <string name="enter_password">Introdueix la contrasenya:</string>
+    <string name="forgot_password">Has oblidat la contrasenya?</string>
+    <string name="invalid_credentials">Credencials incorrectes</string>
+    <string name="connection_error">⚠️ Error de connexió amb el servidor</string>
+    <string name="server_error">⚠️ Error al servidor: %d</string>
+    <string name="login_button">Iniciar sessió</string>
+    <string name="register_button">Registrar-se</string>
+    <string name="menu">Menú</string>
+    <string name="users">Usuaris</string>
+    <string name="proposals">Propostes</string>
+    <string name="logout">Tanca sessió</string>
+    <string name="profile">Perfil</string>
+    <string name="profile_image">Imatge de perfil</string>
+    <string name="my_ads">Els meus anuncis</string>
+    <string name="ad_image">Imatge de l\'anunci</string>
+    <string name="edit">Edita</string>
+    <string name="delete">Elimina</string>
+    <string name="confirm_deletion">Confirma l\'eliminació</string>
+    <string name="confirm_deletion_message">Segur que vols eliminar aquest anunci? Aquesta acció no es pot desfer.</string>
+    <string name="ad_deleted">✅ Anunci eliminat</string>
+    <string name="cancel">Cancel·lar</string>
+    <string name="confirm_password">Confirmar Contrasenya</string>
+    <string name="register">Registrar-se</string>
+    <string name="users_count">Usuaris (%1$d)</string>
+    <string name="phone_number">Telèfon: %1$s</string>
+    <string name="activate">Activar</string>
+    <string name="deactivate">Desactivar</string>
+    <string name="confirm_delete">Confirmar eliminació</string>
+    <string name="confirm_delete_message">Segur que vols eliminar a %1$s? Aquesta acció no es pot desfer.</string>
+    <string name="sort_categories">Ordenar Categoríes A-Z</string>
+    <string name="phone">Telèfon: %1$s</string>
+    <string name="status">Estat: %1$s</string>
+    <string name="role">Rol: %1$s</string>
+    <string name="sort_title">Títol</string>
+    <string name="sort_price_asc">Preu ↑</string>
+    <string name="sort_price_desc">Preu ↓</string>
+    <string name="sort_by">Ordenar per:</string>
+    <string name="search_placeholder">Cercar...</string>
+    <string name="max_price">Preu màxim: %1$d€</string>
+    <string name="see_more">Veure més</string>
+    <string name="see_less">Veure menys</string>
+    <string name="email1">Email: </string>
+    <string name="phone1">Telèfon: </string>
+    <string name="status_format">Estat: %1$s</string>
+    <string name="role_format">Rol: %1$s</string>
+    <string name="user_not_activated">L\'usuari no esta activat</string>
+    <string name="name_error">El nom ha de tenir entre 4 i 18 caracters</string>
+</resources>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
