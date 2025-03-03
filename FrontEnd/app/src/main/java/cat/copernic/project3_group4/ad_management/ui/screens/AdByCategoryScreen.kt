@@ -83,7 +83,7 @@ fun AdsScreen(
         }
         return
     }
-    val ads by adsViewModel.ads.observeAsState(initial = emptyList())
+    val ads by adsViewModel.ads.collectAsState()
     val category by categoryViewModel.category.collectAsState(initial =Category())
     var expandedAdminMenu by remember { mutableStateOf(false) }
     var menuPosition by remember { mutableStateOf(Offset.Zero) }
@@ -269,7 +269,7 @@ fun AdsScreen(
 @Composable
 fun AdItem(ad: Ad, onCategoryClick: (Long) -> Unit) {
     var isExpanded by remember { mutableStateOf(false) }
-    val imageUrl = remember { base64ToByteArray(ad.data) }
+    val imageUrl by remember(ad.data) { mutableStateOf(base64ToByteArray(ad.data)) }
     val author = ad.author
 
     Card(
@@ -300,25 +300,6 @@ fun AdItem(ad: Ad, onCategoryClick: (Long) -> Unit) {
                 modifier = Modifier.clickable { onCategoryClick(ad.category.id) }
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
-            Divider(color = OrangeSecondary, thickness = 1.dp)
-
-            Text(
-                text = "Información del vendedor:",
-                fontWeight = FontWeight.Bold,
-                fontSize = 14.sp,
-                modifier = Modifier.padding(vertical = 4.dp)
-            )
-
-            author?.let {
-                Text("Nombre: ${it.name}", fontSize = 12.sp)
-                Text("Email: ${it.email}", fontSize = 12.sp)
-                Text("Teléfono: ${it.phoneNumber}", fontSize = 12.sp)
-            } ?: Text(
-                "No se encontró información del usuario",
-                fontSize = 12.sp,
-                color = Color.Gray
-            )
         }
     }
 

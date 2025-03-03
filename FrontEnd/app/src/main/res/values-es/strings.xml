@@ -65,7 +65,6 @@
     <string name="enter_email">Introduce tu correo:</string>
     <string name="recovery_email_sent">Correo de recuperación enviado</string>
     <string name="error_sending_request">Error al enviar la solicitud</string>
-    <string name="email">Correo</string>
     <string name="token">Token</string>
     <string name="new_password">Nueva contraseña</string>
     <string name="repeat_password">Repite la contraseña</string>
@@ -78,12 +77,9 @@
     <string name="reset_password">Restablecer Contraseña</string>
     <string name="edit_user">Editar Usuario</string>
     <string name="name">Nombre</string>
-    <string name="phone">Teléfono</string>
     <string name="password">Contraseña</string>
-    <string name="status">Estado</string>
     <string name="active">Activo</string>
     <string name="inactive">Inactivo</string>
-    <string name="role">Rol</string>
     <string name="save_changes">Guardar Cambios</string>
     <string name="user_not_authenticated">No hay usuario autenticado</string>
     <string name="error_loading_user">Error al cargar usuario</string>
@@ -122,6 +118,24 @@
     <string name="deactivate">Desactivar</string>
     <string name="confirm_delete">Confirmar eliminación</string>
     <string name="confirm_delete_message">¿Seguro que quieres eliminar a %1$s? Esta acción no se puede deshacer.</string>
+    <string name="sort_categories">Ordenar Categorías A-Z</string>
+    <string name="email">Correo: %1$s</string>
+    <string name="phone">Teléfono: %1$s</string>
+    <string name="status">Estado: %1$s</string>
+    <string name="role">Rol: %1$s</string>
+    <string name="sort_title">Título</string>
+    <string name="sort_price_asc">Precio ↑</string>
+    <string name="sort_price_desc">Precio ↓</string>
+    <string name="sort_by">Ordenar por:</string>
+    <string name="search_placeholder">Buscar...</string>
+    <string name="max_price">Precio máximo: %1$d€</string>
+    <string name="see_more">Ver más</string>
+    <string name="see_less">Ver menos</string>
+    <string name="email1">Email: </string>
+    <string name="phone1">Teléfono: </string>
+    <string name="status_format">Estado: %1$s</string>
+    <string name="role_format">Rol: %1$s</string>
+
     <string name="user_not_activated">Usuario no activado</string>
 
 </resources>

@@ -135,7 +135,10 @@ fun EditCategoryScreen(
     var imageBitmap by remember { mutableStateOf<ImageBitmap?>(null) }
     var byteArray by remember { mutableStateOf<ByteArray?>(null)}
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
+    val nameError = name.length in 1..3
+    val descriptionError = description.length in 1..9
 
+    val isFormValid = !nameError && !descriptionError
     LaunchedEffect(categoryId) {
         if(categoryId == null) {
             Handler(Looper.getMainLooper()).post {
@@ -270,29 +273,36 @@ fun EditCategoryScreen(
                 Text(stringResource(R.string.category_name), fontSize = 18.sp, fontWeight = FontWeight.Bold)
                 OutlinedTextField(
                     value = name,
-                    onValueChange = { name = it },
+                    onValueChange = { if (it.length in 0..15) name = it },
                     modifier = Modifier.fillMaxWidth(),
                     textStyle = TextStyle(fontSize = 16.sp),
-                    placeholder = { Text(stringResource(R.string.enter_name)) }
+                    placeholder = { Text(stringResource(R.string.enter_name)) },
+                    isError = nameError
                 )
-
+                if (nameError) {
+                    Text(stringResource(R.string.name_error), color = Color.Red, fontSize = 12.sp)
+                }
                 Spacer(modifier = Modifier.height(12.dp))
 
                 Text(stringResource(R.string.category_description), fontSize = 18.sp, fontWeight = FontWeight.Bold)
                 OutlinedTextField(
                     value = description,
-                    onValueChange = { description = it },
+                    onValueChange = { if (it.length in 0..100) description = it },
                     modifier = Modifier.fillMaxWidth().height(120.dp),
                     textStyle = TextStyle(fontSize = 16.sp),
-                    placeholder = { Text(stringResource(R.string.enter_description)) }
+                    placeholder = { Text(stringResource(R.string.enter_description)) },
+                    isError = descriptionError
                 )
+                if (descriptionError) {
+                    Text(stringResource(R.string.description_error), color = Color.Red, fontSize = 12.sp)
+                }
 
                 Spacer(modifier = Modifier.height(12.dp))
 
                 Button(
                     onClick = {
-                        proposal = (user.role.name == "USER")
-                        if (name.isNotBlank() && description.isNotBlank()) {
+
+                        if (name.isNotBlank() && description.isNotBlank() && imageSelected && !nameError && !descriptionError) {
 
                                 val namePart = createPartFromString(name)
                                 val descriptionPart = createPartFromString(description)
@@ -350,12 +360,12 @@ fun EditCategoryScreen(
                             Handler(Looper.getMainLooper()).post {
                                 Toast.makeText(
                                     context,
-                                    "Completa todos los campos",
+                                    "Completa correctamente todos los campos",
                                     Toast.LENGTH_SHORT
                                 ).show()
                                 Log.e(
                                     ContentValues.TAG,
-                                    "Error al categoria no modificada, campos incompletos"
+                                    "Error al categoria no modificada, campos incompletos o incorrectos"
                                 )
                             }
 
@@ -386,7 +396,7 @@ fun encodeImage(inputStream: InputStream?): String {
 }
 fun byteArrayToImageBitmap(byteArray: ByteArray?): ImageBitmap {
     if(byteArray!=null) {
-        return try {
+        try {
 
             val bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
             return bitmap.asImageBitmap()

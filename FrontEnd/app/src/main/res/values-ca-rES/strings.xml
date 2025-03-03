@@ -76,12 +76,9 @@
     <string name="reset_password">Restablir Contrasenya</string>
     <string name="edit_user">Editar Usuari</string>
     <string name="name">Nom</string>
-    <string name="phone">Telèfon</string>
     <string name="password">Contrasenya</string>
-    <string name="status">Estat</string>
     <string name="active">Actiu</string>
     <string name="inactive">Inactiu</string>
-    <string name="role">Rol</string>
     <string name="category2">Categoría: </string>
     <string name="price2">Preu: </string>
     <string name="save_changes">Desar Canvis</string>
@@ -122,6 +119,22 @@
     <string name="deactivate">Desactivar</string>
     <string name="confirm_delete">Confirmar eliminació</string>
     <string name="confirm_delete_message">Segur que vols eliminar a %1$s? Aquesta acció no es pot desfer.</string>
+    <string name="sort_categories">Ordenar Categoríes A-Z</string>
+    <string name="phone">Telèfon: %1$s</string>
+    <string name="status">Estat: %1$s</string>
+    <string name="role">Rol: %1$s</string>
+    <string name="sort_title">Títol</string>
+    <string name="sort_price_asc">Preu ↑</string>
+    <string name="sort_price_desc">Preu ↓</string>
+    <string name="sort_by">Ordenar per:</string>
+    <string name="search_placeholder">Cercar...</string>
+    <string name="max_price">Preu màxim: %1$d€</string>
+    <string name="see_more">Veure més</string>
+    <string name="see_less">Veure menys</string>
+    <string name="email1">Email: </string>
+    <string name="phone1">Telèfon: </string>
+    <string name="status_format">Estat: %1$s</string>
+    <string name="role_format">Rol: %1$s</string>
     <string name="user_not_activated">L\'usuari no esta activat</string>
 </resources>
 
