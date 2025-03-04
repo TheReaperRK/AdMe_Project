@@ -8,6 +8,7 @@ import java.util.List;
 //import lombok.Data;
 //import lombok.NoArgsConstructor;
 
+
 /**
  * Represents a category in the AdMe application. Each category has a unique
  * name, description, an image, and can be marked as a proposal. It also
