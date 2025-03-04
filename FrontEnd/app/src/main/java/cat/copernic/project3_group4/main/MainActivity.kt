@@ -125,7 +125,7 @@ class MainActivity : ComponentActivity() {
                         composable("createAdScreen") { CreateAdScreen(navController, viewModel = categoryViewModel, userState) }
                         composable("recoverByToken") { RecoverByToken(navController) }
                         composable("AdsScreen") {
-                            AdsScreen(adsViewModel, navController, userState)
+                            AdsScreen(adsViewModel, navController)
                         }
                         composable("EditUserScreen/{userId}") { backStackEntry ->
                             val userId = backStackEntry.arguments?.getString("userId")?.toLongOrNull()

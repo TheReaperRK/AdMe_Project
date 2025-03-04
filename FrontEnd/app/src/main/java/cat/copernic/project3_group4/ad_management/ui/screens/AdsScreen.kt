@@ -1,8 +1,6 @@
 package cat.copernic.project3_group4.ad_management.ui.screens
 
-import android.widget.Toast
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -31,21 +29,19 @@ import cat.copernic.project3_group4.R
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
-import cat.copernic.project3_group4.core.models.User
-import cat.copernic.project3_group4.core.ui.theme.BrownTertiary
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AdsScreen(adsViewModel: AdsViewModel, navController: NavController, userState: MutableState<User?>,) {
+fun AdsScreen(adsViewModel: AdsViewModel, navController: NavController) {
     var selectedCategories by remember { mutableStateOf(setOf<Long>()) }
     var maxPrice by remember { mutableStateOf(10000f) }
     var searchText by remember { mutableStateOf("") }
     var sortOption by remember { mutableStateOf("Default") }
     val ads by adsViewModel.ads.collectAsState()
     val categories by adsViewModel.categories.collectAsState()
-    val user = userState.value
+
+
     LaunchedEffect(Unit) {
         adsViewModel.fetchCategories()
     }
@@ -85,7 +81,7 @@ fun AdsScreen(adsViewModel: AdsViewModel, navController: NavController, userStat
                 .padding(horizontal = 8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            items(filteredAds) { ad -> AdItem(ad, navController, adsViewModel, userState) }
+            items(filteredAds) { ad -> AdItem(ad) }
         }
 
         BottomNavigationBar(navController)
@@ -173,21 +169,12 @@ fun FilterSection(
 
 
 @Composable
-fun AdItem(ad: Ad, navController: NavController, adsViewModel: AdsViewModel, userState: MutableState<User?>,) {
+fun AdItem(ad: Ad) {
     val imageUrl by remember(ad.data) { mutableStateOf(base64ToByteArray(ad.data)) }
     val author = ad.author
-    var showMenu by remember { mutableStateOf(false) }
-    var showDialog by remember { mutableStateOf(false) }
-    val context = LocalContext.current
-    val user = userState.value
-    if (user == null){
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Text(stringResource(R.string.no_user_authenticated))
-        }
-        return
-    }
+
     Card(
-        modifier = Modifier.fillMaxWidth().padding(8.dp).clickable { if(user.role.name == "ADMIN")showMenu = !showMenu },
+        modifier = Modifier.fillMaxWidth().padding(8.dp),
         shape = RoundedCornerShape(8.dp),
         colors = CardDefaults.cardColors(containerColor = OrangePrimary)
     ) {
@@ -210,75 +197,6 @@ fun AdItem(ad: Ad, navController: NavController, adsViewModel: AdsViewModel, use
                     Text(stringResource(R.string.seller_email, it.email), fontSize = 12.sp)
                     Text(stringResource(R.string.seller_phone, it.phoneNumber), fontSize = 12.sp)
                 } ?: Text(stringResource(R.string.no_user_info), fontSize = 12.sp, color = Color.Gray)
-            }
-            DropdownMenu(
-                expanded = showMenu,
-                onDismissRequest = { showMenu = false }
-            ) {
-                DropdownMenuItem(
-                    text = { Text(stringResource(R.string.edit)) },
-                    onClick = {
-                        showMenu = false
-                        navController.navigate("UpdateAdScreen/${ad.id}")
-                    }
-                )
-                DropdownMenuItem(
-                    text = { Text(stringResource(R.string.delete)) },
-                    onClick = {
-                        showMenu = false
-                        showDialog = true
-                    }
-                )
-            }
-
-            if (showDialog) {
-                AlertDialog(
-                    onDismissRequest = { showDialog = false },
-                    title = {
-                        Text(
-                            stringResource(R.string.confirm_deletion),
-                            fontWeight = FontWeight.Bold,
-                            color = BrownTertiary
-                        )
-                    },
-                    text = {
-                        Text(
-                            stringResource(R.string.confirm_deletion_message),
-                            color = Color.Black
-                        )
-                    },
-                    confirmButton = {
-                        Button(
-                            onClick = {
-                                adsViewModel.deleteAd(ad.id,
-                                    onSuccess = {
-                                        Toast.makeText(
-                                            context,
-                                            context.getString(R.string.ad_deleted),
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                    },
-                                    onError = { errorMessage ->
-                                        Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT)
-                                            .show()
-                                    }
-                                )
-                                showDialog = false
-                            },
-                            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
-                        ) {
-                            Text(stringResource(R.string.delete), color = Color.White)
-                        }
-                    },
-                    dismissButton = {
-                        Button(
-                            onClick = { showDialog = false },
-                            colors = ButtonDefaults.buttonColors(containerColor = Color.LightGray)
-                        ) {
-                            Text(stringResource(R.string.cancel), color = Color.Black)
-                        }
-                    }
-                )
             }
         }
     }
