@@ -83,7 +83,7 @@ fun LoginScreen(navController: NavController, userState: MutableState<User?>) {
                 text = stringResource(id = R.string.forgot_password),
                 color = White,
                 fontSize = 14.sp,
-                modifier = Modifier.clickable { navController.navigate("paswordRecover") }
+                modifier = Modifier.clickable { navController.navigate("passwordRecover") }
             )
 
             Spacer(modifier = Modifier.height(16.dp))

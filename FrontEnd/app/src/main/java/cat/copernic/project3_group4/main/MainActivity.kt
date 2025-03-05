@@ -82,7 +82,7 @@ class MainActivity : ComponentActivity() {
                                 navController = navController
                             )
                         }
-                        composable("paswordRecover") { PasswordRecover(navController) }
+                        composable("passwordRecover") { PasswordRecover(navController) }
                         composable(
                             route = "adsScreen/{categoryId}",
                             arguments = listOf(navArgument("categoryId") {
